@@ -2,6 +2,7 @@
 
 import { FaGithub, FaLinkedin, FaTwitter, FaEnvelope } from "react-icons/fa";
 import { motion } from "framer-motion";
+import SpotifyWidget from "./SpotifyWidget";
 
 const socialLinks = [
     { icon: FaGithub, href: "https://github.com", label: "GitHub" },
@@ -30,7 +31,11 @@ export default function Footer() {
             </div>
 
             <div className="container mx-auto px-4 relative z-10">
-                <div className="flex flex-col items-center justify-center space-y-6">
+                <div className="flex flex-col items-center justify-center space-y-8">
+
+                    {/* Spotify Widget */}
+                    <SpotifyWidget />
+
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}

@@ -5,6 +5,8 @@ A modern, high-performance personal portfolio website built with Next.js 14 (App
 ## 🚀 Features
 
 - **Modern Design**: Glassmorphism, gradients, and 3D-like effects.
+- **Visual Enhancements**: Custom cursor, particle background, and tilt effects.
+- **Interactive**: Command Palette (Cmd+K), Scroll Progress, and Spotify Widget.
 - **Dark/Light Mode**: Fully supported with smooth transitions.
 - **Animations**: Powered by Framer Motion for a dynamic user experience.
 - **Responsive**: Mobile-first design that looks great on all devices.
