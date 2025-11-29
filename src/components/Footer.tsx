@@ -13,11 +13,11 @@ const socialLinks = [
 
 export default function Footer() {
     return (
-        <footer className="relative bg-gray-100 dark:bg-gray-900 pt-20 pb-10 overflow-hidden">
+        <footer className="relative bg-gray-100 dark:bg-gray-900 pt-16 sm:pt-20 pb-8 sm:pb-10 overflow-hidden">
             {/* Animated Wave */}
             <div className="absolute top-0 left-0 w-full overflow-hidden leading-none rotate-180">
                 <svg
-                    className="relative block w-[calc(100%+1.3px)] h-[50px] md:h-[100px]"
+                    className="relative block w-[calc(100%+1.3px)] h-[40px] sm:h-[60px] md:h-[100px]"
                     data-name="Layer 1"
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 1200 120"
@@ -31,44 +31,62 @@ export default function Footer() {
             </div>
 
             <div className="container mx-auto px-4 relative z-10">
-                <div className="flex flex-col items-center justify-center space-y-8">
+                <div className="flex flex-col items-center justify-center space-y-6 sm:space-y-8">
 
                     {/* Spotify Widget */}
                     <SpotifyWidget />
 
+                    {/* Social Links */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
-                        className="flex space-x-6"
+                        className="flex space-x-5 sm:space-x-6"
                     >
                         {socialLinks.map((link, index) => (
-                            <a
+                            <motion.a
                                 key={index}
                                 href={link.href}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors text-2xl"
+                                className="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors text-xl sm:text-2xl p-2"
                                 aria-label={link.label}
+                                whileHover={{ scale: 1.1, y: -2 }}
+                                whileTap={{ scale: 0.95 }}
                             >
                                 <link.icon />
-                            </a>
+                            </motion.a>
                         ))}
                     </motion.div>
 
+                    {/* Footer Text */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         transition={{ delay: 0.2, duration: 0.5 }}
-                        className="text-center"
+                        className="text-center px-4"
                     >
-                        <p className="text-gray-600 dark:text-gray-400 font-medium">
+                        <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 font-medium">
                             Built with <span className="text-red-500">❤️</span> and lots of{" "}
                             <span className="text-amber-700">☕</span>
                         </p>
-                        <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
+                        <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-500 mt-2">
                             © {new Date().getFullYear()} Ayaan Agarwal. All rights reserved.
                         </p>
+                    </motion.div>
+
+                    {/* Keyboard Shortcut Hint */}
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        transition={{ delay: 0.4, duration: 0.5 }}
+                        className="hidden sm:flex items-center gap-2 text-xs text-gray-400"
+                    >
+                        <span>Press</span>
+                        <kbd className="px-2 py-1 bg-gray-200 dark:bg-gray-800 rounded text-gray-600 dark:text-gray-300 font-mono">⌘</kbd>
+                        <span>+</span>
+                        <kbd className="px-2 py-1 bg-gray-200 dark:bg-gray-800 rounded text-gray-600 dark:text-gray-300 font-mono">K</kbd>
+                        <span>to open command palette</span>
                     </motion.div>
                 </div>
             </div>
