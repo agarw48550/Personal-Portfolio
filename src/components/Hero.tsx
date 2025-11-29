@@ -1,11 +1,11 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useMotionTemplate, useMotionValue } from "framer-motion";
 import AnimatedText from "./AnimatedText";
 import { FiArrowDown } from "react-icons/fi";
 import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
 import CustomCursor from "./CustomCursor";
-import { useEffect, useState } from "react";
+import { useEffect, useState, MouseEvent } from "react";
 
 // Particle component for background effect
 const Particle = ({ delay }: { delay: number }) => {
@@ -40,42 +40,78 @@ export default function Hero() {
 
     const [mounted, setMounted] = useState(false);
 
+    // Spotlight effect
+    const mouseX = useMotionValue(0);
+    const mouseY = useMotionValue(0);
+
     useEffect(() => {
         setMounted(true);
-    }, []);
+
+        const handleMouseMove = (e: globalThis.MouseEvent) => {
+            mouseX.set(e.clientX);
+            mouseY.set(e.clientY);
+        };
+
+        window.addEventListener("mousemove", handleMouseMove);
+        return () => window.removeEventListener("mousemove", handleMouseMove);
+    }, [mouseX, mouseY]);
+
+    const background = useMotionTemplate`radial-gradient(
+    600px circle at ${mouseX}px ${mouseY}px,
+    rgba(139, 92, 246, 0.15),
+    transparent 80%
+  )`;
 
     return (
         <section className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-dark-bg">
             {mounted && <CustomCursor />}
 
+            {/* Spotlight Effect */}
+            <motion.div
+                className="absolute inset-0 z-0 pointer-events-none"
+                style={{ background }}
+            />
+
             {/* Animated Gradient Background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 dark:from-black dark:via-purple-950 dark:to-indigo-950 animate-gradient-xy opacity-80"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 dark:from-black dark:via-purple-950 dark:to-indigo-950 animate-gradient-xy opacity-80 z-[-2]"></div>
 
             {/* Particles */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
                 {[...Array(20)].map((_, i) => (
                     <Particle key={i} delay={i * 0.5} />
                 ))}
             </div>
 
             {/* Animated Background Shapes */}
-            <motion.div style={{ y: y1 }} className="absolute inset-0 overflow-hidden pointer-events-none">
+            <motion.div style={{ y: y1 }} className="absolute inset-0 overflow-hidden pointer-events-none z-[-1]">
                 <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-purple-600 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob"></div>
                 <div className="absolute top-1/3 right-1/4 w-72 h-72 bg-cyan-500 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob animation-delay-2000"></div>
                 <div className="absolute bottom-1/4 left-1/3 w-72 h-72 bg-pink-500 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob animation-delay-4000"></div>
             </motion.div>
 
-            {/* Floating Code Snippets (Decorative) */}
-            <motion.div style={{ y: y2 }} className="absolute inset-0 pointer-events-none opacity-10 font-mono text-sm text-cyan-400 hidden md:block">
-                <div className="absolute top-20 right-20 rotate-12">
-                    {`const future = "bright";`}
-                </div>
-                <div className="absolute bottom-40 left-20 -rotate-12">
-                    {`while(alive) { code(); }`}
-                </div>
-                <div className="absolute top-1/2 left-10 rotate-45">
-                    {`<div>Hello World</div>`}
-                </div>
+            {/* Floating Code Snippets */}
+            <motion.div style={{ y: y2 }} className="absolute inset-0 pointer-events-none opacity-20 font-mono text-sm text-cyan-400 hidden md:block z-0">
+                <motion.div
+                    className="absolute top-20 right-20 rotate-12 bg-black/30 backdrop-blur-sm p-3 rounded-lg border border-white/10"
+                    animate={{ y: [0, -20, 0], rotate: [12, 15, 12] }}
+                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                >
+                    {`const passion = "coding";`}
+                </motion.div>
+                <motion.div
+                    className="absolute bottom-40 left-20 -rotate-12 bg-black/30 backdrop-blur-sm p-3 rounded-lg border border-white/10"
+                    animate={{ y: [0, 20, 0], rotate: [-12, -15, -12] }}
+                    transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                >
+                    {`while(alive) { build(); }`}
+                </motion.div>
+                <motion.div
+                    className="absolute top-1/2 left-10 rotate-6 bg-black/30 backdrop-blur-sm p-3 rounded-lg border border-white/10"
+                    animate={{ y: [0, -15, 0], rotate: [6, 3, 6] }}
+                    transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+                >
+                    {`git commit -m "Future"`}
+                </motion.div>
             </motion.div>
 
             <div className="container mx-auto px-4 z-10 text-center">
@@ -91,13 +127,14 @@ export default function Hero() {
                         transition={{ delay: 0.2, duration: 0.8 }}
                         className="mb-6 inline-block"
                     >
-                        <span className="px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-cyan-300 text-sm font-mono tracking-wider">
+                        <span className="px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-cyan-300 text-sm font-mono tracking-wider shadow-[0_0_15px_rgba(6,182,212,0.3)]">
                             🚀 WELCOME TO MY UNIVERSE
                         </span>
                     </motion.div>
 
+                    {/* Gradient Text Animation */}
                     <h1 className="text-6xl md:text-8xl font-bold text-white mb-6 tracking-tight">
-                        I'm <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 animate-text">Ayaan</span>
+                        I'm <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 animate-text bg-[length:200%_auto]">Ayaan</span>
                     </h1>
 
                     <div className="h-16 md:h-20 text-3xl md:text-5xl text-gray-300 font-light mb-10 flex items-center justify-center">
@@ -158,11 +195,12 @@ export default function Hero() {
 
             {/* Scroll Down Indicator */}
             <motion.div
-                className="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-white/50"
+                className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2 text-white/50"
                 animate={{ y: [0, 10, 0], opacity: [0.5, 1, 0.5] }}
                 transition={{ duration: 2, repeat: Infinity }}
             >
-                <FiArrowDown size={32} />
+                <span className="text-xs uppercase tracking-widest">Scroll Down</span>
+                <FiArrowDown size={24} />
             </motion.div>
         </section>
     );

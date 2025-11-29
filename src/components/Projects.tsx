@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { projects } from "@/lib/data";
 import { FaGithub, FaExternalLinkAlt } from "react-icons/fa";
@@ -52,8 +52,22 @@ const TiltCard = ({ children, className }: { children: React.ReactNode; classNam
     );
 };
 
+// Skeleton Loader
+const ProjectSkeleton = () => (
+    <div className="rounded-3xl bg-gray-200 dark:bg-gray-800 h-[350px] relative overflow-hidden">
+        <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+    </div>
+);
+
 export default function Projects() {
     const [filter, setFilter] = useState("All");
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        // Simulate loading
+        const timer = setTimeout(() => setIsLoading(false), 1500);
+        return () => clearTimeout(timer);
+    }, []);
 
     const filteredProjects = projects.filter(
         (project) => filter === "All" || project.category === filter || project.tags.includes(filter)
@@ -94,100 +108,102 @@ export default function Projects() {
                 </motion.div>
 
                 {/* Bento Grid */}
-                <motion.div
-                    layout
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-[350px]"
-                >
-                    <AnimatePresence mode="popLayout">
-                        {filteredProjects.map((project) => (
-                            <TiltCard
-                                key={project.id}
-                                className={clsx(
-                                    "group relative rounded-3xl bg-white dark:bg-gray-800 shadow-xl border border-gray-100 dark:border-gray-700",
-                                    project.featured ? "md:col-span-2" : "md:col-span-1"
-                                )}
-                            >
-                                <motion.div
-                                    layout
-                                    initial={{ opacity: 0, scale: 0.9 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    exit={{ opacity: 0, scale: 0.9 }}
-                                    transition={{ duration: 0.3 }}
-                                    className="w-full h-full rounded-3xl overflow-hidden"
-                                    style={{ transformStyle: "preserve-3d" }}
-                                >
-                                    {/* Featured Ribbon */}
-                                    {project.featured && (
-                                        <div className="absolute top-4 right-4 z-20 bg-yellow-400 text-black text-xs font-bold px-3 py-1 rounded-full shadow-lg transform translate-z-10">
-                                            ⭐ Featured
-                                        </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-[350px]">
+                    {isLoading ? (
+                        // Loading Skeletons
+                        [...Array(3)].map((_, i) => <ProjectSkeleton key={i} />)
+                    ) : (
+                        <AnimatePresence mode="popLayout">
+                            {filteredProjects.map((project) => (
+                                <TiltCard
+                                    key={project.id}
+                                    className={clsx(
+                                        "group relative rounded-3xl bg-white dark:bg-gray-800 shadow-xl border border-gray-100 dark:border-gray-700",
+                                        project.featured ? "md:col-span-2" : "md:col-span-1"
                                     )}
-
-                                    {/* Project Background (Gradient/Pattern) */}
-                                    <div
-                                        className={clsx(
-                                            "absolute inset-0 transition-transform duration-500 group-hover:scale-110",
-                                            project.category === "Web" ? "bg-gradient-to-br from-blue-400 to-indigo-600" :
-                                                project.category === "AI" ? "bg-gradient-to-br from-purple-400 to-pink-600" :
-                                                    "bg-gradient-to-br from-emerald-400 to-cyan-600"
-                                        )}
+                                >
+                                    <motion.div
+                                        layout
+                                        initial={{ opacity: 0, scale: 0.9 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.9 }}
+                                        transition={{ duration: 0.3 }}
+                                        className="w-full h-full rounded-3xl overflow-hidden"
+                                        style={{ transformStyle: "preserve-3d" }}
                                     >
-                                        {/* Abstract Pattern Overlay */}
-                                        <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+                                        {/* Featured Ribbon */}
+                                        {project.featured && (
+                                            <div className="absolute top-4 right-4 z-20 bg-yellow-400 text-black text-xs font-bold px-3 py-1 rounded-full shadow-lg transform translate-z-10 animate-pulse">
+                                                ⭐ Featured
+                                            </div>
+                                        )}
 
-                                        {/* Icon/Symbol */}
-                                        <div className="w-full h-full flex items-center justify-center text-white text-8xl opacity-30 transform translate-z-0 group-hover:translate-z-10 transition-transform duration-500">
-                                            {project.category === "Web" ? "🌐" : project.category === "AI" ? "🤖" : "💻"}
-                                        </div>
-                                    </div>
+                                        {/* Project Background (Specific Gradients) */}
+                                        <div
+                                            className={clsx(
+                                                "absolute inset-0 transition-transform duration-500 group-hover:scale-110",
+                                                project.category === "Web" ? "bg-gradient-to-br from-blue-500 to-cyan-400" :
+                                                    project.category === "AI" ? "bg-gradient-to-br from-purple-600 to-indigo-500" :
+                                                        "bg-gradient-to-br from-emerald-500 to-green-400"
+                                            )}
+                                        >
+                                            {/* Abstract Pattern Overlay */}
+                                            <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
 
-                                    {/* Overlay Content */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-90 transition-opacity duration-300"></div>
-
-                                    <div className="absolute bottom-0 left-0 w-full p-8 transform translate-z-20">
-                                        <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                                            <h3 className="text-3xl font-bold text-white mb-2 drop-shadow-md">
-                                                {project.title}
-                                            </h3>
-                                            <p className="text-gray-200 text-sm mb-4 line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
-                                                {project.description}
-                                            </p>
-                                            <div className="flex flex-wrap gap-2 mb-4">
-                                                {project.tags.map((tag) => (
-                                                    <span
-                                                        key={tag}
-                                                        className="px-3 py-1 text-xs rounded-full bg-white/20 text-white backdrop-blur-md border border-white/10"
-                                                    >
-                                                        {tag}
-                                                    </span>
-                                                ))}
+                                            {/* Icon/Symbol */}
+                                            <div className="w-full h-full flex items-center justify-center text-white text-8xl opacity-30 transform translate-z-0 group-hover:translate-z-10 transition-transform duration-500">
+                                                {project.category === "Web" ? "🌐" : project.category === "AI" ? "🤖" : "💻"}
                                             </div>
                                         </div>
 
-                                        <div className="flex gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-200 transform translate-y-4 group-hover:translate-y-0">
-                                            <a
-                                                href={project.githubUrl}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 text-white hover:bg-white hover:text-black transition-colors backdrop-blur-sm"
-                                            >
-                                                <FaGithub size={18} /> Code
-                                            </a>
-                                            <a
-                                                href={project.demoUrl}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-white hover:bg-primary/80 transition-colors shadow-lg shadow-primary/30"
-                                            >
-                                                <FaExternalLinkAlt size={16} /> Demo
-                                            </a>
+                                        {/* Overlay Content */}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-90 transition-opacity duration-300"></div>
+
+                                        <div className="absolute bottom-0 left-0 w-full p-8 transform translate-z-20">
+                                            <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                                                <h3 className="text-3xl font-bold text-white mb-2 drop-shadow-md">
+                                                    {project.title}
+                                                </h3>
+                                                <p className="text-gray-200 text-sm mb-4 line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
+                                                    {project.description}
+                                                </p>
+                                                <div className="flex flex-wrap gap-2 mb-4">
+                                                    {project.tags.map((tag) => (
+                                                        <span
+                                                            key={tag}
+                                                            className="px-3 py-1 text-xs rounded-full bg-white/20 text-white backdrop-blur-md border border-white/10"
+                                                        >
+                                                            {tag}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
+
+                                            <div className="flex gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-200 transform translate-y-4 group-hover:translate-y-0">
+                                                <a
+                                                    href={project.githubUrl}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 text-white hover:bg-white hover:text-black transition-colors backdrop-blur-sm"
+                                                >
+                                                    <FaGithub size={18} /> Code
+                                                </a>
+                                                <a
+                                                    href={project.demoUrl}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-white hover:bg-primary/80 transition-colors shadow-lg shadow-primary/30"
+                                                >
+                                                    <FaExternalLinkAlt size={16} /> Demo
+                                                </a>
+                                            </div>
                                         </div>
-                                    </div>
-                                </motion.div>
-                            </TiltCard>
-                        ))}
-                    </AnimatePresence>
-                </motion.div>
+                                    </motion.div>
+                                </TiltCard>
+                            ))}
+                        </AnimatePresence>
+                    )}
+                </div>
             </div>
         </section>
     );

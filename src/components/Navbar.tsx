@@ -17,6 +17,7 @@ const navLinks = [
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -42,16 +43,26 @@ export default function Navbar() {
 
                 {/* Desktop Menu */}
                 <div className="hidden md:flex items-center space-x-8">
-                    {navLinks.map((link) => (
-                        <Link
-                            key={link.name}
-                            href={link.href}
-                            className="text-foreground hover:text-primary transition-colors font-medium relative group"
-                        >
-                            {link.name}
-                            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
-                        </Link>
-                    ))}
+                    <div className="flex space-x-6 relative">
+                        {navLinks.map((link, index) => (
+                            <Link
+                                key={link.name}
+                                href={link.href}
+                                onMouseEnter={() => setHoveredIndex(index)}
+                                onMouseLeave={() => setHoveredIndex(null)}
+                                className="text-foreground hover:text-primary transition-colors font-medium relative px-2 py-1"
+                            >
+                                {link.name}
+                                {hoveredIndex === index && (
+                                    <motion.span
+                                        layoutId="underline"
+                                        className="absolute left-0 top-full block h-[2px] w-full bg-primary"
+                                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                    />
+                                )}
+                            </Link>
+                        ))}
+                    </div>
                     <ThemeToggle />
                 </div>
 

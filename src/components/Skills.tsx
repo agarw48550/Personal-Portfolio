@@ -18,6 +18,46 @@ const item = {
     show: { opacity: 1, y: 0 },
 };
 
+// Circular Progress Component
+const CircularProgress = ({ level, color }: { level: string; color: string }) => {
+    const percentage = level === "Advanced" ? 100 : level === "Intermediate" ? 66 : 33;
+    const radius = 18;
+    const circumference = 2 * Math.PI * radius;
+    const strokeDashoffset = circumference - (percentage / 100) * circumference;
+
+    return (
+        <div className="relative w-12 h-12 flex items-center justify-center">
+            <svg className="transform -rotate-90 w-12 h-12">
+                <circle
+                    cx="24"
+                    cy="24"
+                    r={radius}
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    fill="transparent"
+                    className="text-gray-200 dark:text-gray-700"
+                />
+                <motion.circle
+                    initial={{ strokeDashoffset: circumference }}
+                    whileInView={{ strokeDashoffset }}
+                    transition={{ duration: 1.5, ease: "easeOut" }}
+                    cx="24"
+                    cy="24"
+                    r={radius}
+                    stroke={color}
+                    strokeWidth="3"
+                    fill="transparent"
+                    strokeDasharray={circumference}
+                    strokeLinecap="round"
+                />
+            </svg>
+            <span className="absolute text-[10px] font-bold text-gray-500 dark:text-gray-400">
+                {percentage}%
+            </span>
+        </div>
+    );
+};
+
 export default function Skills() {
     return (
         <section id="skills" className="py-20 bg-white dark:bg-dark-bg transition-colors">
@@ -45,23 +85,37 @@ export default function Skills() {
                                 variants={container}
                                 initial="hidden"
                                 whileInView="show"
-                                viewport={{ once: true }}
-                                className="grid grid-cols-2 gap-4"
+                                viewport={{ once: true, margin: "-50px" }}
+                                className="grid grid-cols-1 gap-4"
                             >
                                 {category.items.map((skill, index) => (
                                     <motion.div
                                         key={index}
                                         variants={item}
-                                        whileHover={{ scale: 1.05, y: -5 }}
-                                        className="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col items-center justify-center gap-3 group"
+                                        whileHover={{ scale: 1.02, x: 5 }}
+                                        className="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex items-center justify-between group relative overflow-hidden"
                                     >
-                                        <div className="text-4xl text-gray-400 group-hover:text-primary transition-colors duration-300">
-                                            <skill.icon />
+                                        {/* Glow Effect */}
+                                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:animate-shimmer"></div>
+
+                                        <div className="flex items-center gap-4">
+                                            <motion.div
+                                                className="text-3xl text-gray-400 group-hover:text-primary transition-colors duration-300"
+                                                animate={{ y: [0, -3, 0] }}
+                                                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: index * 0.2 }}
+                                            >
+                                                <skill.icon />
+                                            </motion.div>
+                                            <span className="font-medium text-foreground text-lg">{skill.name}</span>
                                         </div>
-                                        <span className="font-medium text-foreground">{skill.name}</span>
-                                        <span className="text-xs text-gray-400 bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded-full">
-                                            {skill.level}
-                                        </span>
+
+                                        <CircularProgress
+                                            level={skill.level}
+                                            color={
+                                                category.category.includes("Languages") ? "#8B5CF6" :
+                                                    category.category.includes("Frameworks") ? "#06B6D4" : "#EC4899"
+                                            }
+                                        />
                                     </motion.div>
                                 ))}
                             </motion.div>
