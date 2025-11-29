@@ -39,7 +39,7 @@ export default function Hero() {
     const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
     const [mounted, setMounted] = useState(false);
-    const [isTouchDevice, setIsTouchDevice] = useState(false);
+    const [isTouchDevice, setIsTouchDevice] = useState(true); // Default true to prevent flash
 
     // Spotlight effect - mouse position tracking
     const mouseX = useMotionValue(0);

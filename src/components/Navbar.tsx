@@ -15,12 +15,19 @@ const navLinks = [
 ];
 
 export default function Navbar() {
+    const [mounted, setMounted] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
+    // Set mounted state
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
     // Close mobile menu on scroll
     const handleScroll = useCallback(() => {
+        if (typeof window === "undefined") return;
         setScrolled(window.scrollY > 50);
         if (isOpen && window.scrollY > 100) {
             setIsOpen(false);
@@ -28,12 +35,15 @@ export default function Navbar() {
     }, [isOpen]);
 
     useEffect(() => {
+        if (!mounted) return;
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
-    }, [handleScroll]);
+    }, [mounted, handleScroll]);
 
     // Close menu when clicking outside or pressing escape
     useEffect(() => {
+        if (!mounted) return;
+
         const handleEscape = (e: KeyboardEvent) => {
             if (e.key === "Escape") setIsOpen(false);
         };
@@ -50,7 +60,7 @@ export default function Navbar() {
             document.removeEventListener("keydown", handleEscape);
             document.body.style.overflow = "";
         };
-    }, [isOpen]);
+    }, [mounted, isOpen]);
 
     const handleLinkClick = () => {
         setIsOpen(false);

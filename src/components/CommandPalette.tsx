@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiSearch, FiCommand, FiHome, FiUser, FiCode, FiCpu, FiMail, FiMoon, FiSun } from "react-icons/fi";
 import { useRouter } from "next/navigation";
@@ -15,13 +15,37 @@ const actions = [
 ];
 
 export default function CommandPalette() {
+    const [mounted, setMounted] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [query, setQuery] = useState("");
     const [selectedIndex, setSelectedIndex] = useState(0);
     const router = useRouter();
     const { theme, setTheme } = useTheme();
 
+    const filteredActions = actions.filter((action) =>
+        action.label.toLowerCase().includes(query.toLowerCase())
+    );
+
+    const handleSelect = useCallback((href: string) => {
+        router.push(href);
+        setIsOpen(false);
+        setQuery("");
+    }, [router]);
+
+    const toggleTheme = useCallback(() => {
+        setTheme(theme === "dark" ? "light" : "dark");
+        setIsOpen(false);
+        setQuery("");
+    }, [theme, setTheme]);
+
+    // Set mounted state
     useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    useEffect(() => {
+        if (!mounted) return;
+
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
                 e.preventDefault();
@@ -34,11 +58,11 @@ export default function CommandPalette() {
 
         window.addEventListener("keydown", handleKeyDown);
         return () => window.removeEventListener("keydown", handleKeyDown);
-    }, []);
+    }, [mounted]);
 
     // Handle keyboard navigation
     useEffect(() => {
-        if (!isOpen) return;
+        if (!mounted || !isOpen) return;
 
         const handleNavigation = (e: KeyboardEvent) => {
             const totalItems = filteredActions.length + 1; // +1 for theme toggle
@@ -63,28 +87,12 @@ export default function CommandPalette() {
 
         window.addEventListener("keydown", handleNavigation);
         return () => window.removeEventListener("keydown", handleNavigation);
-    }, [isOpen, selectedIndex]);
-
-    const filteredActions = actions.filter((action) =>
-        action.label.toLowerCase().includes(query.toLowerCase())
-    );
+    }, [mounted, isOpen, selectedIndex, filteredActions, handleSelect, toggleTheme]);
 
     // Reset selected index when query changes
     useEffect(() => {
         setSelectedIndex(0);
     }, [query]);
-
-    const handleSelect = (href: string) => {
-        router.push(href);
-        setIsOpen(false);
-        setQuery("");
-    };
-
-    const toggleTheme = () => {
-        setTheme(theme === "dark" ? "light" : "dark");
-        setIsOpen(false);
-        setQuery("");
-    };
 
     return (
         <AnimatePresence>

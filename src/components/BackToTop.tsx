@@ -5,10 +5,17 @@ import { useState, useEffect } from "react";
 import { FaArrowUp, FaRocket } from "react-icons/fa";
 
 export default function BackToTop() {
+    const [mounted, setMounted] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
 
     useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    useEffect(() => {
+        if (!mounted) return;
+
         const toggleVisibility = () => {
             // Show button after scrolling 500px
             if (window.scrollY > 500) {
@@ -20,14 +27,18 @@ export default function BackToTop() {
 
         window.addEventListener("scroll", toggleVisibility);
         return () => window.removeEventListener("scroll", toggleVisibility);
-    }, []);
+    }, [mounted]);
 
     const scrollToTop = () => {
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth",
-        });
+        if (typeof window !== "undefined") {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+            });
+        }
     };
+
+    if (!mounted) return null;
 
     return (
         <AnimatePresence>

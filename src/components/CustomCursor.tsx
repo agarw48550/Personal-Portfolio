@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 
 export default function CustomCursor() {
+    const [mounted, setMounted] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const [currentSection, setCurrentSection] = useState<string>("hero");
+    const [isTouchDevice, setIsTouchDevice] = useState(true); // Default to true to prevent flash
     
     const cursorX = useMotionValue(-100);
     const cursorY = useMotionValue(-100);
@@ -35,10 +37,19 @@ export default function CustomCursor() {
         }
     };
 
+    // Set mounted state
     useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    useEffect(() => {
+        if (!mounted) return;
+
         // Check if touch device
-        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-        if (isTouchDevice) {
+        const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        setIsTouchDevice(isTouch);
+        
+        if (isTouch) {
             setIsVisible(false);
             return;
         }
@@ -103,10 +114,10 @@ export default function CustomCursor() {
             window.removeEventListener("mouseenter", handleMouseEnter);
             window.removeEventListener("scroll", handleScroll);
         };
-    }, [cursorX, cursorY]);
+    }, [mounted, cursorX, cursorY]);
 
-    // Don't render on touch devices
-    if (typeof window !== "undefined" && ('ontouchstart' in window || navigator.maxTouchPoints > 0)) {
+    // Don't render until mounted or on touch devices
+    if (!mounted || isTouchDevice) {
         return null;
     }
 

@@ -20,7 +20,7 @@ const KONAMI_CODE = [
 const MATRIX_CHARS = "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF";
 
 // Confetti particle component
-const ConfettiParticle = ({ index }: { index: number }) => {
+const ConfettiParticle = ({ index, windowHeight }: { index: number; windowHeight: number }) => {
     const colors = ["#8B5CF6", "#06B6D4", "#EC4899", "#10B981", "#F59E0B", "#EF4444"];
     const randomColor = colors[Math.floor(Math.random() * colors.length)];
     const randomX = Math.random() * 100;
@@ -41,7 +41,7 @@ const ConfettiParticle = ({ index }: { index: number }) => {
             }}
             initial={{ y: -20, opacity: 1, rotate: 0 }}
             animate={{
-                y: window.innerHeight + 100,
+                y: windowHeight + 100,
                 opacity: [1, 1, 0],
                 rotate: randomRotation,
                 x: Math.sin(index) * 100,
@@ -87,9 +87,20 @@ const MatrixColumn = ({ index, totalColumns }: { index: number; totalColumns: nu
 };
 
 export default function KonamiCode() {
+    const [mounted, setMounted] = useState(false);
     const [input, setInput] = useState<string[]>([]);
     const [showSuccess, setShowSuccess] = useState(false);
     const [effectType, setEffectType] = useState<"confetti" | "matrix">("confetti");
+    const [windowDimensions, setWindowDimensions] = useState({ width: 1920, height: 1080 });
+
+    // Set mounted state and get window dimensions
+    useEffect(() => {
+        setMounted(true);
+        setWindowDimensions({
+            width: window.innerWidth,
+            height: window.innerHeight,
+        });
+    }, []);
 
     const triggerEasterEgg = useCallback(() => {
         // Alternate between confetti and matrix effects
@@ -101,6 +112,8 @@ export default function KonamiCode() {
     }, []);
 
     useEffect(() => {
+        if (!mounted) return;
+
         const handleKeyDown = (e: KeyboardEvent) => {
             setInput(prev => {
                 const newInput = [...prev, e.key];
@@ -120,9 +133,12 @@ export default function KonamiCode() {
 
         window.addEventListener("keydown", handleKeyDown);
         return () => window.removeEventListener("keydown", handleKeyDown);
-    }, [triggerEasterEgg]);
+    }, [mounted, triggerEasterEgg]);
 
-    const columnCount = Math.floor(window?.innerWidth / 20) || 50;
+    const columnCount = Math.floor(windowDimensions.width / 20) || 50;
+
+    // Don't render until mounted
+    if (!mounted) return null;
 
     return (
         <AnimatePresence>
@@ -132,7 +148,7 @@ export default function KonamiCode() {
                     {effectType === "confetti" && (
                         <div className="fixed inset-0 z-[200] pointer-events-none overflow-hidden">
                             {Array.from({ length: 100 }).map((_, i) => (
-                                <ConfettiParticle key={i} index={i} />
+                                <ConfettiParticle key={i} index={i} windowHeight={windowDimensions.height} />
                             ))}
                         </div>
                     )}
