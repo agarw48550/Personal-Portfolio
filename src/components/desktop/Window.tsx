@@ -51,7 +51,7 @@ export default function Window({ id, children }: WindowProps) {
                     onMouseDown={() => focusWindow(id)}
                     style={{ zIndex: windowState.zIndex + 10 }}
                     className={cn(
-                        "flex flex-col overflow-hidden rounded-xl shadow-2xl",
+                        "flex flex-col overflow-hidden rounded-xl",
                         windowState.isMaximized ? "rounded-none" : ""
                     )}
                 >
@@ -59,33 +59,32 @@ export default function Window({ id, children }: WindowProps) {
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95 }}
-                        transition={{ duration: 0.2 }}
+                        transition={{ duration: 0.15 }}
                         className={cn(
                             "flex flex-col h-full w-full text-white",
-                            "bg-gradient-to-br from-white/10 via-white/5 to-transparent",
                             "backdrop-blur-2xl backdrop-saturate-150",
-                            "border border-white/20",
+                            "border border-cyan-500/20",
                             windowState.isMaximized ? "rounded-none" : "rounded-xl"
                         )}
                         style={{
-                            background: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.02) 100%)',
-                            boxShadow: '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1), 0 0 0 1px rgba(255,255,255,0.05)'
+                            background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.08) 0%, rgba(15, 15, 25, 0.95) 50%, rgba(10, 10, 15, 0.98) 100%)',
+                            boxShadow: '0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05), 0 0 0 1px rgba(34, 211, 238, 0.1)'
                         }}
                     >
-                        {/* MacOS-style Window Header */}
+                        {/* Window Header - Liquid Glass */}
                         <div
                             className={cn(
                                 "h-11 flex items-center px-4 select-none cursor-default flex-shrink-0",
-                                "bg-gradient-to-b from-white/10 to-transparent",
-                                "border-b border-white/10"
+                                "bg-gradient-to-b from-cyan-500/5 to-transparent",
+                                "border-b border-cyan-500/10"
                             )}
                             onDoubleClick={() => maximizeWindow(id)}
                         >
-                            {/* Traffic Light Buttons (Left) */}
+                            {/* Traffic Light Buttons */}
                             <div className="flex items-center gap-2 group">
                                 <button
                                     onClick={(e) => { e.stopPropagation(); closeWindow(id); }}
-                                    className="w-3 h-3 rounded-full bg-[#ff5f57] hover:bg-[#ff5f57]/80 transition-all flex items-center justify-center group-hover:shadow-[0_0_6px_#ff5f57]"
+                                    className="w-3 h-3 rounded-full bg-[#ff5f57] hover:brightness-110 transition-all flex items-center justify-center"
                                     title="Close"
                                 >
                                     <svg className="w-2 h-2 opacity-0 group-hover:opacity-100 transition-opacity" viewBox="0 0 12 12" fill="none" stroke="rgba(0,0,0,0.5)" strokeWidth="2">
@@ -94,7 +93,7 @@ export default function Window({ id, children }: WindowProps) {
                                 </button>
                                 <button
                                     onClick={(e) => { e.stopPropagation(); minimizeWindow(id); }}
-                                    className="w-3 h-3 rounded-full bg-[#febc2e] hover:bg-[#febc2e]/80 transition-all flex items-center justify-center group-hover:shadow-[0_0_6px_#febc2e]"
+                                    className="w-3 h-3 rounded-full bg-[#febc2e] hover:brightness-110 transition-all flex items-center justify-center"
                                     title="Minimize"
                                 >
                                     <svg className="w-2 h-2 opacity-0 group-hover:opacity-100 transition-opacity" viewBox="0 0 12 12" fill="none" stroke="rgba(0,0,0,0.5)" strokeWidth="2">
@@ -103,7 +102,7 @@ export default function Window({ id, children }: WindowProps) {
                                 </button>
                                 <button
                                     onClick={(e) => { e.stopPropagation(); maximizeWindow(id); }}
-                                    className="w-3 h-3 rounded-full bg-[#28c840] hover:bg-[#28c840]/80 transition-all flex items-center justify-center group-hover:shadow-[0_0_6px_#28c840]"
+                                    className="w-3 h-3 rounded-full bg-[#28c840] hover:brightness-110 transition-all flex items-center justify-center"
                                     title={windowState.isMaximized ? "Restore" : "Maximize"}
                                 >
                                     <svg className="w-2 h-2 opacity-0 group-hover:opacity-100 transition-opacity" viewBox="0 0 12 12" fill="none" stroke="rgba(0,0,0,0.5)" strokeWidth="1.5">
@@ -116,17 +115,16 @@ export default function Window({ id, children }: WindowProps) {
                                 </button>
                             </div>
                             
-                            {/* Window Title (Center) */}
+                            {/* Window Title */}
                             <div className="flex-1 flex items-center justify-center">
-                                <span className="text-sm font-medium text-white/70">{windowState.title}</span>
+                                <span className="text-sm font-medium text-cyan-300/70">{windowState.title}</span>
                             </div>
                             
-                            {/* Spacer for symmetry */}
                             <div className="w-[52px]" />
                         </div>
 
                         {/* Window Content */}
-                        <div className="flex-1 overflow-auto relative bg-[#1a1a2e]/80">
+                        <div className="flex-1 overflow-auto relative bg-[#0a0a0f]/90">
                             {children}
                         </div>
                     </motion.div>
