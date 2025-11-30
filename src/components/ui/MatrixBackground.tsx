@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback, useState } from 'react';
+import { useTheme } from 'next-themes';
 
 interface MatrixParticle {
     x: number;
@@ -42,6 +43,14 @@ export default function MatrixBackground() {
     const particlesRef = useRef<MatrixParticle[]>([]);
     const dropsRef = useRef<{ y: number; speed: number; chars: string[] }[]>([]);
     const lastClickRef = useRef(0);
+    const { resolvedTheme } = useTheme();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    const isDark = resolvedTheme === 'dark';
 
     const getRandomChar = useCallback(() => {
         return codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
@@ -154,8 +163,8 @@ export default function MatrixBackground() {
             const height = window.innerHeight;
             const mouse = mouseRef.current;
 
-            // Fade effect for trails
-            ctx.fillStyle = 'rgba(10, 10, 18, 0.08)'; // Slower fade for subtler trails
+            // Fade effect for trails - adapt to theme
+            ctx.fillStyle = isDark ? 'rgba(10, 10, 18, 0.08)' : 'rgba(248, 250, 252, 0.12)';
             ctx.fillRect(0, 0, width, height);
 
             // Draw falling matrix rain (more subtle)
@@ -197,11 +206,15 @@ export default function MatrixBackground() {
                             }
                             
                             if (alpha > 0) {
-                                // Head character is white, rest is cyan
+                                // Head character is white/black, rest is cyan - adapt to theme
                                 if (j === 0) {
-                                    ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+                                    ctx.fillStyle = isDark 
+                                        ? `rgba(255, 255, 255, ${alpha})`
+                                        : `rgba(0, 0, 0, ${alpha * 0.7})`;
                                 } else {
-                                    ctx.fillStyle = `rgba(34, 211, 238, ${alpha})`;
+                                    ctx.fillStyle = isDark 
+                                        ? `rgba(34, 211, 238, ${alpha})`
+                                        : `rgba(6, 182, 212, ${alpha * 0.6})`;
                                 }
                                 
                                 const char = drop.chars[charIndex % drop.chars.length];
@@ -293,19 +306,21 @@ export default function MatrixBackground() {
                 
                 const glowSize = particle.size * particle.glowMultiplier * 0.7;
                 
-                // Subtle glow effect
-                ctx.shadowColor = '#22d3ee';
-                ctx.shadowBlur = 8 * particle.glowMultiplier; // Reduced glow
-                ctx.globalAlpha = particle.opacity;
-                ctx.fillStyle = particle.isOrbiting ? 'rgba(255, 255, 255, 0.9)' : 'rgba(34, 211, 238, 0.7)';
+                // Subtle glow effect - adapt to theme
+                ctx.shadowColor = isDark ? '#22d3ee' : '#0891b2';
+                ctx.shadowBlur = isDark ? 8 * particle.glowMultiplier : 4 * particle.glowMultiplier;
+                ctx.globalAlpha = isDark ? particle.opacity : particle.opacity * 0.5;
+                ctx.fillStyle = particle.isOrbiting 
+                    ? (isDark ? 'rgba(255, 255, 255, 0.9)' : 'rgba(0, 0, 0, 0.7)')
+                    : (isDark ? 'rgba(34, 211, 238, 0.7)' : 'rgba(6, 182, 212, 0.5)');
                 ctx.font = `${glowSize}px "Fira Code", "SF Mono", Monaco, monospace`;
                 ctx.fillText(particle.char, particle.x, particle.y);
                 
                 // Second pass for brighter core (more subtle)
                 if (particle.isOrbiting) {
-                    ctx.shadowBlur = 12 * particle.glowMultiplier;
-                    ctx.fillStyle = 'rgba(34, 211, 238, 0.4)';
-                    ctx.globalAlpha = particle.opacity * 0.3;
+                    ctx.shadowBlur = (isDark ? 12 : 6) * particle.glowMultiplier;
+                    ctx.fillStyle = isDark ? 'rgba(34, 211, 238, 0.4)' : 'rgba(6, 182, 212, 0.3)';
+                    ctx.globalAlpha = particle.opacity * (isDark ? 0.3 : 0.2);
                     ctx.fillText(particle.char, particle.x, particle.y);
                 }
                 
@@ -315,9 +330,15 @@ export default function MatrixBackground() {
             // Draw very subtle cursor glow
             if (mouse.x > 0 && mouse.y > 0) {
                 const gradient = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 80);
-                gradient.addColorStop(0, 'rgba(34, 211, 238, 0.04)');
-                gradient.addColorStop(0.5, 'rgba(34, 211, 238, 0.015)');
-                gradient.addColorStop(1, 'rgba(34, 211, 238, 0)');
+                if (isDark) {
+                    gradient.addColorStop(0, 'rgba(34, 211, 238, 0.04)');
+                    gradient.addColorStop(0.5, 'rgba(34, 211, 238, 0.015)');
+                    gradient.addColorStop(1, 'rgba(34, 211, 238, 0)');
+                } else {
+                    gradient.addColorStop(0, 'rgba(6, 182, 212, 0.03)');
+                    gradient.addColorStop(0.5, 'rgba(6, 182, 212, 0.01)');
+                    gradient.addColorStop(1, 'rgba(6, 182, 212, 0)');
+                }
                 ctx.fillStyle = gradient;
                 ctx.fillRect(mouse.x - 80, mouse.y - 80, 160, 160);
             }
@@ -335,14 +356,17 @@ export default function MatrixBackground() {
             window.removeEventListener('mousemove', handleMouseMove);
             window.removeEventListener('resize', updateSize);
         };
-    }, [initializeDrops, initializeParticles, getRandomChar, handleMouseMove]);
+    }, [initializeDrops, initializeParticles, getRandomChar, handleMouseMove, isDark]);
+
+    // Don't render until mounted to avoid hydration mismatch
+    if (!mounted) return null;
 
     return (
         <canvas
             ref={canvasRef}
             onClick={handleClick}
-            className="fixed inset-0 w-full h-full"
-            style={{ background: '#0a0a12' }}
+            className="fixed inset-0 w-full h-full transition-colors duration-300"
+            style={{ background: isDark ? '#0a0a12' : '#f8fafc' }}
         />
     );
 }

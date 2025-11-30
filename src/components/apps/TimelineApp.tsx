@@ -1,71 +1,191 @@
 'use client';
 
-import React from 'react';
-import { Calendar, Award, BookOpen, Briefcase } from 'lucide-react';
+import React, { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
+import { Calendar, Award, BookOpen, Briefcase, Code, GraduationCap, Rocket } from 'lucide-react';
 
-const events = [
+interface TimelineEvent {
+    year: string;
+    title: string;
+    description: string;
+    icon: React.ComponentType<{ size?: number; className?: string }>;
+    color: string;
+    category: 'work' | 'education' | 'achievement' | 'project';
+}
+
+const events: TimelineEvent[] = [
+    {
+        year: '2024',
+        title: 'Portfolio OS Launch',
+        description: 'Built this interactive OS-style portfolio with Next.js, Framer Motion, and a matrix-effect background.',
+        icon: Rocket,
+        color: 'from-cyan-500 to-blue-500',
+        category: 'project'
+    },
     {
         year: '2024',
         title: 'Activities Executive',
-        description: 'Leading team for student events and innovative initiatives at UWCSEA.',
+        description: 'Leading team for student events and innovative initiatives at UWCSEA. Organizing school-wide activities.',
         icon: Briefcase,
-        color: 'bg-blue-500'
+        color: 'from-blue-500 to-indigo-500',
+        category: 'work'
     },
     {
         year: '2024',
         title: 'DragonsTV Leadership',
-        description: 'Co-managing school video news platform. Content strategy and editing.',
+        description: 'Co-managing school video news platform. Content strategy, filming, and editing.',
         icon: Award,
-        color: 'bg-purple-500'
+        color: 'from-purple-500 to-pink-500',
+        category: 'achievement'
+    },
+    {
+        year: '2023',
+        title: 'Started Web Development',
+        description: 'Deep dive into React, Next.js, and modern web technologies. First major projects completed.',
+        icon: Code,
+        color: 'from-green-500 to-emerald-500',
+        category: 'education'
     },
     {
         year: '2023',
         title: 'Willing Hearts Volunteer',
-        description: 'Started regular volunteering at soup kitchen.',
+        description: 'Started regular volunteering at soup kitchen, giving back to the community.',
         icon: Award,
-        color: 'bg-red-500'
+        color: 'from-red-500 to-rose-500',
+        category: 'achievement'
     },
     {
-        year: '2021',
+        year: '2022',
         title: 'Activities Council Chair',
-        description: 'Led team and introduced creative formats like live Go-Kart demos.',
+        description: 'Led team and introduced creative formats like live Go-Kart demos at school events.',
         icon: Calendar,
-        color: 'bg-green-500'
+        color: 'from-amber-500 to-orange-500',
+        category: 'work'
     },
     {
         year: '2021',
         title: 'Great Books Ambassador',
-        description: 'Elite reading program with U.S. professors, mentored participants.',
+        description: 'Elite reading program with U.S. professors, mentored junior participants.',
         icon: BookOpen,
-        color: 'bg-yellow-500'
+        color: 'from-yellow-500 to-amber-500',
+        category: 'education'
+    },
+    {
+        year: '2021',
+        title: 'First Code Written',
+        description: 'Started coding journey with Python. Discovered passion for building things.',
+        icon: GraduationCap,
+        color: 'from-teal-500 to-cyan-500',
+        category: 'education'
     }
 ];
 
-export default function TimelineApp() {
+function TimelineItem({ event, index }: { event: TimelineEvent; index: number }) {
+    const ref = useRef(null);
+    const isInView = useInView(ref, { once: true, margin: "-100px" });
+    const Icon = event.icon;
+    const isLeft = index % 2 === 0;
+
     return (
-        <div className="h-full bg-white p-8 overflow-y-auto">
-            <h2 className="text-3xl font-bold mb-8 text-gray-800">My Journey</h2>
+        <motion.div
+            ref={ref}
+            initial={{ opacity: 0, x: isLeft ? -50 : 50 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className={`flex items-center gap-4 ${isLeft ? 'flex-row' : 'flex-row-reverse'} relative`}
+        >
+            {/* Content Card */}
+            <motion.div 
+                className={`flex-1 ${isLeft ? 'text-right' : 'text-left'}`}
+                whileHover={{ scale: 1.02 }}
+                transition={{ type: 'spring', stiffness: 300 }}
+            >
+                <div className={`bg-gray-800/50 backdrop-blur-sm p-5 rounded-xl border border-gray-700/50 hover:border-cyan-500/30 transition-all group ${isLeft ? 'mr-4' : 'ml-4'}`}>
+                    {/* Year Badge */}
+                    <span className={`inline-block px-3 py-1 bg-gradient-to-r ${event.color} rounded-full text-xs font-bold text-white mb-3`}>
+                        {event.year}
+                    </span>
+                    
+                    <h3 className={`text-lg font-bold text-white mb-2 flex items-center gap-2 ${isLeft ? 'justify-end' : 'justify-start'}`}>
+                        {!isLeft && <Icon size={18} className="text-cyan-400" />}
+                        {event.title}
+                        {isLeft && <Icon size={18} className="text-cyan-400" />}
+                    </h3>
+                    
+                    <p className="text-gray-400 text-sm leading-relaxed">
+                        {event.description}
+                    </p>
 
-            <div className="relative border-l-2 border-gray-200 ml-4 space-y-8">
-                {events.map((event, index) => (
-                    <div key={index} className="relative pl-8">
-                        {/* Dot */}
-                        <div className={`absolute -left-[9px] top-1 w-4 h-4 rounded-full border-2 border-white ${event.color}`} />
-
-                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-100 hover:shadow-md transition-shadow">
-                            <span className="inline-block px-3 py-1 bg-white rounded-full text-xs font-bold text-gray-500 mb-2 border border-gray-100 shadow-sm">
-                                {event.year}
-                            </span>
-                            <h3 className="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
-                                <event.icon size={20} className="text-gray-400" />
-                                {event.title}
-                            </h3>
-                            <p className="text-gray-600 leading-relaxed">
-                                {event.description}
-                            </p>
-                        </div>
+                    {/* Category tag */}
+                    <div className={`mt-3 flex ${isLeft ? 'justify-end' : 'justify-start'}`}>
+                        <span className="text-[10px] uppercase tracking-wider text-gray-500 bg-gray-800 px-2 py-0.5 rounded">
+                            {event.category}
+                        </span>
                     </div>
-                ))}
+                </div>
+            </motion.div>
+
+            {/* Center Line Node */}
+            <div className="relative flex-shrink-0 z-10">
+                <motion.div 
+                    initial={{ scale: 0 }}
+                    animate={isInView ? { scale: 1 } : {}}
+                    transition={{ delay: 0.2, type: 'spring' }}
+                    className={`w-4 h-4 rounded-full bg-gradient-to-r ${event.color} border-4 border-gray-900 shadow-lg`}
+                    style={{ boxShadow: `0 0 20px rgba(34, 211, 238, 0.3)` }}
+                />
+            </div>
+
+            {/* Spacer for opposite side */}
+            <div className="flex-1" />
+        </motion.div>
+    );
+}
+
+export default function TimelineApp() {
+    const headerRef = useRef(null);
+    const headerInView = useInView(headerRef, { once: true });
+
+    return (
+        <div className="h-full bg-gradient-to-b from-gray-900 via-gray-900 to-black overflow-y-auto">
+            {/* Header */}
+            <motion.div 
+                ref={headerRef}
+                initial={{ opacity: 0, y: -20 }}
+                animate={headerInView ? { opacity: 1, y: 0 } : {}}
+                className="sticky top-0 z-20 bg-gray-900/80 backdrop-blur-lg border-b border-gray-800 p-6"
+            >
+                <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+                    <Calendar className="text-cyan-400" />
+                    My Journey
+                </h2>
+                <p className="text-gray-500 text-sm mt-1">A timeline of milestones and achievements</p>
+            </motion.div>
+
+            {/* Timeline */}
+            <div className="relative px-6 py-8">
+                {/* Center Line */}
+                <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-cyan-500/50 via-cyan-500/20 to-transparent" />
+
+                {/* Timeline Items */}
+                <div className="space-y-8">
+                    {events.map((event, index) => (
+                        <TimelineItem key={index} event={event} index={index} />
+                    ))}
+                </div>
+
+                {/* End marker */}
+                <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1 }}
+                    className="flex justify-center mt-12"
+                >
+                    <div className="text-center">
+                        <div className="w-3 h-3 rounded-full bg-cyan-500/30 mx-auto mb-2" />
+                        <span className="text-gray-600 text-xs">The journey continues...</span>
+                    </div>
+                </motion.div>
             </div>
         </div>
     );

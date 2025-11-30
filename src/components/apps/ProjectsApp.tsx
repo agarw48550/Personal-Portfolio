@@ -1,13 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ExternalLink, Github, ChevronRight, ChevronLeft } from 'lucide-react';
+import { ExternalLink, Github, Filter, X } from 'lucide-react';
 
 interface Project {
     id: string;
     name: string;
     type: string;
+    category: string;
     description: string;
     stats: {
         hp: number; // Complexity
@@ -18,6 +19,7 @@ interface Project {
     tech: string[];
     image: string;
     color: string;
+    featured: boolean;
     links: {
         demo?: string;
         repo?: string;
@@ -29,82 +31,234 @@ const projects: Project[] = [
         id: '1',
         name: 'Portfolio OS',
         type: 'Web App',
-        description: 'A fully functional operating system simulation in the browser using Next.js, React, and Three.js.',
+        category: 'Web',
+        description: 'A fully functional operating system simulation in the browser using Next.js, React, and Framer Motion.',
         stats: { hp: 90, attack: 85, defense: 80, speed: 95 },
-        tech: ['Next.js', 'React', 'Three.js', 'Tailwind'],
-        image: '/projects/portfolio.png', // Placeholder
-        color: 'from-purple-500 to-indigo-600',
+        tech: ['Next.js', 'React', 'TypeScript', 'Tailwind'],
+        image: '/projects/portfolio.png',
+        color: 'from-cyan-500 to-blue-600',
+        featured: true,
         links: { repo: 'https://github.com/agarw48550/portfolio' }
     },
     {
         id: '2',
-        name: 'DragonsTV',
-        type: 'Media',
-        description: 'Video news platform for UWCSEA. Managed content strategy, filming, and editing.',
-        stats: { hp: 70, attack: 90, defense: 60, speed: 80 },
-        tech: ['Premiere Pro', 'After Effects', 'YouTube'],
-        image: '/projects/dragonstv.png', // Placeholder
-        color: 'from-orange-500 to-amber-600',
-        links: { demo: 'https://youtube.com' }
+        name: 'Fridge Chef AI',
+        type: 'AI App',
+        category: 'AI',
+        description: 'AI-powered app that scans your fridge and suggests recipes based on available ingredients.',
+        stats: { hp: 85, attack: 95, defense: 70, speed: 80 },
+        tech: ['React Native', 'OpenAI', 'TensorFlow', 'Python'],
+        image: '/projects/fridgechef.png',
+        color: 'from-green-500 to-emerald-600',
+        featured: true,
+        links: { demo: 'https://fridgechef.app' }
     },
     {
         id: '3',
-        name: 'School Events',
-        type: 'Leadership',
-        description: 'Led the Activities Council to organize major school events and student initiatives.',
-        stats: { hp: 85, attack: 95, defense: 75, speed: 70 },
-        tech: ['Leadership', 'Planning', 'Management'],
-        image: '/projects/events.png', // Placeholder
-        color: 'from-blue-500 to-cyan-600',
-        links: {}
+        name: 'Air Drums',
+        type: 'Computer Vision',
+        category: 'AI',
+        description: 'Virtual drumming experience using hand tracking technology. Play drums in the air!',
+        stats: { hp: 70, attack: 90, defense: 60, speed: 95 },
+        tech: ['Python', 'OpenCV', 'MediaPipe', 'PyAudio'],
+        image: '/projects/airdrums.png',
+        color: 'from-purple-500 to-pink-600',
+        featured: false,
+        links: { repo: 'https://github.com/agarw48550/air-drums' }
+    },
+    {
+        id: '4',
+        name: 'DragonsTV',
+        type: 'Media',
+        category: 'Other',
+        description: 'Video news platform for UWCSEA. Managed content strategy, filming, and editing.',
+        stats: { hp: 70, attack: 90, defense: 60, speed: 80 },
+        tech: ['Premiere Pro', 'After Effects', 'YouTube'],
+        image: '/projects/dragonstv.png',
+        color: 'from-orange-500 to-amber-600',
+        featured: false,
+        links: { demo: 'https://youtube.com' }
     },
 ];
 
+// Extract unique categories and tech for filters
+const categories = ['All', ...new Set(projects.map(p => p.category))];
+const allTech = [...new Set(projects.flatMap(p => p.tech))].sort();
+
 export default function ProjectsApp() {
     const [selectedId, setSelectedId] = useState<string | null>(null);
+    const [activeCategory, setActiveCategory] = useState('All');
+    const [selectedTech, setSelectedTech] = useState<string[]>([]);
+    const [showFilters, setShowFilters] = useState(false);
+
+    // Filter projects based on category and tech
+    const filteredProjects = useMemo(() => {
+        return projects.filter(project => {
+            const categoryMatch = activeCategory === 'All' || project.category === activeCategory;
+            const techMatch = selectedTech.length === 0 || selectedTech.some(t => project.tech.includes(t));
+            return categoryMatch && techMatch;
+        });
+    }, [activeCategory, selectedTech]);
+
+    const toggleTech = (tech: string) => {
+        setSelectedTech(prev => 
+            prev.includes(tech) 
+                ? prev.filter(t => t !== tech)
+                : [...prev, tech]
+        );
+    };
+
+    const clearFilters = () => {
+        setActiveCategory('All');
+        setSelectedTech([]);
+    };
+
+    const hasActiveFilters = activeCategory !== 'All' || selectedTech.length > 0;
 
     return (
-        <div className="h-full bg-gray-900 overflow-y-auto p-4 sm:p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
-                {projects.map((project) => (
-                    <motion.div
-                        key={project.id}
-                        layoutId={project.id}
-                        onClick={() => setSelectedId(project.id)}
-                        className={`relative h-80 sm:h-96 rounded-2xl bg-gradient-to-br ${project.color} p-[2px] cursor-pointer group`}
-                        whileHover={{ scale: 1.02 }}
-                        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+        <div className="h-full bg-gray-900 overflow-y-auto">
+            {/* Filter Bar */}
+            <div className="sticky top-0 z-10 bg-gray-900/95 backdrop-blur-sm border-b border-white/10 p-4">
+                <div className="flex items-center justify-between gap-4 mb-3">
+                    <div className="flex items-center gap-2">
+                        <Filter size={16} className="text-cyan-400" />
+                        <span className="text-sm font-medium text-gray-300">Filter Projects</span>
+                        {hasActiveFilters && (
+                            <button 
+                                onClick={clearFilters}
+                                className="text-xs text-cyan-400 hover:text-cyan-300 flex items-center gap-1"
+                            >
+                                <X size={12} /> Clear
+                            </button>
+                        )}
+                    </div>
+                    <button 
+                        onClick={() => setShowFilters(!showFilters)}
+                        className="text-xs text-gray-400 hover:text-white transition-colors"
                     >
-                        <div className="h-full w-full bg-gray-900/95 backdrop-blur-sm rounded-[14px] p-4 sm:p-6 flex flex-col relative overflow-hidden">
-                            {/* Card Header */}
-                            <div className="flex justify-between items-start mb-3 sm:mb-4 gap-2">
-                                <div className="min-w-0 flex-1">
-                                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-1 truncate" title={project.name}>{project.name}</h3>
-                                    <span className="inline-block px-2 py-0.5 bg-white/10 rounded-full text-[10px] sm:text-xs text-white/80 border border-white/10">
-                                        {project.type}
-                                    </span>
-                                </div>
-                                <span className="text-white/20 font-bold text-2xl sm:text-4xl flex-shrink-0">#{project.id.padStart(3, '0')}</span>
-                            </div>
+                        {showFilters ? 'Hide' : 'Show'} Tech Filters
+                    </button>
+                </div>
+                
+                {/* Category Pills */}
+                <div className="flex flex-wrap gap-2">
+                    {categories.map(category => (
+                        <button
+                            key={category}
+                            onClick={() => setActiveCategory(category)}
+                            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                                activeCategory === category
+                                    ? 'bg-cyan-500 text-black'
+                                    : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
+                            }`}
+                        >
+                            {category}
+                        </button>
+                    ))}
+                </div>
 
-                            {/* Image Placeholder */}
-                            <div className="flex-1 bg-black/30 rounded-lg mb-3 sm:mb-4 flex items-center justify-center border border-white/5 group-hover:border-white/20 transition-colors min-h-0">
-                                <span className="text-white/40 text-xs sm:text-sm">Project Preview</span>
-                            </div>
-
-                            {/* Stats Preview */}
-                            <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
-                                {project.tech.slice(0, 4).map((t) => (
-                                    <span key={t} className="text-[10px] sm:text-xs text-center py-1 px-1 bg-white/5 rounded text-gray-300 truncate" title={t}>
-                                        {t}
-                                    </span>
+                {/* Tech Filter Chips */}
+                <AnimatePresence>
+                    {showFilters && (
+                        <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            className="overflow-hidden"
+                        >
+                            <div className="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-white/5">
+                                {allTech.map(tech => (
+                                    <button
+                                        key={tech}
+                                        onClick={() => toggleTech(tech)}
+                                        className={`px-2 py-1 rounded text-[10px] font-medium transition-all ${
+                                            selectedTech.includes(tech)
+                                                ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/50'
+                                                : 'bg-white/5 text-gray-500 hover:text-gray-300 border border-transparent'
+                                        }`}
+                                    >
+                                        {tech}
+                                    </button>
                                 ))}
                             </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
 
-                            <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                        </div>
-                    </motion.div>
-                ))}
+            {/* Projects Grid */}
+            <div className="p-4 sm:p-6">
+                <AnimatePresence mode="popLayout">
+                    {filteredProjects.length === 0 ? (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="text-center py-12"
+                        >
+                            <p className="text-gray-500">No projects match your filters</p>
+                            <button 
+                                onClick={clearFilters}
+                                className="mt-2 text-cyan-400 text-sm hover:underline"
+                            >
+                                Clear filters
+                            </button>
+                        </motion.div>
+                    ) : (
+                        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+                            {filteredProjects.map((project, index) => (
+                                <motion.div
+                                    key={project.id}
+                                    layout
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.9 }}
+                                    transition={{ delay: index * 0.05 }}
+                                    layoutId={project.id}
+                                    onClick={() => setSelectedId(project.id)}
+                                    className={`relative h-80 sm:h-96 rounded-2xl bg-gradient-to-br ${project.color} p-[2px] cursor-pointer group`}
+                                    whileHover={{ scale: 1.02 }}
+                                >
+                                    <div className="h-full w-full bg-gray-900/95 backdrop-blur-sm rounded-[14px] p-4 sm:p-6 flex flex-col relative overflow-hidden">
+                                        {/* Featured Badge */}
+                                        {project.featured && (
+                                            <div className="absolute top-2 right-2 px-2 py-0.5 bg-cyan-500/20 border border-cyan-500/50 rounded-full">
+                                                <span className="text-[10px] text-cyan-400 font-medium">Featured</span>
+                                            </div>
+                                        )}
+
+                                        {/* Card Header */}
+                                        <div className="flex justify-between items-start mb-3 sm:mb-4 gap-2">
+                                            <div className="min-w-0 flex-1">
+                                                <h3 className="text-xl sm:text-2xl font-bold text-white mb-1 truncate" title={project.name}>{project.name}</h3>
+                                                <span className="inline-block px-2 py-0.5 bg-white/10 rounded-full text-[10px] sm:text-xs text-white/80 border border-white/10">
+                                                    {project.type}
+                                                </span>
+                                            </div>
+                                            <span className="text-white/20 font-bold text-2xl sm:text-4xl flex-shrink-0">#{project.id.padStart(3, '0')}</span>
+                                        </div>
+
+                                        {/* Image Placeholder */}
+                                        <div className="flex-1 bg-black/30 rounded-lg mb-3 sm:mb-4 flex items-center justify-center border border-white/5 group-hover:border-white/20 transition-colors min-h-0">
+                                            <span className="text-white/40 text-xs sm:text-sm">Project Preview</span>
+                                        </div>
+
+                                        {/* Tech Tags */}
+                                        <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
+                                            {project.tech.slice(0, 4).map((t) => (
+                                                <span key={t} className="text-[10px] sm:text-xs text-center py-1 px-1 bg-white/5 rounded text-gray-300 truncate" title={t}>
+                                                    {t}
+                                                </span>
+                                            ))}
+                                        </div>
+
+                                        <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
 
             <AnimatePresence>
@@ -117,6 +271,7 @@ export default function ProjectsApp() {
                         >
                             {(() => {
                                 const project = projects.find(p => p.id === selectedId)!;
+                                if (!project) return null;
                                 return (
                                     <div className="flex flex-col md:flex-row h-[600px]">
                                         {/* Left Side - Visuals */}

@@ -8,6 +8,7 @@ import {
     User, Briefcase, Code, Mail, Terminal, Clock
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useTheme } from 'next-themes';
 
 const apps = [
     { id: 'about', icon: User, label: 'About' },
@@ -109,6 +110,8 @@ function DockIcon({ app, mouseX, isOpen, isMinimized, onClick }: DockIconProps) 
 export default function Dock() {
     const mouseX = useMotionValue(Infinity);
     const { windows, openWindow, minimizeWindow, focusWindow } = useWindowManager();
+    const { resolvedTheme } = useTheme();
+    const isDark = resolvedTheme === 'dark';
 
     const handleAppClick = (id: AppId) => {
         const windowState = windows[id];
@@ -135,11 +138,16 @@ export default function Dock() {
             <div
                 className="flex items-end gap-1.5 px-2.5 py-2 border border-cyan-500/20"
                 style={{
-                    background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.08) 0%, rgba(10, 10, 15, 0.9) 100%)',
+                    background: isDark 
+                        ? 'linear-gradient(135deg, rgba(34, 211, 238, 0.08) 0%, rgba(10, 10, 15, 0.9) 100%)'
+                        : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%)',
                     backdropFilter: 'blur(30px) saturate(180%)',
                     WebkitBackdropFilter: 'blur(30px) saturate(180%)',
                     borderRadius: '18px',
-                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.05)',
+                    borderColor: isDark ? 'rgba(34, 211, 238, 0.2)' : 'rgba(0, 0, 0, 0.1)',
+                    boxShadow: isDark 
+                        ? '0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.05)'
+                        : '0 8px 32px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255,255,255,0.5)',
                 }}
             >
                 {apps.map((app) => (
