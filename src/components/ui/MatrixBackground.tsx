@@ -69,18 +69,18 @@ export default function MatrixBackground() {
 
     const initializeParticles = useCallback((width: number, height: number): MatrixParticle[] => {
         const particles: MatrixParticle[] = [];
-        const count = 120;
+        const count = 60; // Reduced from 120
         
         for (let i = 0; i < count; i++) {
             particles.push({
                 x: Math.random() * width,
                 y: Math.random() * height,
-                vx: (Math.random() - 0.5) * 0.5,
-                vy: (Math.random() - 0.5) * 0.5,
+                vx: (Math.random() - 0.5) * 0.3,
+                vy: (Math.random() - 0.5) * 0.3,
                 char: getRandomChar(),
-                size: 10 + Math.random() * 6,
-                opacity: 0.4 + Math.random() * 0.4,
-                baseOpacity: 0.4 + Math.random() * 0.4,
+                size: 10 + Math.random() * 4,
+                opacity: 0.15 + Math.random() * 0.2, // Much lower opacity
+                baseOpacity: 0.15 + Math.random() * 0.2,
                 glowMultiplier: 1,
                 glowVelocity: 0,
                 isOrbiting: false,
@@ -155,17 +155,26 @@ export default function MatrixBackground() {
             const mouse = mouseRef.current;
 
             // Fade effect for trails
-            ctx.fillStyle = 'rgba(10, 10, 18, 0.12)';
+            ctx.fillStyle = 'rgba(10, 10, 18, 0.08)'; // Slower fade for subtler trails
             ctx.fillRect(0, 0, width, height);
 
-            // Draw falling matrix rain
+            // Draw falling matrix rain (more subtle)
             ctx.font = `${fontSize}px "Fira Code", "SF Mono", Monaco, monospace`;
             
             dropsRef.current.forEach((drop, i) => {
+                // Only render every 3rd column for sparser rain
+                if (i % 3 !== 0) {
+                    drop.y += drop.speed * 0.5;
+                    if (drop.y * fontSize > height + 200) {
+                        drop.y = Math.random() * -20;
+                    }
+                    return;
+                }
+                
                 const x = i * fontSize;
                 
                 // Draw the column of characters
-                for (let j = 0; j < 15; j++) {
+                for (let j = 0; j < 10; j++) { // Reduced trail length
                     const charIndex = Math.floor(drop.y) - j;
                     if (charIndex >= 0 && charIndex < drop.chars.length) {
                         const y = (drop.y - j) * fontSize;
@@ -176,15 +185,15 @@ export default function MatrixBackground() {
                             const dy = y - mouse.y;
                             const dist = Math.sqrt(dx * dx + dy * dy);
                             
-                            // Brightness based on position and mouse proximity
-                            let alpha = 0.1 - j * 0.006;
-                            if (j === 0) alpha = 0.9; // Head is brightest
-                            else if (j === 1) alpha = 0.6;
-                            else if (j === 2) alpha = 0.4;
+                            // Much lower base brightness
+                            let alpha = 0.04 - j * 0.003;
+                            if (j === 0) alpha = 0.4; // Head less bright
+                            else if (j === 1) alpha = 0.2;
+                            else if (j === 2) alpha = 0.12;
                             
-                            // Brighten near mouse
-                            if (dist < 200) {
-                                alpha = Math.min(1, alpha + (200 - dist) / 200 * 0.3);
+                            // Subtle brighten near mouse
+                            if (dist < 150) {
+                                alpha = Math.min(0.6, alpha + (150 - dist) / 150 * 0.15);
                             }
                             
                             if (alpha > 0) {
@@ -203,12 +212,12 @@ export default function MatrixBackground() {
                 }
                 
                 // Update drop position
-                drop.y += drop.speed;
+                drop.y += drop.speed * 0.4; // Slower falling
                 
                 // Reset when off screen
                 if (drop.y * fontSize > height + 200) {
-                    drop.y = Math.random() * -20;
-                    drop.speed = 0.3 + Math.random() * 0.7;
+                    drop.y = Math.random() * -40; // More staggered starts
+                    drop.speed = 0.2 + Math.random() * 0.4; // Slower speeds
                     // Shuffle some characters
                     for (let k = 0; k < 5; k++) {
                         const idx = Math.floor(Math.random() * drop.chars.length);
@@ -238,12 +247,12 @@ export default function MatrixBackground() {
                     particle.vx += normalizedDy * gravityForce * 0.5;
                     particle.vy -= normalizedDx * gravityForce * 0.5;
 
-                    particle.opacity = Math.min(1, particle.baseOpacity + force * 0.5);
+                    particle.opacity = Math.min(0.5, particle.baseOpacity + force * 0.3); // Lower max opacity
                     particle.isOrbiting = true;
                     
-                    // Glow spring effect
-                    const targetGlow = 1 + force * 2;
-                    const springForce = (targetGlow - particle.glowMultiplier) * 0.15;
+                    // Glow spring effect (reduced)
+                    const targetGlow = 1 + force * 1.2;
+                    const springForce = (targetGlow - particle.glowMultiplier) * 0.12;
                     particle.glowVelocity = particle.glowVelocity * 0.85 + springForce;
                     particle.glowMultiplier += particle.glowVelocity;
                 } else {
@@ -282,35 +291,35 @@ export default function MatrixBackground() {
                 // Draw particle
                 ctx.save();
                 
-                const glowSize = particle.size * particle.glowMultiplier * 0.8;
+                const glowSize = particle.size * particle.glowMultiplier * 0.7;
                 
-                // Glow effect
+                // Subtle glow effect
                 ctx.shadowColor = '#22d3ee';
-                ctx.shadowBlur = 15 * particle.glowMultiplier;
+                ctx.shadowBlur = 8 * particle.glowMultiplier; // Reduced glow
                 ctx.globalAlpha = particle.opacity;
-                ctx.fillStyle = particle.isOrbiting ? '#ffffff' : '#22d3ee';
+                ctx.fillStyle = particle.isOrbiting ? 'rgba(255, 255, 255, 0.9)' : 'rgba(34, 211, 238, 0.7)';
                 ctx.font = `${glowSize}px "Fira Code", "SF Mono", Monaco, monospace`;
                 ctx.fillText(particle.char, particle.x, particle.y);
                 
-                // Second pass for brighter core
+                // Second pass for brighter core (more subtle)
                 if (particle.isOrbiting) {
-                    ctx.shadowBlur = 25 * particle.glowMultiplier;
-                    ctx.fillStyle = '#22d3ee';
-                    ctx.globalAlpha = particle.opacity * 0.5;
+                    ctx.shadowBlur = 12 * particle.glowMultiplier;
+                    ctx.fillStyle = 'rgba(34, 211, 238, 0.4)';
+                    ctx.globalAlpha = particle.opacity * 0.3;
                     ctx.fillText(particle.char, particle.x, particle.y);
                 }
                 
                 ctx.restore();
             });
 
-            // Draw subtle cursor glow
+            // Draw very subtle cursor glow
             if (mouse.x > 0 && mouse.y > 0) {
-                const gradient = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 100);
-                gradient.addColorStop(0, 'rgba(34, 211, 238, 0.08)');
-                gradient.addColorStop(0.5, 'rgba(34, 211, 238, 0.03)');
+                const gradient = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 80);
+                gradient.addColorStop(0, 'rgba(34, 211, 238, 0.04)');
+                gradient.addColorStop(0.5, 'rgba(34, 211, 238, 0.015)');
                 gradient.addColorStop(1, 'rgba(34, 211, 238, 0)');
                 ctx.fillStyle = gradient;
-                ctx.fillRect(mouse.x - 100, mouse.y - 100, 200, 200);
+                ctx.fillRect(mouse.x - 80, mouse.y - 80, 160, 160);
             }
 
             animationRef.current = requestAnimationFrame(draw);
