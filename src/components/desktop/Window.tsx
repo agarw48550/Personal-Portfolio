@@ -50,9 +50,9 @@ export default function Window({ id, children }: WindowProps) {
                         focusWindow(id);
                     }}
                     onMouseDown={() => focusWindow(id)}
-                    style={{ zIndex: windowState.zIndex }}
+                    style={{ zIndex: windowState.zIndex + 10 }}
                     className={cn(
-                        "flex flex-col overflow-hidden rounded-lg shadow-2xl border border-white/10 backdrop-blur-xl transition-all duration-200",
+                        "flex flex-col overflow-hidden rounded-lg shadow-2xl border border-white/10 backdrop-blur-xl",
                         windowState.isMaximized ? "rounded-none border-none" : ""
                     )}
                 >
@@ -65,30 +65,36 @@ export default function Window({ id, children }: WindowProps) {
                     >
                         {/* Window Header */}
                         <div
-                            className="h-10 flex items-center justify-between px-4 bg-[#0f3460] select-none cursor-default"
+                            className="h-10 sm:h-11 flex items-center justify-between px-3 sm:px-4 bg-[#0f3460] select-none cursor-default flex-shrink-0"
                             onDoubleClick={() => maximizeWindow(id)}
                         >
-                            <div className="flex items-center gap-2">
-                                <span className="text-sm font-medium text-gray-200">{windowState.title}</span>
+                            <div className="flex items-center gap-2 min-w-0">
+                                <span className="text-sm font-medium text-gray-200 truncate">{windowState.title}</span>
                             </div>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1 flex-shrink-0">
                                 <button
                                     onClick={(e) => { e.stopPropagation(); minimizeWindow(id); }}
-                                    className="p-1.5 hover:bg-white/10 rounded-full transition-colors"
+                                    className="p-1.5 hover:bg-white/10 rounded transition-colors group"
+                                    title="Minimize"
                                 >
-                                    <Minus size={14} />
+                                    <Minus size={14} className="text-gray-300 group-hover:text-white" />
                                 </button>
                                 <button
                                     onClick={(e) => { e.stopPropagation(); maximizeWindow(id); }}
-                                    className="p-1.5 hover:bg-white/10 rounded-full transition-colors"
+                                    className="p-1.5 hover:bg-white/10 rounded transition-colors group"
+                                    title={windowState.isMaximized ? "Restore" : "Maximize"}
                                 >
-                                    {windowState.isMaximized ? <Square size={12} /> : <Maximize2 size={12} />}
+                                    {windowState.isMaximized ? 
+                                        <Square size={12} className="text-gray-300 group-hover:text-white" /> : 
+                                        <Maximize2 size={12} className="text-gray-300 group-hover:text-white" />
+                                    }
                                 </button>
                                 <button
                                     onClick={(e) => { e.stopPropagation(); closeWindow(id); }}
-                                    className="p-1.5 hover:bg-red-500/80 rounded-full transition-colors"
+                                    className="p-1.5 hover:bg-red-500 rounded transition-colors group"
+                                    title="Close"
                                 >
-                                    <X size={14} />
+                                    <X size={14} className="text-gray-300 group-hover:text-white" />
                                 </button>
                             </div>
                         </div>

@@ -44,7 +44,7 @@ const projects: Project[] = [
         stats: { hp: 70, attack: 90, defense: 60, speed: 80 },
         tech: ['Premiere Pro', 'After Effects', 'YouTube'],
         image: '/projects/dragonstv.png', // Placeholder
-        color: 'from-red-500 to-orange-600',
+        color: 'from-orange-500 to-amber-600',
         links: { demo: 'https://youtube.com' }
     },
     {
@@ -64,38 +64,38 @@ export default function ProjectsApp() {
     const [selectedId, setSelectedId] = useState<string | null>(null);
 
     return (
-        <div className="h-full bg-gray-900 overflow-y-auto p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="h-full bg-gray-900 overflow-y-auto p-4 sm:p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
                 {projects.map((project) => (
                     <motion.div
                         key={project.id}
                         layoutId={project.id}
                         onClick={() => setSelectedId(project.id)}
-                        className={`relative h-96 rounded-2xl bg-gradient-to-br ${project.color} p-1 cursor-pointer group perspective-1000`}
-                        whileHover={{ scale: 1.02, rotateY: 5 }}
+                        className={`relative h-80 sm:h-96 rounded-2xl bg-gradient-to-br ${project.color} p-[2px] cursor-pointer group`}
+                        whileHover={{ scale: 1.02 }}
                         transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                     >
-                        <div className="h-full w-full bg-gray-900/90 backdrop-blur-sm rounded-xl p-6 flex flex-col relative overflow-hidden">
+                        <div className="h-full w-full bg-gray-900/95 backdrop-blur-sm rounded-[14px] p-4 sm:p-6 flex flex-col relative overflow-hidden">
                             {/* Card Header */}
-                            <div className="flex justify-between items-start mb-4">
-                                <div>
-                                    <h3 className="text-2xl font-bold text-white mb-1">{project.name}</h3>
-                                    <span className="px-2 py-1 bg-white/10 rounded-full text-xs text-white/80 border border-white/10">
+                            <div className="flex justify-between items-start mb-3 sm:mb-4 gap-2">
+                                <div className="min-w-0 flex-1">
+                                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-1 truncate" title={project.name}>{project.name}</h3>
+                                    <span className="inline-block px-2 py-0.5 bg-white/10 rounded-full text-[10px] sm:text-xs text-white/80 border border-white/10">
                                         {project.type}
                                     </span>
                                 </div>
-                                <span className="text-white/20 font-bold text-4xl">#{project.id.padStart(3, '0')}</span>
+                                <span className="text-white/20 font-bold text-2xl sm:text-4xl flex-shrink-0">#{project.id.padStart(3, '0')}</span>
                             </div>
 
                             {/* Image Placeholder */}
-                            <div className="flex-1 bg-black/30 rounded-lg mb-4 flex items-center justify-center border border-white/5 group-hover:border-white/20 transition-colors">
-                                <span className="text-white/40 text-sm">Project Preview</span>
+                            <div className="flex-1 bg-black/30 rounded-lg mb-3 sm:mb-4 flex items-center justify-center border border-white/5 group-hover:border-white/20 transition-colors min-h-0">
+                                <span className="text-white/40 text-xs sm:text-sm">Project Preview</span>
                             </div>
 
                             {/* Stats Preview */}
-                            <div className="grid grid-cols-2 gap-2 mb-4">
+                            <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
                                 {project.tech.slice(0, 4).map((t) => (
-                                    <span key={t} className="text-xs text-center py-1 bg-white/5 rounded text-gray-300">
+                                    <span key={t} className="text-[10px] sm:text-xs text-center py-1 px-1 bg-white/5 rounded text-gray-300 truncate" title={t}>
                                         {t}
                                     </span>
                                 ))}

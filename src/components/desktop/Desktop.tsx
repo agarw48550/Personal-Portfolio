@@ -34,9 +34,9 @@ export default function Desktop() {
     const { windows } = useWindowManager();
 
     return (
-        <div className="fixed inset-0 overflow-hidden select-none">
-            {/* Background - To be replaced with 3D Scene */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#1a1a2e] to-[#16213e] -z-20" />
+        <div className="fixed inset-0 overflow-hidden select-none bg-[#0f0f1a]">
+            {/* Background - Clean solid gradient */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f0f23]" />
 
             {/* Desktop Icons */}
             <div className="absolute top-16 left-4 flex flex-col gap-4 z-0">
