@@ -35,7 +35,8 @@ export default function Home() {
 
   useEffect(() => {
     setMounted(true);
-    // Check if user has visited before in this session
+    // For testing - clear session to always show startup
+    // sessionStorage.removeItem('ayaanos-visited');
     const visited = sessionStorage.getItem('ayaanos-visited');
     if (visited) {
       setShowStartup(false);

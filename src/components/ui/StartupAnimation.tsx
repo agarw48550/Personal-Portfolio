@@ -1,155 +1,133 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface StartupAnimationProps {
     onComplete: () => void;
 }
 
-// Matrix rain character
-interface MatrixChar {
-    x: number;
-    y: number;
-    char: string;
-    speed: number;
-    opacity: number;
-}
-
 export default function StartupAnimation({ onComplete }: StartupAnimationProps) {
     const [phase, setPhase] = useState<'welcome' | 'matrix' | 'loading' | 'complete'>('welcome');
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const animationRef = useRef<number | null>(null);
-    const matrixCharsRef = useRef<MatrixChar[]>([]);
+    const animationIdRef = useRef<number | null>(null);
     const [loadingProgress, setLoadingProgress] = useState(0);
 
-    // Matrix animation
-    const initMatrix = useCallback((canvas: HTMLCanvasElement) => {
-        const chars: MatrixChar[] = [];
-        const columns = Math.floor(canvas.width / 20);
-        
-        for (let i = 0; i < columns; i++) {
-            chars.push({
-                x: i * 20,
-                y: Math.random() * canvas.height - canvas.height,
-                char: String.fromCharCode(0x30A0 + Math.random() * 96),
-                speed: 2 + Math.random() * 8,
-                opacity: 0.5 + Math.random() * 0.5,
-            });
-        }
-        
-        matrixCharsRef.current = chars;
-    }, []);
-
-    const drawMatrix = useCallback((ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => {
-        // Semi-transparent black for trail effect
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        ctx.font = '16px monospace';
-
-        matrixCharsRef.current.forEach((char, i) => {
-            // Green gradient based on position
-            const gradient = ctx.createLinearGradient(char.x, char.y - 100, char.x, char.y);
-            gradient.addColorStop(0, 'rgba(0, 255, 65, 0)');
-            gradient.addColorStop(0.8, `rgba(0, 255, 65, ${char.opacity * 0.8})`);
-            gradient.addColorStop(1, `rgba(180, 255, 180, ${char.opacity})`);
-            
-            ctx.fillStyle = gradient;
-            
-            // Draw trail
-            for (let j = 0; j < 20; j++) {
-                const trailY = char.y - j * 20;
-                const trailOpacity = 1 - (j / 20);
-                ctx.globalAlpha = trailOpacity * char.opacity;
-                ctx.fillText(
-                    String.fromCharCode(0x30A0 + Math.random() * 96),
-                    char.x,
-                    trailY
-                );
-            }
-            
-            ctx.globalAlpha = 1;
-
-            // Update position
-            char.y += char.speed;
-
-            // Reset if off screen
-            if (char.y > canvas.height + 200) {
-                char.y = -100;
-                char.speed = 2 + Math.random() * 8;
-            }
-
-            // Randomly change character
-            if (Math.random() > 0.98) {
-                char.char = String.fromCharCode(0x30A0 + Math.random() * 96);
-            }
-        });
-    }, []);
-
-    const animateMatrix = useCallback(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
-
-        drawMatrix(ctx, canvas);
-        animationRef.current = requestAnimationFrame(animateMatrix);
-    }, [drawMatrix]);
-
+    // Matrix effect using simpler approach
     useEffect(() => {
-        if (phase === 'matrix') {
-            const canvas = canvasRef.current;
-            if (!canvas) return;
+        if (phase !== 'matrix') return;
 
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+        // Small delay to ensure canvas is mounted
+        const startDelay = setTimeout(() => {
+            const canvas = canvasRef.current;
+            if (!canvas) {
+                console.error('Canvas not found');
+                return;
+            }
 
             const ctx = canvas.getContext('2d');
-            if (ctx) {
-                ctx.fillStyle = '#000';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            if (!ctx) {
+                console.error('Could not get canvas context');
+                return;
             }
 
-            initMatrix(canvas);
-            animateMatrix();
+            // Set canvas size in pixels (not CSS)
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = window.innerWidth * dpr;
+            canvas.height = window.innerHeight * dpr;
+            ctx.scale(dpr, dpr);
 
-            // Transition to loading after matrix animation
-            const timer = setTimeout(() => {
-                if (animationRef.current) {
-                    cancelAnimationFrame(animationRef.current);
-                }
-                setPhase('loading');
-            }, 3000);
+            // Fill initial black background
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
 
-            return () => {
-                clearTimeout(timer);
-                if (animationRef.current) {
-                    cancelAnimationFrame(animationRef.current);
-                }
-            };
-        }
-    }, [phase, initMatrix, animateMatrix]);
+            // Matrix characters
+            const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789';
+            const fontSize = 14;
+            const columns = Math.floor(window.innerWidth / fontSize);
+            
+            // Initialize drops - start them at random positions
+            const drops: number[] = [];
+            for (let i = 0; i < columns; i++) {
+                drops[i] = Math.floor(Math.random() * (window.innerHeight / fontSize));
+            }
 
-    useEffect(() => {
-        if (phase === 'loading') {
-            const interval = setInterval(() => {
-                setLoadingProgress(prev => {
-                    if (prev >= 100) {
-                        clearInterval(interval);
-                        setTimeout(() => {
-                            setPhase('complete');
-                            setTimeout(onComplete, 500);
-                        }, 300);
-                        return 100;
+            const draw = () => {
+                // Semi-transparent black overlay for trail effect
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+                ctx.font = `${fontSize}px monospace`;
+
+                for (let i = 0; i < drops.length; i++) {
+                    // Random character
+                    const char = chars[Math.floor(Math.random() * chars.length)];
+                    
+                    // Draw character position
+                    const x = i * fontSize;
+                    const y = drops[i] * fontSize;
+                    
+                    // Bright white/green head character
+                    ctx.fillStyle = '#fff';
+                    ctx.fillText(char, x, y);
+                    
+                    // Slightly dimmer character above (trail effect)
+                    ctx.fillStyle = '#0f0';
+                    const trailChar = chars[Math.floor(Math.random() * chars.length)];
+                    ctx.fillText(trailChar, x, y - fontSize);
+
+                    // Move drop down
+                    drops[i]++;
+
+                    // Reset drop when it goes off screen (with randomness)
+                    if (drops[i] * fontSize > window.innerHeight) {
+                        if (Math.random() > 0.95) {
+                            drops[i] = 0;
+                        }
                     }
-                    return prev + Math.random() * 15 + 5;
-                });
-            }, 100);
+                }
 
-            return () => clearInterval(interval);
-        }
+                animationIdRef.current = requestAnimationFrame(draw);
+            };
+
+            // Start animation
+            draw();
+        }, 50);
+
+        // Transition to loading after 2.5 seconds
+        const transitionTimer = setTimeout(() => {
+            if (animationIdRef.current) cancelAnimationFrame(animationIdRef.current);
+            setPhase('loading');
+        }, 2500);
+
+        return () => {
+            clearTimeout(startDelay);
+            clearTimeout(transitionTimer);
+            if (animationIdRef.current) cancelAnimationFrame(animationIdRef.current);
+        };
+    }, [phase]);
+
+    // Loading progress effect
+    useEffect(() => {
+        if (phase !== 'loading') return;
+
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.random() * 20 + 10;
+            if (progress >= 100) {
+                progress = 100;
+                setLoadingProgress(100);
+                clearInterval(interval);
+                setTimeout(() => {
+                    setPhase('complete');
+                    setTimeout(onComplete, 400);
+                }, 300);
+            } else {
+                setLoadingProgress(progress);
+            }
+        }, 80);
+
+        return () => clearInterval(interval);
     }, [phase, onComplete]);
 
     const handleBeginClick = () => {
@@ -259,25 +237,52 @@ export default function StartupAnimation({ onComplete }: StartupAnimationProps) 
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="fixed inset-0 z-[9999] bg-black"
+                    className="fixed inset-0 z-[9999] bg-black overflow-hidden"
                 >
+                    {/* Canvas for matrix effect */}
                     <canvas
                         ref={canvasRef}
-                        className="w-full h-full"
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
+                            background: '#000',
+                        }}
                     />
+                    
+                    {/* CSS Fallback - Animated matrix columns */}
+                    <div className="absolute inset-0 overflow-hidden opacity-30 pointer-events-none">
+                        {Array.from({ length: 30 }).map((_, i) => (
+                            <div
+                                key={i}
+                                className="absolute text-green-500 font-mono text-xs whitespace-pre animate-matrix-fall"
+                                style={{
+                                    left: `${(i * 3.33)}%`,
+                                    animationDelay: `${Math.random() * 2}s`,
+                                    animationDuration: `${2 + Math.random() * 3}s`,
+                                }}
+                            >
+                                {Array.from({ length: 30 }).map(() => 
+                                    String.fromCharCode(0x30A0 + Math.floor(Math.random() * 96))
+                                ).join('\n')}
+                            </div>
+                        ))}
+                    </div>
                     
                     {/* Center text overlay */}
                     <motion.div
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.5 }}
-                        className="absolute inset-0 flex items-center justify-center"
+                        transition={{ delay: 0.3 }}
+                        className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                        style={{ zIndex: 10 }}
                     >
-                        <div className="text-center">
+                        <div className="text-center bg-black/50 p-8 rounded-lg backdrop-blur-sm">
                             <motion.h2
                                 className="text-4xl md:text-6xl font-bold text-green-400 font-mono mb-4"
-                                animate={{ textShadow: ['0 0 20px #00ff00', '0 0 40px #00ff00', '0 0 20px #00ff00'] }}
-                                transition={{ duration: 1.5, repeat: Infinity }}
+                                style={{ textShadow: '0 0 30px #00ff00, 0 0 60px #00ff00' }}
                             >
                                 INITIALIZING
                             </motion.h2>
