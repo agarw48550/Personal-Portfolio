@@ -7,7 +7,6 @@ import StartMenu from './StartMenu';
 import SystemTray from './SystemTray';
 import Window from './Window';
 import MatrixBackground from '@/components/ui/MatrixBackground';
-import MatrixCursor from '@/components/ui/MatrixCursor';
 
 // Import App Components - only functional ones
 import AboutApp from '@/components/apps/AboutApp';
@@ -57,11 +56,8 @@ export default function Desktop() {
 
             {/* Keyboard shortcut hint */}
             <div className="fixed bottom-20 right-4 z-50 text-cyan-400/20 text-xs font-mono">
-                ⌘K Terminal • Click background to toggle mode
+                ⌘K Terminal • Click to dispel particles
             </div>
-
-            {/* Custom Matrix Cursor */}
-            <MatrixCursor />
         </div>
     );
 }
