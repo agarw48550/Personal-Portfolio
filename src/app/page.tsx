@@ -1,49 +1,123 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useDevice } from '@/hooks/useDevice';
+
+// Matrix transition component (no loading spinners)
+const MatrixTransition = ({ onComplete }: { onComplete: () => void }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const animationIdRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+    ctx.scale(dpr, dpr);
+
+    ctx.fillStyle = '#0a0a0f';
+    ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+    const chars = 'アイウエオカキクケコ01';
+    const fontSize = 14;
+    const columns = Math.floor(window.innerWidth / fontSize);
+    
+    const drops: number[] = [];
+    for (let i = 0; i < columns; i++) {
+      drops[i] = Math.random() * -30;
+    }
+
+    const draw = () => {
+      ctx.fillStyle = 'rgba(10, 10, 15, 0.1)';
+      ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+      ctx.font = `${fontSize}px monospace`;
+
+      for (let i = 0; i < drops.length; i++) {
+        const char = chars[Math.floor(Math.random() * chars.length)];
+        const x = i * fontSize;
+        const y = drops[i] * fontSize;
+        
+        ctx.fillStyle = '#fff';
+        ctx.fillText(char, x, y);
+        ctx.fillStyle = '#22d3ee';
+        ctx.fillText(char, x, y - fontSize);
+
+        drops[i] += 1.5;
+
+        if (drops[i] * fontSize > window.innerHeight && Math.random() > 0.95) {
+          drops[i] = 0;
+        }
+      }
+
+      animationIdRef.current = requestAnimationFrame(draw);
+    };
+
+    draw();
+
+    const timer = setTimeout(() => {
+      if (animationIdRef.current) cancelAnimationFrame(animationIdRef.current);
+      onComplete();
+    }, 800);
+
+    return () => {
+      clearTimeout(timer);
+      if (animationIdRef.current) cancelAnimationFrame(animationIdRef.current);
+    };
+  }, [onComplete]);
+
+  return (
+    <div className="fixed inset-0 z-[9999] bg-[#0a0a0f]">
+      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
+    </div>
+  );
+};
 
 const Desktop = dynamic(() => import('@/components/desktop/Desktop'), {
   ssr: false,
-  loading: () => <LoadingScreen />,
+  loading: () => <div className="h-screen w-screen bg-[#0a0a0f]" />,
 });
 
 const MobileLayout = dynamic(() => import('@/components/mobile/MobileLayout'), {
   ssr: false,
-  loading: () => <LoadingScreen />,
+  loading: () => <div className="h-screen w-screen bg-[#0a0a0f]" />,
 });
 
 const StartupAnimation = dynamic(() => import('@/components/ui/StartupAnimation'), {
   ssr: false,
 });
 
-const LoadingScreen = () => (
-  <div className="h-screen w-screen flex items-center justify-center bg-[#0a0a0f] text-white">
-    <div className="flex flex-col items-center gap-4">
-      <div className="w-12 h-12 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
-      <p className="text-sm font-mono animate-pulse text-cyan-400">Loading...</p>
-    </div>
-  </div>
-);
-
 export default function Home() {
   const { isMobile } = useDevice();
   const [mounted, setMounted] = useState(false);
   const [showStartup, setShowStartup] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setMounted(true);
-    // Always show startup animation on every visit
+    // Quick load check
+    setTimeout(() => setIsLoading(false), 100);
   }, []);
 
   const handleStartupComplete = () => {
     setShowStartup(false);
   };
 
-  if (!mounted) return <LoadingScreen />;
+  // Show nothing while mounting
+  if (!mounted) return <div className="h-screen w-screen bg-[#0a0a0f]" />;
 
-  // Show startup animation for ALL devices on EVERY visit
+  // Matrix transition while loading
+  if (isLoading) {
+    return <MatrixTransition onComplete={() => setIsLoading(false)} />;
+  }
+
+  // Startup animation
   if (showStartup) {
     return <StartupAnimation onComplete={handleStartupComplete} />;
   }

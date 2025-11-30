@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface StartupAnimationProps {
@@ -8,104 +8,92 @@ interface StartupAnimationProps {
 }
 
 export default function StartupAnimation({ onComplete }: StartupAnimationProps) {
-    const [phase, setPhase] = useState<'welcome' | 'matrix' | 'loading' | 'complete'>('welcome');
+    const [phase, setPhase] = useState<'welcome' | 'matrix' | 'complete'>('welcome');
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const animationIdRef = useRef<number | null>(null);
-    const [loadingProgress, setLoadingProgress] = useState(0);
 
-    // Matrix effect - FAST
+    const runMatrix = useCallback(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = window.innerWidth * dpr;
+        canvas.height = window.innerHeight * dpr;
+        ctx.scale(dpr, dpr);
+
+        // Initial black fill
+        ctx.fillStyle = '#0a0a0f';
+        ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+        const chars = 'アイウエオカキクケコサシスセソタチツテト01234789';
+        const fontSize = 14;
+        const columns = Math.floor(window.innerWidth / fontSize);
+        
+        const drops: number[] = [];
+        for (let i = 0; i < columns; i++) {
+            drops[i] = Math.random() * -50;
+        }
+
+        const draw = () => {
+            // Trail effect
+            ctx.fillStyle = 'rgba(10, 10, 15, 0.1)';
+            ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+            ctx.font = `${fontSize}px monospace`;
+
+            for (let i = 0; i < drops.length; i++) {
+                const char = chars[Math.floor(Math.random() * chars.length)];
+                const x = i * fontSize;
+                const y = drops[i] * fontSize;
+                
+                // Bright head
+                ctx.fillStyle = '#ffffff';
+                ctx.fillText(char, x, y);
+                
+                // Cyan trail
+                ctx.fillStyle = '#22d3ee';
+                ctx.fillText(chars[Math.floor(Math.random() * chars.length)], x, y - fontSize);
+                ctx.fillStyle = 'rgba(34, 211, 238, 0.6)';
+                ctx.fillText(chars[Math.floor(Math.random() * chars.length)], x, y - fontSize * 2);
+                ctx.fillStyle = 'rgba(34, 211, 238, 0.3)';
+                ctx.fillText(chars[Math.floor(Math.random() * chars.length)], x, y - fontSize * 3);
+
+                // Speed
+                drops[i] += 1.2;
+
+                // Reset
+                if (drops[i] * fontSize > window.innerHeight && Math.random() > 0.95) {
+                    drops[i] = 0;
+                }
+            }
+
+            animationIdRef.current = requestAnimationFrame(draw);
+        };
+
+        draw();
+    }, []);
+
     useEffect(() => {
         if (phase !== 'matrix') return;
 
-        const startDelay = setTimeout(() => {
-            const canvas = canvasRef.current;
-            if (!canvas) return;
+        // Start matrix immediately
+        runMatrix();
 
-            const ctx = canvas.getContext('2d');
-            if (!ctx) return;
-
-            const dpr = window.devicePixelRatio || 1;
-            canvas.width = window.innerWidth * dpr;
-            canvas.height = window.innerHeight * dpr;
-            ctx.scale(dpr, dpr);
-
-            ctx.fillStyle = '#0a0a0f';
-            ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
-
-            const chars = 'アイウエオカキクケコ01';
-            const fontSize = 12;
-            const columns = Math.floor(window.innerWidth / fontSize);
-            
-            const drops: number[] = [];
-            for (let i = 0; i < columns; i++) {
-                drops[i] = Math.floor(Math.random() * (window.innerHeight / fontSize));
-            }
-
-            const draw = () => {
-                ctx.fillStyle = 'rgba(10, 10, 15, 0.15)';
-                ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
-
-                ctx.font = `${fontSize}px monospace`;
-
-                for (let i = 0; i < drops.length; i++) {
-                    const char = chars[Math.floor(Math.random() * chars.length)];
-                    const x = i * fontSize;
-                    const y = drops[i] * fontSize;
-                    
-                    ctx.fillStyle = '#22d3ee';
-                    ctx.fillText(char, x, y);
-                    
-                    ctx.fillStyle = 'rgba(34, 211, 238, 0.3)';
-                    ctx.fillText(char, x, y - fontSize);
-
-                    drops[i] += 1.5;
-
-                    if (drops[i] * fontSize > window.innerHeight && Math.random() > 0.9) {
-                        drops[i] = 0;
-                    }
-                }
-
-                animationIdRef.current = requestAnimationFrame(draw);
-            };
-
-            draw();
-        }, 30);
-
-        // Fast - 1.2 seconds
-        const transitionTimer = setTimeout(() => {
+        // Complete after 1.5s
+        const timer = setTimeout(() => {
             if (animationIdRef.current) cancelAnimationFrame(animationIdRef.current);
-            setPhase('loading');
-        }, 1200);
+            setPhase('complete');
+            setTimeout(onComplete, 300);
+        }, 1500);
 
         return () => {
-            clearTimeout(startDelay);
-            clearTimeout(transitionTimer);
+            clearTimeout(timer);
             if (animationIdRef.current) cancelAnimationFrame(animationIdRef.current);
         };
-    }, [phase]);
-
-    // Loading - FAST
-    useEffect(() => {
-        if (phase !== 'loading') return;
-
-        let progress = 0;
-        const interval = setInterval(() => {
-            progress += Math.random() * 30 + 20;
-            if (progress >= 100) {
-                progress = 100;
-                setLoadingProgress(100);
-                clearInterval(interval);
-                setTimeout(() => {
-                    setPhase('complete');
-                    setTimeout(onComplete, 200);
-                }, 150);
-            } else {
-                setLoadingProgress(progress);
-            }
-        }, 50);
-
-        return () => clearInterval(interval);
-    }, [phase, onComplete]);
+    }, [phase, onComplete, runMatrix]);
 
     const handleBeginClick = () => {
         setPhase('matrix');
@@ -141,7 +129,6 @@ export default function StartupAnimation({ onComplete }: StartupAnimationProps) 
                         <p className="text-cyan-500/50 text-sm font-mono">v2.0</p>
                     </motion.div>
 
-                    {/* Liquid Glass Button */}
                     <motion.button
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -163,7 +150,7 @@ export default function StartupAnimation({ onComplete }: StartupAnimationProps) 
                                 transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
                             />
                             <span className="relative z-10 text-lg sm:text-xl font-semibold text-cyan-300 group-hover:text-cyan-200 transition-colors">
-                                Begin?
+                                Enter
                             </span>
                         </div>
                         <div className="absolute -inset-1 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-cyan-500/20 blur-xl -z-10" />
@@ -187,74 +174,27 @@ export default function StartupAnimation({ onComplete }: StartupAnimationProps) 
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.2 }}
-                    className="fixed inset-0 z-[9999] bg-[#0a0a0f] overflow-hidden"
+                    className="fixed inset-0 z-[9999] bg-[#0a0a0f]"
                 >
                     <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
                     
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.1, duration: 0.2 }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.2 }}
                         className="absolute inset-0 flex items-center justify-center pointer-events-none"
                     >
                         <div 
-                            className="text-center px-8 py-6 rounded-2xl backdrop-blur-xl border border-cyan-500/20"
-                            style={{ background: 'rgba(10, 10, 15, 0.7)' }}
+                            className="text-center px-8 py-6 rounded-2xl backdrop-blur-sm border border-cyan-500/20"
+                            style={{ background: 'rgba(10, 10, 15, 0.5)' }}
                         >
-                            <motion.h2
-                                className="text-2xl sm:text-4xl md:text-5xl font-bold text-cyan-400 font-mono mb-2"
+                            <h2
+                                className="text-2xl sm:text-4xl font-bold text-cyan-400 font-mono"
                                 style={{ textShadow: '0 0 30px rgba(34, 211, 238, 0.5)' }}
                             >
-                                BOOTING
-                            </motion.h2>
-                            <p className="text-cyan-500/60 font-mono text-xs sm:text-sm tracking-widest">
-                                SYSTEM INIT
-                            </p>
+                                INITIALIZING
+                            </h2>
                         </div>
-                    </motion.div>
-                </motion.div>
-            )}
-
-            {phase === 'loading' && (
-                <motion.div
-                    key="loading"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="fixed inset-0 z-[9999] bg-[#0a0a0f] flex flex-col items-center justify-center px-6"
-                >
-                    <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="text-center"
-                    >
-                        <motion.div
-                            className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-6 rounded-2xl flex items-center justify-center border border-cyan-500/30"
-                            style={{
-                                background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.2) 0%, rgba(34, 211, 238, 0.1) 100%)',
-                                boxShadow: '0 0 40px rgba(34, 211, 238, 0.2)',
-                            }}
-                        >
-                            <span className="text-3xl sm:text-4xl font-bold text-cyan-400">A</span>
-                        </motion.div>
-
-                        <h2 className="text-xl sm:text-2xl font-bold text-white mb-1">AyaanOS</h2>
-                        <p className="text-cyan-500/50 font-mono text-xs mb-6">Loading...</p>
-
-                        <div className="w-48 sm:w-64 h-1 rounded-full overflow-hidden mx-auto bg-cyan-500/10">
-                            <motion.div
-                                className="h-full rounded-full bg-gradient-to-r from-cyan-500 to-cyan-400"
-                                initial={{ width: 0 }}
-                                animate={{ width: `${Math.min(loadingProgress, 100)}%` }}
-                                transition={{ duration: 0.1 }}
-                            />
-                        </div>
-                        
-                        <p className="mt-3 text-cyan-600/50 font-mono text-xs">
-                            {Math.min(Math.round(loadingProgress), 100)}%
-                        </p>
                     </motion.div>
                 </motion.div>
             )}

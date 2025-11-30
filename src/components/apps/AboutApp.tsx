@@ -1,264 +1,304 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, Check, CheckCheck, Phone, Video, MoreVertical } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Globe, ChevronLeft, ChevronRight, RotateCcw, Lock, Star, Share2, Sidebar, PanelLeftClose } from 'lucide-react';
 
-interface Message {
-    id: string;
-    text: string;
-    sender: 'me' | 'ayaan';
-    timestamp: Date;
-    isRead?: boolean;
-}
+// Typing Animation Component
+const TypingEffect = ({ text }: { text: string }) => {
+    const [displayedText, setDisplayedText] = useState("");
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [started, setStarted] = useState(false);
 
-const initialMessages: Message[] = [
-    {
-        id: '1',
-        text: "Hey! 👋 Thanks for stopping by my portfolio!",
-        sender: 'ayaan',
-        timestamp: new Date(Date.now() - 12000),
-        isRead: true,
-    },
-    {
-        id: '2',
-        text: "I'm Ayaan — a 10th grader at UWC South East Asia, Singapore 🇸🇬",
-        sender: 'ayaan',
-        timestamp: new Date(Date.now() - 10000),
-        isRead: true,
-    },
-    {
-        id: '3',
-        text: "I'm super into building things with code, especially AI and web apps. Currently learning Next.js and React — this portfolio is my latest project! 🚀",
-        sender: 'ayaan',
-        timestamp: new Date(Date.now() - 8000),
-        isRead: true,
-    },
-    {
-        id: '4',
-        text: "Feel free to ask me anything! Try: skills, projects, hobbies, or just say hi 😊",
-        sender: 'ayaan',
-        timestamp: new Date(Date.now() - 5000),
-        isRead: true,
-    },
+    useEffect(() => {
+        // Small delay before starting
+        const timer = setTimeout(() => setStarted(true), 500);
+        return () => clearTimeout(timer);
+    }, []);
+
+    useEffect(() => {
+        if (started && currentIndex < text.length) {
+            const timeout = setTimeout(() => {
+                setDisplayedText((prev) => prev + text[currentIndex]);
+                setCurrentIndex((prev) => prev + 1);
+            }, 25);
+            return () => clearTimeout(timeout);
+        }
+    }, [currentIndex, started, text]);
+
+    return (
+        <span>
+            {displayedText}
+            {currentIndex < text.length && <span className="animate-pulse text-cyan-400">|</span>}
+        </span>
+    );
+};
+
+// Flip Card Component
+const FlipCard = ({ fact }: { fact: { title: string; description: string } }) => {
+    const [isFlipped, setIsFlipped] = useState(false);
+
+    return (
+        <div
+            className="relative w-full h-24 cursor-pointer"
+            onMouseEnter={() => setIsFlipped(true)}
+            onMouseLeave={() => setIsFlipped(false)}
+            onClick={() => setIsFlipped(!isFlipped)}
+            style={{ perspective: '1000px' }}
+        >
+            <motion.div
+                className="w-full h-full relative"
+                animate={{ rotateY: isFlipped ? 180 : 0 }}
+                transition={{ duration: 0.5, type: "spring", stiffness: 260, damping: 20 }}
+                style={{ transformStyle: "preserve-3d" }}
+            >
+                {/* Front */}
+                <div 
+                    className="absolute inset-0 w-full h-full rounded-xl flex items-center justify-center p-4 border border-cyan-500/20"
+                    style={{ 
+                        backfaceVisibility: 'hidden',
+                        background: 'rgba(34, 211, 238, 0.05)',
+                    }}
+                >
+                    <h4 className="font-bold text-cyan-400 text-lg">{fact.title}</h4>
+                </div>
+
+                {/* Back */}
+                <div
+                    className="absolute inset-0 w-full h-full rounded-xl flex items-center justify-center p-4 text-center"
+                    style={{ 
+                        transform: "rotateY(180deg)",
+                        backfaceVisibility: 'hidden',
+                        background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.2) 0%, rgba(34, 211, 238, 0.1) 100%)',
+                    }}
+                >
+                    <p className="text-sm text-white font-medium">{fact.description}</p>
+                </div>
+            </motion.div>
+        </div>
+    );
+};
+
+// Fun facts data
+const funFacts = [
+    { title: "🎮 Gamer", description: "I love strategy games and FPS." },
+    { title: "🎸 Music", description: "I play the guitar in my free time." },
+    { title: "☕ Coffee", description: "Powered by caffeine and code." },
+    { title: "🤖 Robotics", description: "Built a line-following robot." },
+];
+
+// Arc Browser Tabs
+const tabs = [
+    { id: 'about', title: 'About Me', icon: '👨‍💻', url: 'ayaan.dev/about' },
 ];
 
 export default function AboutApp() {
-    const [messages, setMessages] = useState<Message[]>(initialMessages);
-    const [inputValue, setInputValue] = useState('');
-    const [isTyping, setIsTyping] = useState(false);
-    const [isOnline] = useState(true);
-    const messagesEndRef = useRef<HTMLDivElement>(null);
-
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    };
-
-    useEffect(() => {
-        scrollToBottom();
-    }, [messages, isTyping]);
-
-    const handleSend = async () => {
-        if (!inputValue.trim()) return;
-
-        const newMessage: Message = {
-            id: Date.now().toString(),
-            text: inputValue,
-            sender: 'me',
-            timestamp: new Date(),
-            isRead: false,
-        };
-
-        setMessages(prev => [...prev, newMessage]);
-        setInputValue('');
-        setIsTyping(true);
-
-        // Variable response time based on response length
-        const responseText = getResponse(inputValue);
-        const typingTime = Math.min(1500 + responseText.length * 10, 3000);
-
-        setTimeout(() => {
-            setIsTyping(false);
-            const responseMessage: Message = {
-                id: (Date.now() + 1).toString(),
-                text: responseText,
-                sender: 'ayaan',
-                timestamp: new Date(),
-                isRead: true,
-            };
-            setMessages(prev => 
-                prev.map(m => m.id === newMessage.id ? { ...m, isRead: true } : m)
-                    .concat(responseMessage)
-            );
-        }, typingTime);
-    };
-
-    const getResponse = (input: string): string => {
-        const lowerInput = input.toLowerCase();
-        
-        // Greetings
-        if (lowerInput.match(/^(hi|hey|hello|sup|yo|hola)/)) {
-            return "Hey there! 👋 Great to hear from you! What would you like to know about me?";
-        }
-        
-        // School/Education
-        if (lowerInput.includes('school') || lowerInput.includes('education') || lowerInput.includes('study') || lowerInput.includes('uwc')) {
-            return "I'm at UWC South East Asia (East Campus) in Singapore! 🏫 Currently in 10th grade doing IGCSE — graduating in 2028. UWC is amazing because of how diverse and global it is. I love the community here!";
-        }
-        
-        // Skills/Tech
-        if (lowerInput.includes('skill') || lowerInput.includes('tech') || lowerInput.includes('programming') || lowerInput.includes('code') || lowerInput.includes('language')) {
-            return "Oh I love talking tech! 💻 I'm mainly working with JavaScript/TypeScript and Python. Building web apps with Next.js and React is my jam right now. Also getting into AI/ML — it's fascinating! Check out the Skills app for more details~";
-        }
-        
-        // Projects
-        if (lowerInput.includes('project') || lowerInput.includes('built') || lowerInput.includes('made') || lowerInput.includes('create')) {
-            return "I've been building some cool stuff! 🛠️ This portfolio you're on is one of them. Also working on Fridge Chef (AI recipe app), Air Drums (virtual drumming with hand tracking), and some school tech projects. Hit up the Projects app to see them all!";
-        }
-        
-        // Contact
-        if (lowerInput.includes('contact') || lowerInput.includes('email') || lowerInput.includes('reach') || lowerInput.includes('connect')) {
-            return "Would love to connect! 📬 Best way is email: agarw48550@gapps.uwcsea.edu.sg. Also on LinkedIn — just search Ayaan Agarwal. Or use the Contact app on the desktop!";
-        }
-        
-        // Hobbies/Interests
-        if (lowerInput.includes('hobby') || lowerInput.includes('interest') || lowerInput.includes('fun') || lowerInput.includes('free time')) {
-            return "Outside of coding? I'm super into MUN (Model UN) — love debating world issues! 🌍 Also play squash competitively (Top 20 in Singapore! 🏆), drum in my free time 🥁, and build random DIY tech projects. Always something going on lol";
-        }
-        
-        // Age
-        if (lowerInput.includes('age') || lowerInput.includes('old') || lowerInput.includes('year')) {
-            return "I'm 15! Turning 16 soon. Sometimes I forget I'm still in high school with all the stuff I get to work on 😅";
-        }
-        
-        // Location
-        if (lowerInput.includes('where') || lowerInput.includes('location') || lowerInput.includes('live') || lowerInput.includes('singapore')) {
-            return "Living in Singapore 🇸🇬 — been here for a few years now for school. Originally from India though! Singapore is awesome for tech stuff, lots happening here.";
-        }
-        
-        // Goals/Future
-        if (lowerInput.includes('goal') || lowerInput.includes('future') || lowerInput.includes('plan') || lowerInput.includes('dream')) {
-            return "Big dreams! 🌟 Want to study CS at a top uni, maybe Stanford or MIT. Long term? Building tech that actually helps people — maybe in AI/healthcare or education. But honestly just excited to keep learning and building!";
-        }
-        
-        // Thanks
-        if (lowerInput.includes('thank') || lowerInput.includes('thanks') || lowerInput.includes('awesome') || lowerInput.includes('cool')) {
-            return "Aw thanks! 😊 Really appreciate you taking the time to check out my portfolio. If you have any opportunities or just want to chat, hit me up anytime!";
-        }
-        
-        // Hire/Work
-        if (lowerInput.includes('hire') || lowerInput.includes('work') || lowerInput.includes('intern') || lowerInput.includes('opportunity')) {
-            return "Oh that's exciting! 🎉 I'm definitely open to internships, freelance projects, or collaborations. Would love to work on something cool together. Drop me an email and let's chat!";
-        }
-        
-        // Portfolio/Website
-        if (lowerInput.includes('portfolio') || lowerInput.includes('website') || lowerInput.includes('site') || lowerInput.includes('this')) {
-            return "Glad you like it! 💜 Built this whole thing with Next.js, React, Tailwind, and Framer Motion. The OS-style interface was super fun to design. Took a while but totally worth it!";
-        }
-        
-        // Default
-        return "Interesting question! 🤔 Feel free to ask about my school, skills, projects, hobbies, or how to reach me. Or just chat — I'm friendly I promise! 😄";
-    };
+    const [activeTab] = useState('about');
+    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
     return (
-        <div className="flex flex-col h-full bg-[#0b141a] text-white">
-            {/* Chat Header - WhatsApp style */}
-            <div className="p-3 flex items-center gap-3 border-b border-white/5"
-                style={{ background: 'linear-gradient(180deg, #202c33 0%, #1a262d 100%)' }}
-            >
-                <div className="relative">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center font-bold text-sm">
-                        AA
-                    </div>
-                    {isOnline && (
-                        <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-[#202c33]" />
-                    )}
-                </div>
-                <div className="flex flex-col flex-1">
-                    <span className="font-medium text-sm">Ayaan Agarwal</span>
-                    <span className="text-xs text-green-400">{isOnline ? 'online' : 'last seen recently'}</span>
-                </div>
-                <div className="flex items-center gap-4 text-white/60">
-                    <Video size={20} className="cursor-pointer hover:text-white transition-colors" />
-                    <Phone size={20} className="cursor-pointer hover:text-white transition-colors" />
-                    <MoreVertical size={20} className="cursor-pointer hover:text-white transition-colors" />
-                </div>
-            </div>
-
-            {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-3"
+        <div className="h-full flex bg-[#1a1a2e] text-white overflow-hidden rounded-b-xl">
+            {/* Arc Sidebar */}
+            <motion.div 
+                className="flex flex-col border-r border-white/10"
+                animate={{ width: sidebarCollapsed ? 48 : 200 }}
+                transition={{ duration: 0.2 }}
                 style={{
-                    backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.02\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
-                    backgroundColor: '#0b141a'
+                    background: 'linear-gradient(180deg, rgba(34, 211, 238, 0.05) 0%, rgba(10, 10, 30, 0.8) 100%)',
                 }}
             >
-                {messages.map((msg, index) => (
-                    <motion.div
-                        key={msg.id}
-                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        transition={{ duration: 0.2 }}
-                        className={`flex ${msg.sender === 'me' ? 'justify-end' : 'justify-start'}`}
+                {/* Sidebar Header */}
+                <div className="p-2 flex items-center justify-between border-b border-white/5">
+                    <button 
+                        onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                        className="p-1.5 hover:bg-white/10 rounded-lg transition-colors"
                     >
-                        <div
-                            className={`max-w-[85%] p-3 rounded-lg text-sm relative shadow-sm ${msg.sender === 'me'
-                                    ? 'bg-[#005c4b] text-white rounded-tr-none'
-                                    : 'bg-[#202c33] text-white rounded-tl-none'
-                                }`}
-                            style={{
-                                boxShadow: '0 1px 2px rgba(0,0,0,0.2)'
-                            }}
-                        >
-                            <p className="leading-relaxed">{msg.text}</p>
-                            <div className="flex items-center justify-end gap-1 mt-1.5">
-                                <span className="text-[10px] text-white/50">
-                                    {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                </span>
-                                {msg.sender === 'me' && (
-                                    <span className={msg.isRead ? "text-blue-400" : "text-white/50"}>
-                                        {msg.isRead ? <CheckCheck size={14} /> : <Check size={14} />}
-                                    </span>
-                                )}
-                            </div>
-                        </div>
-                    </motion.div>
-                ))}
+                        {sidebarCollapsed ? <Sidebar size={16} className="text-cyan-400" /> : <PanelLeftClose size={16} className="text-cyan-400" />}
+                    </button>
+                </div>
 
-                {isTyping && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="flex justify-start"
-                    >
-                        <div className="bg-[#202c33] px-4 py-3 rounded-lg rounded-tl-none text-sm text-gray-400 flex items-center gap-1.5">
-                            <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                            <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                            <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                {/* Spaces */}
+                {!sidebarCollapsed && (
+                    <div className="p-2">
+                        <div className="flex items-center gap-2 p-2 rounded-lg bg-cyan-500/10 border border-cyan-500/20">
+                            <div className="w-3 h-3 rounded-full bg-cyan-400" />
+                            <span className="text-xs font-medium text-cyan-300">Portfolio</span>
                         </div>
-                    </motion.div>
+                    </div>
                 )}
-                <div ref={messagesEndRef} />
+
+                {/* Tabs */}
+                <div className="flex-1 p-2">
+                    {tabs.map(tab => (
+                        <div 
+                            key={tab.id}
+                            className={`flex items-center gap-2 p-2 rounded-lg cursor-pointer transition-all ${
+                                activeTab === tab.id 
+                                    ? 'bg-cyan-500/20 border border-cyan-500/30' 
+                                    : 'hover:bg-white/5'
+                            }`}
+                        >
+                            <span className="text-base">{tab.icon}</span>
+                            {!sidebarCollapsed && (
+                                <span className="text-xs text-white/80 truncate">{tab.title}</span>
+                            )}
+                        </div>
+                    ))}
+                </div>
+
+                {/* Bottom Actions */}
+                {!sidebarCollapsed && (
+                    <div className="p-2 border-t border-white/5">
+                        <div className="flex items-center gap-2 p-2 text-white/50 text-xs">
+                            <Star size={12} />
+                            <span>Favorites</span>
+                        </div>
+                    </div>
+                )}
+            </motion.div>
+
+            {/* Main Content */}
+            <div className="flex-1 flex flex-col min-w-0">
+                {/* URL Bar */}
+                <div className="flex items-center gap-2 p-2 border-b border-white/10 bg-black/20">
+                    {/* Navigation */}
+                    <div className="flex items-center gap-1">
+                        <button className="p-1.5 hover:bg-white/10 rounded-lg transition-colors text-white/40">
+                            <ChevronLeft size={14} />
+                        </button>
+                        <button className="p-1.5 hover:bg-white/10 rounded-lg transition-colors text-white/40">
+                            <ChevronRight size={14} />
+                        </button>
+                        <button className="p-1.5 hover:bg-white/10 rounded-lg transition-colors text-white/40">
+                            <RotateCcw size={14} />
+                        </button>
+                    </div>
+
+                    {/* URL Input */}
+                    <div 
+                        className="flex-1 flex items-center gap-2 px-3 py-1.5 rounded-lg"
+                        style={{
+                            background: 'rgba(255, 255, 255, 0.05)',
+                            border: '1px solid rgba(34, 211, 238, 0.2)',
+                        }}
+                    >
+                        <Lock size={12} className="text-cyan-400" />
+                        <span className="text-xs text-white/60">https://</span>
+                        <span className="text-xs text-white font-medium">ayaan.dev</span>
+                        <span className="text-xs text-white/60">/about</span>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex items-center gap-1">
+                        <button className="p-1.5 hover:bg-white/10 rounded-lg transition-colors text-white/40">
+                            <Share2 size={14} />
+                        </button>
+                    </div>
+                </div>
+
+                {/* Page Content - Original About Design */}
+                <div className="flex-1 overflow-auto">
+                    <div 
+                        className="min-h-full p-6"
+                        style={{
+                            background: 'linear-gradient(180deg, #0a0a1a 0%, #0f0f2a 100%)',
+                        }}
+                    >
+                        {/* Header */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5 }}
+                            className="text-center mb-8"
+                        >
+                            <h2 className="text-3xl font-bold mb-3 text-white">
+                                About <span className="text-cyan-400">Me</span>
+                            </h2>
+                            <div className="w-16 h-1 bg-gradient-to-r from-cyan-400 to-cyan-600 mx-auto rounded-full"></div>
+                        </motion.div>
+
+                        <div className="flex flex-col md:flex-row items-center gap-8 max-w-4xl mx-auto">
+                            {/* Avatar */}
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ duration: 0.6 }}
+                                className="flex-shrink-0"
+                            >
+                                <div className="relative w-48 h-48 group">
+                                    {/* Animated Border */}
+                                    <div 
+                                        className="absolute inset-0 rounded-full opacity-70 blur-md group-hover:opacity-100 transition-opacity duration-500"
+                                        style={{
+                                            background: 'linear-gradient(45deg, #22d3ee, #a855f7, #ec4899, #22d3ee)',
+                                            backgroundSize: '400% 400%',
+                                            animation: 'gradient-spin 3s ease infinite',
+                                        }}
+                                    />
+                                    <div 
+                                        className="relative w-full h-full rounded-full overflow-hidden border-4 border-[#0a0a1a] z-10 flex items-center justify-center text-7xl"
+                                        style={{
+                                            background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%)',
+                                        }}
+                                    >
+                                        👨‍💻
+                                    </div>
+
+                                    {/* Floating Badge */}
+                                    <motion.div
+                                        className="absolute -bottom-2 -right-2 p-2 rounded-xl shadow-lg border border-cyan-500/20 z-20"
+                                        style={{
+                                            background: 'rgba(10, 10, 30, 0.9)',
+                                        }}
+                                        animate={{ y: [0, -8, 0] }}
+                                        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                                    >
+                                        <span className="text-xl">🚀</span>
+                                    </motion.div>
+                                </div>
+                            </motion.div>
+
+                            {/* Text Content */}
+                            <motion.div
+                                initial={{ opacity: 0, x: 30 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.6, delay: 0.2 }}
+                                className="flex-1"
+                            >
+                                <h3 className="text-xl font-bold mb-3 text-white">
+                                    Aspiring Developer | Tech Enthusiast
+                                </h3>
+
+                                <div className="text-sm text-white/70 mb-4 leading-relaxed min-h-[60px]">
+                                    <TypingEffect text="Hi, I'm Ayaan! I'm a 10th-grade student based in Singapore with a burning passion for technology. I started my coding journey exploring how things work, and now I'm building full-stack applications and experimenting with AI." />
+                                </div>
+
+                                <p className="text-sm text-white/60 mb-6 leading-relaxed">
+                                    When I&apos;m not coding, you can find me gaming, exploring new tech
+                                    trends, or working on my next big idea. I believe in learning by
+                                    doing and am always looking for new challenges.
+                                </p>
+
+                                {/* Fun Facts */}
+                                <div className="grid grid-cols-2 gap-3">
+                                    {funFacts.map((fact, index) => (
+                                        <FlipCard key={index} fact={fact} />
+                                    ))}
+                                </div>
+                            </motion.div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            {/* Input Area */}
-            <div className="p-3 flex items-center gap-3" style={{ background: '#202c33' }}>
-                <input
-                    type="text"
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                    placeholder="Type a message..."
-                    className="flex-1 bg-[#2a3942] rounded-full px-5 py-2.5 text-sm text-white focus:outline-none placeholder:text-gray-500 transition-colors"
-                />
-                <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={handleSend}
-                    className="p-2.5 bg-[#00a884] rounded-full hover:bg-[#00a884]/90 transition-colors text-white"
-                >
-                    <Send size={20} />
-                </motion.button>
-            </div>
+            {/* CSS for gradient animation */}
+            <style jsx>{`
+                @keyframes gradient-spin {
+                    0% { background-position: 0% 50%; }
+                    50% { background-position: 100% 50%; }
+                    100% { background-position: 0% 50%; }
+                }
+            `}</style>
         </div>
     );
 }
