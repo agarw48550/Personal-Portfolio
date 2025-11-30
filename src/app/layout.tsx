@@ -2,9 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Providers";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import ClientComponents from "@/components/ClientComponents";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -83,10 +80,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-dark-bg text-foreground transition-colors duration-300`}
       >
         <Providers>
-          <ClientComponents />
-          <Navbar />
           <main className="min-h-screen">{children}</main>
-          <Footer />
         </Providers>
       </body>
     </html>

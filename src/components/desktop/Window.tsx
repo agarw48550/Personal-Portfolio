@@ -2,7 +2,6 @@
 
 import React, { useRef } from 'react';
 import { Rnd } from 'react-rnd';
-import { X, Minus, Square, Maximize2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useWindowManager } from '@/hooks/useWindowManager';
 import { AppId } from '@/lib/store';
@@ -52,8 +51,8 @@ export default function Window({ id, children }: WindowProps) {
                     onMouseDown={() => focusWindow(id)}
                     style={{ zIndex: windowState.zIndex + 10 }}
                     className={cn(
-                        "flex flex-col overflow-hidden rounded-lg shadow-2xl border border-white/10 backdrop-blur-xl",
-                        windowState.isMaximized ? "rounded-none border-none" : ""
+                        "flex flex-col overflow-hidden rounded-xl shadow-2xl",
+                        windowState.isMaximized ? "rounded-none" : ""
                     )}
                 >
                     <motion.div
@@ -61,46 +60,73 @@ export default function Window({ id, children }: WindowProps) {
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95 }}
                         transition={{ duration: 0.2 }}
-                        className="flex flex-col h-full w-full bg-[#16213e]/95 text-white"
+                        className={cn(
+                            "flex flex-col h-full w-full text-white",
+                            "bg-gradient-to-br from-white/10 via-white/5 to-transparent",
+                            "backdrop-blur-2xl backdrop-saturate-150",
+                            "border border-white/20",
+                            windowState.isMaximized ? "rounded-none" : "rounded-xl"
+                        )}
+                        style={{
+                            background: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.02) 100%)',
+                            boxShadow: '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1), 0 0 0 1px rgba(255,255,255,0.05)'
+                        }}
                     >
-                        {/* Window Header */}
+                        {/* MacOS-style Window Header */}
                         <div
-                            className="h-10 sm:h-11 flex items-center justify-between px-3 sm:px-4 bg-[#0f3460] select-none cursor-default flex-shrink-0"
+                            className={cn(
+                                "h-11 flex items-center px-4 select-none cursor-default flex-shrink-0",
+                                "bg-gradient-to-b from-white/10 to-transparent",
+                                "border-b border-white/10"
+                            )}
                             onDoubleClick={() => maximizeWindow(id)}
                         >
-                            <div className="flex items-center gap-2 min-w-0">
-                                <span className="text-sm font-medium text-gray-200 truncate">{windowState.title}</span>
-                            </div>
-                            <div className="flex items-center gap-1 flex-shrink-0">
+                            {/* Traffic Light Buttons (Left) */}
+                            <div className="flex items-center gap-2 group">
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); closeWindow(id); }}
+                                    className="w-3 h-3 rounded-full bg-[#ff5f57] hover:bg-[#ff5f57]/80 transition-all flex items-center justify-center group-hover:shadow-[0_0_6px_#ff5f57]"
+                                    title="Close"
+                                >
+                                    <svg className="w-2 h-2 opacity-0 group-hover:opacity-100 transition-opacity" viewBox="0 0 12 12" fill="none" stroke="rgba(0,0,0,0.5)" strokeWidth="2">
+                                        <path d="M3 3l6 6M9 3l-6 6" />
+                                    </svg>
+                                </button>
                                 <button
                                     onClick={(e) => { e.stopPropagation(); minimizeWindow(id); }}
-                                    className="p-1.5 hover:bg-white/10 rounded transition-colors group"
+                                    className="w-3 h-3 rounded-full bg-[#febc2e] hover:bg-[#febc2e]/80 transition-all flex items-center justify-center group-hover:shadow-[0_0_6px_#febc2e]"
                                     title="Minimize"
                                 >
-                                    <Minus size={14} className="text-gray-300 group-hover:text-white" />
+                                    <svg className="w-2 h-2 opacity-0 group-hover:opacity-100 transition-opacity" viewBox="0 0 12 12" fill="none" stroke="rgba(0,0,0,0.5)" strokeWidth="2">
+                                        <path d="M2 6h8" />
+                                    </svg>
                                 </button>
                                 <button
                                     onClick={(e) => { e.stopPropagation(); maximizeWindow(id); }}
-                                    className="p-1.5 hover:bg-white/10 rounded transition-colors group"
+                                    className="w-3 h-3 rounded-full bg-[#28c840] hover:bg-[#28c840]/80 transition-all flex items-center justify-center group-hover:shadow-[0_0_6px_#28c840]"
                                     title={windowState.isMaximized ? "Restore" : "Maximize"}
                                 >
-                                    {windowState.isMaximized ? 
-                                        <Square size={12} className="text-gray-300 group-hover:text-white" /> : 
-                                        <Maximize2 size={12} className="text-gray-300 group-hover:text-white" />
-                                    }
-                                </button>
-                                <button
-                                    onClick={(e) => { e.stopPropagation(); closeWindow(id); }}
-                                    className="p-1.5 hover:bg-red-500 rounded transition-colors group"
-                                    title="Close"
-                                >
-                                    <X size={14} className="text-gray-300 group-hover:text-white" />
+                                    <svg className="w-2 h-2 opacity-0 group-hover:opacity-100 transition-opacity" viewBox="0 0 12 12" fill="none" stroke="rgba(0,0,0,0.5)" strokeWidth="1.5">
+                                        {windowState.isMaximized ? (
+                                            <path d="M4 8l4-4M4 4v4h4" />
+                                        ) : (
+                                            <path d="M2 2h8v8H2z" />
+                                        )}
+                                    </svg>
                                 </button>
                             </div>
+                            
+                            {/* Window Title (Center) */}
+                            <div className="flex-1 flex items-center justify-center">
+                                <span className="text-sm font-medium text-white/70">{windowState.title}</span>
+                            </div>
+                            
+                            {/* Spacer for symmetry */}
+                            <div className="w-[52px]" />
                         </div>
 
                         {/* Window Content */}
-                        <div className="flex-1 overflow-auto relative">
+                        <div className="flex-1 overflow-auto relative bg-[#1a1a2e]/80">
                             {children}
                         </div>
                     </motion.div>
