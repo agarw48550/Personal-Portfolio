@@ -1,11 +1,11 @@
 'use client';
 
 import React from 'react';
-import { useWindowManager } from '@/hooks/useWindowManager';
-import { AppId } from '@/lib/store';
+import { useStore, AppId } from '@/lib/store';
 import { LucideIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { useSounds } from '@/hooks/useSounds';
 
 interface DesktopIconProps {
     id: AppId;
@@ -24,8 +24,14 @@ const iconColors: Record<string, string> = {
 };
 
 export default function DesktopIcon({ id, label, icon: Icon }: DesktopIconProps) {
-    const { openWindow, windows } = useWindowManager();
-    const isOpen = windows[id]?.isOpen;
+    const { openApp, openApps } = useStore();
+    const { playSound } = useSounds();
+    const isOpen = openApps.includes(id);
+
+    const handleClick = () => {
+        openApp(id);
+        playSound('open');
+    };
 
     return (
         <motion.button
@@ -33,14 +39,14 @@ export default function DesktopIcon({ id, label, icon: Icon }: DesktopIconProps)
             animate={{ opacity: 1, scale: 1 }}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => openWindow(id)}
-            onDoubleClick={() => openWindow(id)}
+            onClick={handleClick}
+            onDoubleClick={handleClick}
             className={cn(
                 "flex flex-col items-center gap-2 p-3 rounded-xl transition-all group w-20",
                 isOpen ? "bg-white/10" : "hover:bg-white/5"
             )}
         >
-            <div 
+            <div
                 className={cn(
                     "w-14 h-14 rounded-2xl flex items-center justify-center transition-all",
                     "bg-gradient-to-br",
@@ -57,7 +63,7 @@ export default function DesktopIcon({ id, label, icon: Icon }: DesktopIconProps)
                 {label}
             </span>
             {isOpen && (
-                <motion.div 
+                <motion.div
                     layoutId={`desktop-dot-${id}`}
                     className="w-1 h-1 rounded-full bg-white/80"
                     style={{ boxShadow: '0 0 4px rgba(255,255,255,0.5)' }}

@@ -1,126 +1,86 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
-export type AppId = 'about' | 'projects' | 'skills' | 'blog' | 'contact' | 'terminal' | 'settings' | 'music' | 'timeline';
+export type AppId = 'about' | 'projects' | 'skills' | 'contact' | 'terminal' | 'timeline' | 'blogs';
 
-export interface WindowState {
-    id: AppId;
-    title: string;
-    isOpen: boolean;
-    isMinimized: boolean;
-    isMaximized: boolean;
-    zIndex: number;
-    position?: { x: number; y: number };
-    size?: { width: number; height: number };
-}
+interface AppState {
+    // System Preferences
+    theme: 'dark' | 'light';
+    soundEnabled: boolean;
+    hapticsEnabled: boolean;
+    isMobile: boolean;
 
-interface OSState {
-    windows: Record<AppId, WindowState>;
-    activeWindowId: AppId | null;
-    maxZIndex: number;
-    isMenuOpen: boolean;
+    // Desktop State
+    activeApp: AppId | null;
+    openApps: AppId[];
+    minimizedApps: AppId[];
+    zIndexes: Record<string, number>;
 
     // Actions
-    openWindow: (id: AppId) => void;
-    closeWindow: (id: AppId) => void;
-    minimizeWindow: (id: AppId) => void;
-    maximizeWindow: (id: AppId) => void;
-    focusWindow: (id: AppId) => void;
-    toggleStartMenu: () => void;
-    closeStartMenu: () => void;
-    setWindowPosition: (id: AppId, position: { x: number; y: number }) => void;
-    setWindowSize: (id: AppId, size: { width: number; height: number }) => void;
+    setTheme: (theme: 'dark' | 'light') => void;
+    toggleSound: () => void;
+    toggleHaptics: () => void;
+    setIsMobile: (isMobile: boolean) => void;
+
+    openApp: (appId: AppId) => void;
+    closeApp: (appId: AppId) => void;
+    minimizeApp: (appId: AppId) => void;
+    focusApp: (appId: AppId) => void;
 }
 
-const defaultWindows: Record<AppId, WindowState> = {
-    about: { id: 'about', title: 'About Me', isOpen: true, isMinimized: false, isMaximized: false, zIndex: 1 },
-    projects: { id: 'projects', title: 'Projects', isOpen: false, isMinimized: false, isMaximized: false, zIndex: 0 },
-    skills: { id: 'skills', title: 'Skills', isOpen: false, isMinimized: false, isMaximized: false, zIndex: 0 },
-    blog: { id: 'blog', title: 'Blog', isOpen: false, isMinimized: false, isMaximized: false, zIndex: 0 },
-    contact: { id: 'contact', title: 'Contact', isOpen: false, isMinimized: false, isMaximized: false, zIndex: 0 },
-    terminal: { id: 'terminal', title: 'Terminal', isOpen: false, isMinimized: false, isMaximized: false, zIndex: 0 },
-    settings: { id: 'settings', title: 'Settings', isOpen: false, isMinimized: false, isMaximized: false, zIndex: 0 },
-    music: { id: 'music', title: 'Music', isOpen: false, isMinimized: false, isMaximized: false, zIndex: 0 },
-    timeline: { id: 'timeline', title: 'Timeline', isOpen: false, isMinimized: false, isMaximized: false, zIndex: 0 },
-};
+export const useStore = create<AppState>()(
+    persist(
+        (set, get) => ({
+            theme: 'dark',
+            soundEnabled: true,
+            hapticsEnabled: true,
+            isMobile: false,
 
-export const useOSStore = create<OSState>((set) => ({
-    windows: defaultWindows,
-    activeWindowId: 'about',
-    maxZIndex: 1,
-    isMenuOpen: false,
+            activeApp: null,
+            openApps: [],
+            minimizedApps: [],
+            zIndexes: {},
 
-    openWindow: (id) => set((state) => {
-        const newZIndex = state.maxZIndex + 1;
-        return {
-            windows: {
-                ...state.windows,
-                [id]: { ...state.windows[id], isOpen: true, isMinimized: false, zIndex: newZIndex },
-            },
-            activeWindowId: id,
-            maxZIndex: newZIndex,
-            isMenuOpen: false,
-        };
-    }),
+            setTheme: (theme) => set({ theme }),
+            toggleSound: () => set((state) => ({ soundEnabled: !state.soundEnabled })),
+            toggleHaptics: () => set((state) => ({ hapticsEnabled: !state.hapticsEnabled })),
+            setIsMobile: (isMobile) => set({ isMobile }),
 
-    closeWindow: (id) => set((state) => ({
-        windows: {
-            ...state.windows,
-            [id]: { ...state.windows[id], isOpen: false, isMaximized: false },
-        },
-        activeWindowId: state.activeWindowId === id ? null : state.activeWindowId,
-    })),
+            openApp: (appId) => set((state) => {
+                if (state.openApps.includes(appId)) {
+                    return { activeApp: appId, minimizedApps: state.minimizedApps.filter(id => id !== appId) };
+                }
+                return {
+                    openApps: [...state.openApps, appId],
+                    activeApp: appId,
+                    zIndexes: { ...state.zIndexes, [appId]: Math.max(0, ...Object.values(state.zIndexes)) + 1 }
+                };
+            }),
 
-    minimizeWindow: (id) => set((state) => ({
-        windows: {
-            ...state.windows,
-            [id]: { ...state.windows[id], isMinimized: true },
-        },
-        activeWindowId: null,
-    })),
+            closeApp: (appId) => set((state) => ({
+                openApps: state.openApps.filter((id) => id !== appId),
+                activeApp: state.activeApp === appId ? null : state.activeApp,
+                minimizedApps: state.minimizedApps.filter((id) => id !== appId),
+            })),
 
-    maximizeWindow: (id) => set((state) => {
-        const newZIndex = state.maxZIndex + 1;
-        return {
-            windows: {
-                ...state.windows,
-                [id]: {
-                    ...state.windows[id],
-                    isMaximized: !state.windows[id].isMaximized,
-                    zIndex: newZIndex
-                },
-            },
-            activeWindowId: id,
-            maxZIndex: newZIndex,
-        };
-    }),
+            minimizeApp: (appId) => set((state) => ({
+                minimizedApps: [...state.minimizedApps, appId],
+                activeApp: null,
+            })),
 
-    focusWindow: (id) => set((state) => {
-        if (state.activeWindowId === id) return {};
-        const newZIndex = state.maxZIndex + 1;
-        return {
-            windows: {
-                ...state.windows,
-                [id]: { ...state.windows[id], isMinimized: false, zIndex: newZIndex },
-            },
-            activeWindowId: id,
-            maxZIndex: newZIndex,
-        };
-    }),
-
-    toggleStartMenu: () => set((state) => ({ isMenuOpen: !state.isMenuOpen })),
-    closeStartMenu: () => set({ isMenuOpen: false }),
-
-    setWindowPosition: (id, position) => set((state) => ({
-        windows: {
-            ...state.windows,
-            [id]: { ...state.windows[id], position },
-        },
-    })),
-
-    setWindowSize: (id, size) => set((state) => ({
-        windows: {
-            ...state.windows,
-            [id]: { ...state.windows[id], size },
-        },
-    })),
-}));
+            focusApp: (appId) => set((state) => ({
+                activeApp: appId,
+                minimizedApps: state.minimizedApps.filter((id) => id !== appId),
+                zIndexes: { ...state.zIndexes, [appId]: Math.max(0, ...Object.values(state.zIndexes)) + 1 }
+            })),
+        }),
+        {
+            name: 'portfolio-storage',
+            partialize: (state) => ({
+                theme: state.theme,
+                soundEnabled: state.soundEnabled,
+                hapticsEnabled: state.hapticsEnabled
+            }),
+        }
+    )
+);

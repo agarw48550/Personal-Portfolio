@@ -1,105 +1,156 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
-  --primary: #22d3ee;
-  --primary-hover: #06b6d4;
-  --card-bg: rgba(255, 255, 255, 0.8);
-  --card-border: rgba(0, 0, 0, 0.1);
+  /* Deep Navy / Slate Blue / Gold / White Palette */
+  --background: #0a192f;
+  --foreground: #e6f1ff;
+
+  --primary: #0a192f;
+  /* Deep Navy */
+  --secondary: #112240;
+  /* Slate Blue */
+  --tertiary: #233554;
+  /* Lighter Navy */
+  --accent: #ffc107;
+  /* Warm Amber/Gold */
+  --accent-glow: rgba(255, 193, 7, 0.5);
+
+  --text-primary: #e6f1ff;
+  --text-secondary: #8892b0;
+  --text-muted: #ccd6f6;
+
+  --card-bg: rgba(17, 34, 64, 0.7);
+  --card-border: rgba(255, 255, 255, 0.1);
+
+  --success: #64ffda;
+  --error: #ff6b6b;
+
+  /* Retro Mobile Palette */
+  --retro-bg: #c7d5e0;
+  --retro-screen: #9cb0a5;
+  /* Nokia screen green-ish */
+  --retro-dark: #2d3436;
+  --retro-accent: #ff7675;
 }
 
-.dark {
-  --background: #0a0a0f;
-  --foreground: #f8fafc;
-  --card-bg: rgba(0, 0, 0, 0.4);
-  --card-border: rgba(34, 211, 238, 0.2);
+.light {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+
+  --primary: #ffffff;
+  --secondary: #f1f5f9;
+  --tertiary: #e2e8f0;
+  --accent: #d97706;
+  /* Darker Amber for light mode contrast */
+  --accent-glow: rgba(217, 119, 6, 0.3);
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+
+  --card-bg: rgba(255, 255, 255, 0.8);
+  --card-border: rgba(0, 0, 0, 0.1);
 }
 
 @theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-tertiary: var(--tertiary);
+  --color-accent: var(--accent);
+  --color-accent-glow: var(--accent-glow);
+  --color-card-bg: var(--card-bg);
+  --color-card-border: var(--card-border);
+
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'Fira Code', monospace;
+  --font-retro: 'VT323', monospace;
+  /* We'll need to load this */
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   transition: background-color 0.3s ease, color 0.3s ease;
+  overflow: hidden;
+  /* OS-like behavior */
+  font-family: var(--font-sans);
 }
 
-/* Custom Scrollbar - Dark Mode */
-.dark ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-.dark ::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.dark ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
-}
-
-.dark ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
-
-/* Custom Scrollbar - Light Mode */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.05);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
+  background: var(--text-secondary);
+  border-radius: 3px;
+  opacity: 0.5;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.3);
+  background: var(--accent);
 }
 
-/* 3D Perspective Utilities */
-.perspective-1000 {
-  perspective: 1000px;
+/* Utilities */
+.glass {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--card-border);
 }
 
-/* Animations */
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+.glass-panel {
+  background: rgba(17, 34, 64, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
 
-.animate-spin {
-  animation: spin 1s linear infinite;
+.text-glow {
+  text-shadow: 0 0 10px var(--accent-glow);
 }
 
-/* Matrix falling animation */
-@keyframes matrix-fall {
-  0% {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(100vh);
-    opacity: 0;
-  }
+.box-glow {
+  box-shadow: 0 0 20px var(--accent-glow);
 }
 
-.animate-matrix-fall {
-  animation: matrix-fall 3s linear infinite;
+/* Matrix Effect Utilities */
+.matrix-text {
+  font-family: var(--font-mono);
+  color: var(--accent);
+  text-shadow: 0 0 5px var(--accent);
+}
+
+/* Retro Phone Utilities */
+.retro-screen-effect {
+  background: var(--retro-screen);
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.retro-screen-effect::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  z-index: 2;
+  background-size: 100% 2px, 3px 100%;
+  pointer-events: none;
+}
+
+.pixel-text {
+  font-family: var(--font-retro);
+  image-rendering: pixelated;
 }

@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
-import { Calendar, Award, BookOpen, Briefcase, Code, GraduationCap, Rocket } from 'lucide-react';
+import React, { useRef, useState, useMemo } from 'react';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { Calendar, Award, BookOpen, Briefcase, Code, GraduationCap, Rocket, Filter, X } from 'lucide-react';
 
 interface TimelineEvent {
     year: string;
@@ -80,6 +80,8 @@ const events: TimelineEvent[] = [
     }
 ];
 
+const categories = ['All', 'work', 'education', 'achievement', 'project'];
+
 function TimelineItem({ event, index }: { event: TimelineEvent; index: number }) {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, margin: "-100px" });
@@ -89,13 +91,15 @@ function TimelineItem({ event, index }: { event: TimelineEvent; index: number })
     return (
         <motion.div
             ref={ref}
+            layout
             initial={{ opacity: 0, x: isLeft ? -50 : 50 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
+            exit={{ opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.5, delay: 0.1 }}
             className={`flex items-center gap-4 ${isLeft ? 'flex-row' : 'flex-row-reverse'} relative`}
         >
             {/* Content Card */}
-            <motion.div 
+            <motion.div
                 className={`flex-1 ${isLeft ? 'text-right' : 'text-left'}`}
                 whileHover={{ scale: 1.02 }}
                 transition={{ type: 'spring', stiffness: 300 }}
@@ -105,13 +109,13 @@ function TimelineItem({ event, index }: { event: TimelineEvent; index: number })
                     <span className={`inline-block px-3 py-1 bg-gradient-to-r ${event.color} rounded-full text-xs font-bold text-white mb-3`}>
                         {event.year}
                     </span>
-                    
+
                     <h3 className={`text-lg font-bold text-white mb-2 flex items-center gap-2 ${isLeft ? 'justify-end' : 'justify-start'}`}>
                         {!isLeft && <Icon size={18} className="text-cyan-400" />}
                         {event.title}
                         {isLeft && <Icon size={18} className="text-cyan-400" />}
                     </h3>
-                    
+
                     <p className="text-gray-400 text-sm leading-relaxed">
                         {event.description}
                     </p>
@@ -127,7 +131,7 @@ function TimelineItem({ event, index }: { event: TimelineEvent; index: number })
 
             {/* Center Line Node */}
             <div className="relative flex-shrink-0 z-10">
-                <motion.div 
+                <motion.div
                     initial={{ scale: 0 }}
                     animate={isInView ? { scale: 1 } : {}}
                     transition={{ delay: 0.2, type: 'spring' }}
@@ -143,23 +147,50 @@ function TimelineItem({ event, index }: { event: TimelineEvent; index: number })
 }
 
 export default function TimelineApp() {
+    const [activeCategory, setActiveCategory] = useState('All');
     const headerRef = useRef(null);
     const headerInView = useInView(headerRef, { once: true });
+
+    const filteredEvents = useMemo(() => {
+        return activeCategory === 'All'
+            ? events
+            : events.filter(e => e.category === activeCategory);
+    }, [activeCategory]);
 
     return (
         <div className="h-full bg-gradient-to-b from-gray-900 via-gray-900 to-black overflow-y-auto">
             {/* Header */}
-            <motion.div 
+            <motion.div
                 ref={headerRef}
                 initial={{ opacity: 0, y: -20 }}
                 animate={headerInView ? { opacity: 1, y: 0 } : {}}
                 className="sticky top-0 z-20 bg-gray-900/80 backdrop-blur-lg border-b border-gray-800 p-6"
             >
-                <h2 className="text-2xl font-bold text-white flex items-center gap-3">
-                    <Calendar className="text-cyan-400" />
-                    My Journey
-                </h2>
-                <p className="text-gray-500 text-sm mt-1">A timeline of milestones and achievements</p>
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+                            <Calendar className="text-cyan-400" />
+                            My Journey
+                        </h2>
+                        <p className="text-gray-500 text-sm mt-1">A timeline of milestones and achievements</p>
+                    </div>
+
+                    {/* Filter Pills */}
+                    <div className="flex flex-wrap gap-2">
+                        {categories.map(cat => (
+                            <button
+                                key={cat}
+                                onClick={() => setActiveCategory(cat)}
+                                className={`px-3 py-1.5 rounded-full text-xs font-medium capitalize transition-all ${activeCategory === cat
+                                        ? 'bg-cyan-500 text-black'
+                                        : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
+                                    }`}
+                            >
+                                {cat}
+                            </button>
+                        ))}
+                    </div>
+                </div>
             </motion.div>
 
             {/* Timeline */}
@@ -169,13 +200,15 @@ export default function TimelineApp() {
 
                 {/* Timeline Items */}
                 <div className="space-y-8">
-                    {events.map((event, index) => (
-                        <TimelineItem key={index} event={event} index={index} />
-                    ))}
+                    <AnimatePresence mode="popLayout">
+                        {filteredEvents.map((event, index) => (
+                            <TimelineItem key={event.title} event={event} index={index} />
+                        ))}
+                    </AnimatePresence>
                 </div>
 
                 {/* End marker */}
-                <motion.div 
+                <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 1 }}

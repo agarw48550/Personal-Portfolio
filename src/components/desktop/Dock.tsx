@@ -2,10 +2,10 @@
 
 import React, { useState, useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { useWindowManager } from '@/hooks/useWindowManager';
-import { AppId } from '@/lib/store';
+import { useStore, AppId } from '@/lib/store';
+import { useSounds } from '@/hooks/useSounds';
 import {
-    User, Briefcase, Code, Mail, Terminal, Clock
+    User, Briefcase, Code, Mail, Terminal, Clock, BookOpen
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTheme } from 'next-themes';
@@ -17,6 +17,7 @@ const apps = [
     { id: 'timeline', icon: Clock, label: 'Timeline' },
     { id: 'terminal', icon: Terminal, label: 'Terminal' },
     { id: 'contact', icon: Mail, label: 'Contact' },
+    { id: 'blogs', label: 'Blogs', icon: BookOpen, color: 'bg-orange-500' }, // Add if implemented
 ] as const;
 
 interface DockIconProps {
@@ -24,10 +25,11 @@ interface DockIconProps {
     mouseX: ReturnType<typeof useMotionValue<number>>;
     isOpen: boolean;
     isMinimized: boolean;
+    isActive: boolean;
     onClick: () => void;
 }
 
-function DockIcon({ app, mouseX, isOpen, isMinimized, onClick }: DockIconProps) {
+function DockIcon({ app, mouseX, isOpen, isMinimized, isActive, onClick }: DockIconProps) {
     const ref = useRef<HTMLButtonElement>(null);
     const [isHovered, setIsHovered] = useState(false);
 
@@ -49,6 +51,7 @@ function DockIcon({ app, mouseX, isOpen, isMinimized, onClick }: DockIconProps) 
             onMouseLeave={() => setIsHovered(false)}
             className="relative group flex flex-col items-center"
             style={{ width }}
+            aria-label={`Open ${app.label}`}
         >
             {/* Tooltip */}
             <motion.div
@@ -82,7 +85,7 @@ function DockIcon({ app, mouseX, isOpen, isMinimized, onClick }: DockIconProps) 
             >
                 {/* Shine effect */}
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent" />
-                
+
                 <motion.div style={{ scale: useTransform(width, [48, 70], [1, 1.15]) }}>
                     <Icon className="text-cyan-400" size={22} />
                 </motion.div>
@@ -109,20 +112,26 @@ function DockIcon({ app, mouseX, isOpen, isMinimized, onClick }: DockIconProps) 
 
 export default function Dock() {
     const mouseX = useMotionValue(Infinity);
-    const { windows, openWindow, minimizeWindow, focusWindow } = useWindowManager();
+    const { openApps, minimizedApps, activeApp, openApp, minimizeApp, focusApp } = useStore();
+    const { playSound } = useSounds();
     const { resolvedTheme } = useTheme();
     const isDark = resolvedTheme === 'dark';
 
     const handleAppClick = (id: AppId) => {
-        const windowState = windows[id];
-        if (windowState.isOpen) {
-            if (windowState.isMinimized) {
-                focusWindow(id);
+        playSound('click');
+        const isOpen = openApps.includes(id);
+        const isMinimized = minimizedApps.includes(id);
+        const isActive = activeApp === id;
+
+        if (isOpen) {
+            if (isMinimized || !isActive) {
+                focusApp(id);
             } else {
-                minimizeWindow(id);
+                minimizeApp(id);
             }
         } else {
-            openWindow(id);
+            openApp(id);
+            playSound('open');
         }
     };
 
@@ -138,14 +147,14 @@ export default function Dock() {
             <div
                 className="flex items-end gap-1.5 px-2.5 py-2 border border-cyan-500/20"
                 style={{
-                    background: isDark 
+                    background: isDark
                         ? 'linear-gradient(135deg, rgba(34, 211, 238, 0.08) 0%, rgba(10, 10, 15, 0.9) 100%)'
                         : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%)',
                     backdropFilter: 'blur(30px) saturate(180%)',
                     WebkitBackdropFilter: 'blur(30px) saturate(180%)',
                     borderRadius: '18px',
                     borderColor: isDark ? 'rgba(34, 211, 238, 0.2)' : 'rgba(0, 0, 0, 0.1)',
-                    boxShadow: isDark 
+                    boxShadow: isDark
                         ? '0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.05)'
                         : '0 8px 32px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255,255,255,0.5)',
                 }}
@@ -155,8 +164,9 @@ export default function Dock() {
                         key={app.id}
                         app={app}
                         mouseX={mouseX}
-                        isOpen={windows[app.id as AppId]?.isOpen || false}
-                        isMinimized={windows[app.id as AppId]?.isMinimized || false}
+                        isOpen={openApps.includes(app.id as AppId)}
+                        isMinimized={minimizedApps.includes(app.id as AppId)}
+                        isActive={activeApp === app.id}
                         onClick={() => handleAppClick(app.id as AppId)}
                     />
                 ))}

@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { useWindowManager } from '@/hooks/useWindowManager';
-import { AppId } from '@/lib/store';
+import { useStore, AppId } from '@/lib/store';
 import { motion } from 'framer-motion';
 
 interface Command {
@@ -22,24 +21,28 @@ const asciiArt = `
 export default function TerminalApp() {
     const [input, setInput] = useState('');
     const [history, setHistory] = useState<Command[]>([
-        { command: '', output: (
-            <div className="text-green-400 whitespace-pre font-mono text-[10px] sm:text-xs leading-tight mb-2">
-                {asciiArt}
-            </div>
-        )},
-        { command: 'welcome', output: (
-            <div className="space-y-1">
-                <p className="text-white">Welcome to <span className="text-cyan-400 font-semibold">AyaanOS</span> v2.0.0</p>
-                <p className="text-gray-400">Type <span className="text-yellow-400">"help"</span> for available commands.</p>
-                <p className="text-gray-500 text-xs mt-2">Last login: {new Date().toLocaleDateString()} {new Date().toLocaleTimeString()}</p>
-            </div>
-        )}
+        {
+            command: '', output: (
+                <div className="text-green-400 whitespace-pre font-mono text-[10px] sm:text-xs leading-tight mb-2">
+                    {asciiArt}
+                </div>
+            )
+        },
+        {
+            command: 'welcome', output: (
+                <div className="space-y-1">
+                    <p className="text-white">Welcome to <span className="text-cyan-400 font-semibold">AyaanOS</span> v2.0.0</p>
+                    <p className="text-gray-400">Type <span className="text-yellow-400">"help"</span> for available commands.</p>
+                    <p className="text-gray-500 text-xs mt-2">Last login: {new Date().toLocaleDateString()} {new Date().toLocaleTimeString()}</p>
+                </div>
+            )
+        }
     ]);
     const [commandHistory, setCommandHistory] = useState<string[]>([]);
     const [historyIndex, setHistoryIndex] = useState(-1);
     const inputRef = useRef<HTMLInputElement>(null);
     const bottomRef = useRef<HTMLDivElement>(null);
-    const { openWindow } = useWindowManager();
+    const { openApp } = useStore();
 
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -91,7 +94,7 @@ export default function TerminalApp() {
                         <p>Opening <span className="text-cyan-400">About</span> app...</p>
                     </div>
                 );
-                openWindow('about');
+                openApp('about');
                 break;
             case 'projects':
                 output = (
@@ -99,7 +102,7 @@ export default function TerminalApp() {
                         <p>Opening <span className="text-purple-400">Projects</span> app...</p>
                     </div>
                 );
-                openWindow('projects');
+                openApp('projects');
                 break;
             case 'skills':
                 output = (
@@ -107,7 +110,7 @@ export default function TerminalApp() {
                         <p>Opening <span className="text-green-400">Skills</span> app...</p>
                     </div>
                 );
-                openWindow('skills');
+                openApp('skills');
                 break;
             case 'contact':
                 output = (
@@ -115,7 +118,7 @@ export default function TerminalApp() {
                         <p>Opening <span className="text-red-400">Contact</span> app...</p>
                     </div>
                 );
-                openWindow('contact');
+                openApp('contact');
                 break;
             case 'social':
                 output = (
@@ -137,7 +140,7 @@ export default function TerminalApp() {
                 output = (
                     <div className="flex gap-4 text-sm">
                         <div className="text-cyan-400 whitespace-pre font-mono text-xs">
-{`   _____ 
+                            {`   _____ 
   /     \\
  | () () |
   \\  ^  /
@@ -159,7 +162,7 @@ export default function TerminalApp() {
                 return;
             case 'sudo hire-ayaan':
                 output = (
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         className="space-y-2"
@@ -221,8 +224,8 @@ export default function TerminalApp() {
             onClick={() => inputRef.current?.focus()}
         >
             {history.map((entry, i) => (
-                <motion.div 
-                    key={i} 
+                <motion.div
+                    key={i}
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     className="mb-3"

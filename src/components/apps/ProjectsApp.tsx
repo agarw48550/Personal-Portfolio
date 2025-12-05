@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ExternalLink, Github, Filter, X } from 'lucide-react';
+import { ExternalLink, Github, Filter, X, Play } from 'lucide-react';
 
 interface Project {
     id: string;
@@ -18,6 +18,7 @@ interface Project {
     };
     tech: string[];
     image: string;
+    video?: string; // YouTube video ID
     color: string;
     featured: boolean;
     links: {
@@ -75,6 +76,7 @@ const projects: Project[] = [
         stats: { hp: 70, attack: 90, defense: 60, speed: 80 },
         tech: ['Premiere Pro', 'After Effects', 'YouTube'],
         image: '/projects/dragonstv.png',
+        video: 'dQw4w9WgXcQ', // Placeholder
         color: 'from-orange-500 to-amber-600',
         featured: false,
         links: { demo: 'https://youtube.com' }
@@ -101,8 +103,8 @@ export default function ProjectsApp() {
     }, [activeCategory, selectedTech]);
 
     const toggleTech = (tech: string) => {
-        setSelectedTech(prev => 
-            prev.includes(tech) 
+        setSelectedTech(prev =>
+            prev.includes(tech)
                 ? prev.filter(t => t !== tech)
                 : [...prev, tech]
         );
@@ -124,7 +126,7 @@ export default function ProjectsApp() {
                         <Filter size={16} className="text-cyan-400" />
                         <span className="text-sm font-medium text-gray-300">Filter Projects</span>
                         {hasActiveFilters && (
-                            <button 
+                            <button
                                 onClick={clearFilters}
                                 className="text-xs text-cyan-400 hover:text-cyan-300 flex items-center gap-1"
                             >
@@ -132,25 +134,24 @@ export default function ProjectsApp() {
                             </button>
                         )}
                     </div>
-                    <button 
+                    <button
                         onClick={() => setShowFilters(!showFilters)}
                         className="text-xs text-gray-400 hover:text-white transition-colors"
                     >
                         {showFilters ? 'Hide' : 'Show'} Tech Filters
                     </button>
                 </div>
-                
+
                 {/* Category Pills */}
                 <div className="flex flex-wrap gap-2">
                     {categories.map(category => (
                         <button
                             key={category}
                             onClick={() => setActiveCategory(category)}
-                            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                                activeCategory === category
+                            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${activeCategory === category
                                     ? 'bg-cyan-500 text-black'
                                     : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
-                            }`}
+                                }`}
                         >
                             {category}
                         </button>
@@ -171,11 +172,10 @@ export default function ProjectsApp() {
                                     <button
                                         key={tech}
                                         onClick={() => toggleTech(tech)}
-                                        className={`px-2 py-1 rounded text-[10px] font-medium transition-all ${
-                                            selectedTech.includes(tech)
+                                        className={`px-2 py-1 rounded text-[10px] font-medium transition-all ${selectedTech.includes(tech)
                                                 ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/50'
                                                 : 'bg-white/5 text-gray-500 hover:text-gray-300 border border-transparent'
-                                        }`}
+                                            }`}
                                     >
                                         {tech}
                                     </button>
@@ -197,7 +197,7 @@ export default function ProjectsApp() {
                             className="text-center py-12"
                         >
                             <p className="text-gray-500">No projects match your filters</p>
-                            <button 
+                            <button
                                 onClick={clearFilters}
                                 className="mt-2 text-cyan-400 text-sm hover:underline"
                             >
@@ -239,8 +239,14 @@ export default function ProjectsApp() {
                                         </div>
 
                                         {/* Image Placeholder */}
-                                        <div className="flex-1 bg-black/30 rounded-lg mb-3 sm:mb-4 flex items-center justify-center border border-white/5 group-hover:border-white/20 transition-colors min-h-0">
-                                            <span className="text-white/40 text-xs sm:text-sm">Project Preview</span>
+                                        <div className="flex-1 bg-black/30 rounded-lg mb-3 sm:mb-4 flex items-center justify-center border border-white/5 group-hover:border-white/20 transition-colors min-h-0 relative overflow-hidden">
+                                            {project.video ? (
+                                                <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+                                                    <Play className="text-white/50 w-12 h-12" />
+                                                </div>
+                                            ) : (
+                                                <span className="text-white/40 text-xs sm:text-sm">Project Preview</span>
+                                            )}
                                         </div>
 
                                         {/* Tech Tags */}
@@ -286,8 +292,21 @@ export default function ProjectsApp() {
                                                 <span className="text-white/40 font-bold text-5xl">#{project.id.padStart(3, '0')}</span>
                                             </div>
 
-                                            <div className="flex-1 bg-black/20 rounded-2xl mb-8 flex items-center justify-center backdrop-blur-sm border border-white/10">
-                                                <span className="text-white/60">Project Image</span>
+                                            <div className="flex-1 bg-black/20 rounded-2xl mb-8 flex items-center justify-center backdrop-blur-sm border border-white/10 overflow-hidden relative">
+                                                {project.video ? (
+                                                    <iframe
+                                                        width="100%"
+                                                        height="100%"
+                                                        src={`https://www.youtube.com/embed/${project.video}`}
+                                                        title="YouTube video player"
+                                                        frameBorder="0"
+                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                        allowFullScreen
+                                                        className="absolute inset-0"
+                                                    ></iframe>
+                                                ) : (
+                                                    <span className="text-white/60">Project Image</span>
+                                                )}
                                             </div>
 
                                             <div className="flex gap-4">
