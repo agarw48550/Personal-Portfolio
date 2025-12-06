@@ -1,8 +1,6 @@
 'use client';
 
-import React, { useRef, useEffect } from 'react';
-import { drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils';
-import { HAND_CONNECTIONS } from '@mediapipe/hands';
+import React from 'react';
 
 interface WebcamFeedProps {
     onVideoReady: (video: HTMLVideoElement) => void;
@@ -30,17 +28,4 @@ export default function WebcamFeed({ onVideoReady, videoRef, canvasRef, streamRe
             />
         </div>
     );
-}
-
-export function drawResults(ctx: CanvasRenderingContext2D, results: any) {
-    ctx.save();
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
-    if (results.multiHandLandmarks) {
-        for (const landmarks of results.multiHandLandmarks) {
-            drawConnectors(ctx, landmarks, HAND_CONNECTIONS, { color: '#00FF00', lineWidth: 2 });
-            drawLandmarks(ctx, landmarks, { color: '#FF0000', lineWidth: 1, radius: 2 });
-        }
-    }
-    ctx.restore();
 }

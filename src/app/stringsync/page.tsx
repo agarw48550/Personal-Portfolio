@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Loader2, Volume2, VolumeX } from 'lucide-react';
-import WebcamFeed, { drawResults } from '@/components/stringsync/WebcamFeed';
+import WebcamFeed from '@/components/stringsync/WebcamFeed';
 import { HandTracker } from '@/components/stringsync/HandTracker';
 import { detectChord, ChordSmoother } from '@/components/stringsync/ChordDetector';
 import { StrumDetector } from '@/components/stringsync/StrumDetector';
@@ -44,7 +44,7 @@ export default function StringSyncPage() {
             if (ctx) {
                 ctx.canvas.width = videoRef.current.videoWidth;
                 ctx.canvas.height = videoRef.current.videoHeight;
-                drawResults(ctx, results);
+                handTracker.current?.draw(ctx, results);
             }
 
             // Logic Processing
