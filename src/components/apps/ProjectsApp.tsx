@@ -149,8 +149,8 @@ export default function ProjectsApp() {
                             key={category}
                             onClick={() => setActiveCategory(category)}
                             className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${activeCategory === category
-                                    ? 'bg-cyan-500 text-black'
-                                    : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
+                                ? 'bg-cyan-500 text-black'
+                                : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
                                 }`}
                         >
                             {category}
@@ -173,8 +173,8 @@ export default function ProjectsApp() {
                                         key={tech}
                                         onClick={() => toggleTech(tech)}
                                         className={`px-2 py-1 rounded text-[10px] font-medium transition-all ${selectedTech.includes(tech)
-                                                ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/50'
-                                                : 'bg-white/5 text-gray-500 hover:text-gray-300 border border-transparent'
+                                            ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/50'
+                                            : 'bg-white/5 text-gray-500 hover:text-gray-300 border border-transparent'
                                             }`}
                                     >
                                         {tech}
@@ -187,7 +187,7 @@ export default function ProjectsApp() {
             </div>
 
             {/* Projects Grid */}
-            <div className="p-4 sm:p-6">
+            <div className="p-4 sm:p-6 pb-20">
                 <AnimatePresence mode="popLayout">
                     {filteredProjects.length === 0 ? (
                         <motion.div
@@ -205,7 +205,7 @@ export default function ProjectsApp() {
                             </button>
                         </motion.div>
                     ) : (
-                        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+                        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                             {filteredProjects.map((project, index) => (
                                 <motion.div
                                     key={project.id}
@@ -216,46 +216,50 @@ export default function ProjectsApp() {
                                     transition={{ delay: index * 0.05 }}
                                     layoutId={project.id}
                                     onClick={() => setSelectedId(project.id)}
-                                    className={`relative h-80 sm:h-96 rounded-2xl bg-gradient-to-br ${project.color} p-[2px] cursor-pointer group`}
+                                    className={`relative rounded-2xl bg-gradient-to-br ${project.color} p-[2px] cursor-pointer group h-full`}
                                     whileHover={{ scale: 1.02 }}
                                 >
-                                    <div className="h-full w-full bg-gray-900/95 backdrop-blur-sm rounded-[14px] p-4 sm:p-6 flex flex-col relative overflow-hidden">
+                                    <div className="h-full w-full bg-gray-900/95 backdrop-blur-sm rounded-[14px] p-6 flex flex-col relative overflow-hidden min-h-[320px]">
                                         {/* Featured Badge */}
                                         {project.featured && (
-                                            <div className="absolute top-2 right-2 px-2 py-0.5 bg-cyan-500/20 border border-cyan-500/50 rounded-full">
+                                            <div className="absolute top-4 right-4 px-2 py-0.5 bg-cyan-500/20 border border-cyan-500/50 rounded-full z-10">
                                                 <span className="text-[10px] text-cyan-400 font-medium">Featured</span>
                                             </div>
                                         )}
 
                                         {/* Card Header */}
-                                        <div className="flex justify-between items-start mb-3 sm:mb-4 gap-2">
+                                        <div className="flex justify-between items-start mb-4 gap-2 pr-16">
                                             <div className="min-w-0 flex-1">
-                                                <h3 className="text-xl sm:text-2xl font-bold text-white mb-1 truncate" title={project.name}>{project.name}</h3>
-                                                <span className="inline-block px-2 py-0.5 bg-white/10 rounded-full text-[10px] sm:text-xs text-white/80 border border-white/10">
+                                                <h3 className="text-2xl font-bold text-white mb-1 truncate" title={project.name}>{project.name}</h3>
+                                                <span className="inline-block px-2 py-0.5 bg-white/10 rounded-full text-xs text-white/80 border border-white/10">
                                                     {project.type}
                                                 </span>
                                             </div>
-                                            <span className="text-white/20 font-bold text-2xl sm:text-4xl flex-shrink-0">#{project.id.padStart(3, '0')}</span>
                                         </div>
 
                                         {/* Image Placeholder */}
-                                        <div className="flex-1 bg-black/30 rounded-lg mb-3 sm:mb-4 flex items-center justify-center border border-white/5 group-hover:border-white/20 transition-colors min-h-0 relative overflow-hidden">
+                                        <div className="flex-1 bg-black/30 rounded-lg mb-4 flex items-center justify-center border border-white/5 group-hover:border-white/20 transition-colors min-h-[140px] relative overflow-hidden">
                                             {project.video ? (
                                                 <div className="absolute inset-0 flex items-center justify-center bg-black/50">
                                                     <Play className="text-white/50 w-12 h-12" />
                                                 </div>
                                             ) : (
-                                                <span className="text-white/40 text-xs sm:text-sm">Project Preview</span>
+                                                <span className="text-white/40 text-sm">Project Preview</span>
                                             )}
                                         </div>
 
                                         {/* Tech Tags */}
-                                        <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
+                                        <div className="flex flex-wrap gap-2">
                                             {project.tech.slice(0, 4).map((t) => (
-                                                <span key={t} className="text-[10px] sm:text-xs text-center py-1 px-1 bg-white/5 rounded text-gray-300 truncate" title={t}>
+                                                <span key={t} className="text-xs py-1 px-2 bg-white/5 rounded text-gray-300 border border-white/5">
                                                     {t}
                                                 </span>
                                             ))}
+                                            {project.tech.length > 4 && (
+                                                <span className="text-xs py-1 px-2 bg-white/5 rounded text-gray-500 border border-white/5">
+                                                    +{project.tech.length - 4}
+                                                </span>
+                                            )}
                                         </div>
 
                                         <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />

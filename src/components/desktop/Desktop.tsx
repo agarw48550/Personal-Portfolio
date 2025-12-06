@@ -1,13 +1,12 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useStore } from '@/lib/store';
-import Dock from './Dock';
-import Window from './Window'; // We'll need to ensure this component is compatible or update it
-import CustomCursor from './CustomCursor';
 import { useSounds } from '@/hooks/useSounds';
-
-// Import App Components
+import { AnimatePresence, motion } from 'framer-motion';
+import Window from './Window';
+import Dock from './Dock';
+import CustomCursor from './CustomCursor';
 import AboutApp from '@/components/apps/AboutApp';
 import ProjectsApp from '@/components/apps/ProjectsApp';
 import SkillsApp from '@/components/apps/SkillsApp';
@@ -15,6 +14,8 @@ import ContactApp from '@/components/apps/ContactApp';
 import TerminalApp from '@/components/apps/TerminalApp';
 import TimelineApp from '@/components/apps/TimelineApp';
 import BlogsApp from '@/components/apps/BlogsApp';
+import TopBar from './TopBar';
+import MatrixBackground from './MatrixBackground';
 
 export default function Desktop() {
     const { openApp, activeApp } = useStore();
@@ -39,11 +40,19 @@ export default function Desktop() {
             {/* Custom Cursor */}
             <CustomCursor />
 
-            {/* Wallpaper / Background */}
-            <div className="absolute inset-0 z-0 bg-gradient-to-br from-[#0a192f] via-[#112240] to-[#0a192f] opacity-80" />
+            {/* Top Bar */}
+            <TopBar />
+
+            {/* Matrix Background */}
+            <div className="absolute inset-0 z-0 opacity-30">
+                <MatrixBackground />
+            </div>
+
+            {/* Gradient Overlay for readability */}
+            <div className="absolute inset-0 z-0 bg-gradient-to-br from-[#0a192f]/80 via-[#112240]/80 to-[#0a192f]/80 pointer-events-none" />
 
             {/* Windows Layer */}
-            <div className="absolute inset-0 z-10 pointer-events-none">
+            <div className="absolute inset-0 z-10 pointer-events-none pt-8">
                 <div className="relative w-full h-full pointer-events-auto">
                     <Window id="about"><AboutApp /></Window>
                     <Window id="projects"><ProjectsApp /></Window>

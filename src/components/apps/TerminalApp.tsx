@@ -58,8 +58,8 @@ export default function TerminalApp() {
             setHistoryIndex(-1);
         }
 
-        switch (trimmedCmd) {
-            case 'help':
+        switch (true) {
+            case trimmedCmd === 'help':
                 output = (
                     <div className="space-y-2 text-gray-300">
                         <p className="text-white font-semibold">Available commands:</p>
@@ -88,7 +88,7 @@ export default function TerminalApp() {
                     </div>
                 );
                 break;
-            case 'about':
+            case trimmedCmd === 'about':
                 output = (
                     <div className="text-gray-300">
                         <p>Opening <span className="text-cyan-400">About</span> app...</p>
@@ -96,7 +96,7 @@ export default function TerminalApp() {
                 );
                 openApp('about');
                 break;
-            case 'projects':
+            case trimmedCmd === 'projects':
                 output = (
                     <div className="text-gray-300">
                         <p>Opening <span className="text-purple-400">Projects</span> app...</p>
@@ -104,7 +104,7 @@ export default function TerminalApp() {
                 );
                 openApp('projects');
                 break;
-            case 'skills':
+            case trimmedCmd === 'skills':
                 output = (
                     <div className="text-gray-300">
                         <p>Opening <span className="text-green-400">Skills</span> app...</p>
@@ -112,7 +112,7 @@ export default function TerminalApp() {
                 );
                 openApp('skills');
                 break;
-            case 'contact':
+            case trimmedCmd === 'contact':
                 output = (
                     <div className="text-gray-300">
                         <p>Opening <span className="text-red-400">Contact</span> app...</p>
@@ -120,7 +120,7 @@ export default function TerminalApp() {
                 );
                 openApp('contact');
                 break;
-            case 'social':
+            case trimmedCmd === 'social':
                 output = (
                     <div className="space-y-1.5 text-sm">
                         <p className="text-white font-semibold">Social Links:</p>
@@ -130,13 +130,13 @@ export default function TerminalApp() {
                     </div>
                 );
                 break;
-            case 'whoami':
+            case trimmedCmd === 'whoami':
                 output = <p className="text-cyan-400">guest@ayaan-os</p>;
                 break;
-            case 'date':
+            case trimmedCmd === 'date':
                 output = <p className="text-gray-300">{new Date().toString()}</p>;
                 break;
-            case 'neofetch':
+            case trimmedCmd === 'neofetch':
                 output = (
                     <div className="flex gap-4 text-sm">
                         <div className="text-cyan-400 whitespace-pre font-mono text-xs">
@@ -157,10 +157,10 @@ export default function TerminalApp() {
                     </div>
                 );
                 break;
-            case 'clear':
+            case trimmedCmd === 'clear':
                 setHistory([]);
                 return;
-            case 'sudo hire-ayaan':
+            case trimmedCmd.startsWith('sudo hire-ayaan'):
                 output = (
                     <motion.div
                         initial={{ opacity: 0 }}
@@ -176,7 +176,7 @@ export default function TerminalApp() {
                     </motion.div>
                 );
                 break;
-            case '':
+            case trimmedCmd === '':
                 output = '';
                 break;
             default:

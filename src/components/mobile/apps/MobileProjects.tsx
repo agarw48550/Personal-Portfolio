@@ -7,21 +7,24 @@ const PROJECTS = [
         title: 'DragonsTV',
         desc: 'School media platform',
         tech: 'Next.js, YouTube API',
-        color: '#ff7675'
+        color: '#ff7675',
+        links: { demo: 'https://youtube.com' }
     },
     {
         id: 'mun',
         title: 'MUN Dashboard',
         desc: 'Conference management',
         tech: 'React, Firebase',
-        color: '#74b9ff'
+        color: '#74b9ff',
+        links: { repo: 'https://github.com' }
     },
     {
         id: 'portfolio',
         title: 'OS Portfolio',
         desc: 'Interactive desktop UI',
         tech: 'React, Framer Motion',
-        color: '#a29bfe'
+        color: '#a29bfe',
+        links: { repo: 'https://github.com/agarw48550/portfolio' }
     }
 ];
 
@@ -29,9 +32,12 @@ export default function MobileProjects() {
     return (
         <div className="space-y-4 p-2 pb-20">
             {PROJECTS.map((project) => (
-                <div
+                <a
                     key={project.id}
-                    className="bg-[#dfe6e9] rounded-lg border-2 border-[#b2bec3] overflow-hidden shadow-sm hover:translate-y-[-2px] transition-transform"
+                    href={project.links?.demo || project.links?.repo || '#'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block bg-[#dfe6e9] rounded-lg border-2 border-[#b2bec3] overflow-hidden shadow-sm hover:translate-y-[-2px] transition-transform active:scale-95"
                 >
                     <div className="h-24 bg-[#b2bec3] relative flex items-center justify-center">
                         {/* Placeholder for project thumbnail */}
@@ -54,7 +60,7 @@ export default function MobileProjects() {
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
             ))}
         </div>
     );

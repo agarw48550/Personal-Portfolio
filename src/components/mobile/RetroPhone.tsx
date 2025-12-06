@@ -1,21 +1,20 @@
-"use client";
-
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useHaptics } from '@/hooks/useHaptics';
 import { useSounds } from '@/hooks/useSounds';
-import { Battery, Signal, Wifi, Menu, ChevronLeft, User, Briefcase, Code, Mail, BookOpen } from 'lucide-react';
+import { Battery, Signal, Wifi, Menu, ChevronLeft, User, Briefcase, Code, Mail, BookOpen, Edit3 } from 'lucide-react';
 import MobileAbout from './apps/MobileAbout';
 import MobileProjects from './apps/MobileProjects';
 import MobileSkills from './apps/MobileSkills';
 import MobileContact from './apps/MobileContact';
+import MobileBlog from './apps/MobileBlog';
 
 // Simple pixel-art style icons using Lucide for now, but styled to look retro
 const APPS = [
     { id: 'about', name: 'About', icon: User, color: '#ff7675' },
     { id: 'projects', name: 'Projects', icon: Briefcase, color: '#74b9ff' },
     { id: 'skills', name: 'Skills', icon: Code, color: '#55efc4' },
-    { id: 'timeline', name: 'Timeline', icon: BookOpen, color: '#a29bfe' },
+    { id: 'blog', name: 'Blog', icon: Edit3, color: '#fab1a0' },
     { id: 'contact', name: 'Contact', icon: Mail, color: '#fdcb6e' },
 ];
 
@@ -36,12 +35,14 @@ export default function RetroPhone() {
     }, []);
 
     const handleAppClick = (appId: string) => {
+        if (navigator.vibrate) navigator.vibrate(10); // Direct haptic call
         triggerHaptic('retroClick');
         playSound('retroBeep');
         setActiveApp(appId);
     };
 
     const handleBack = () => {
+        if (navigator.vibrate) navigator.vibrate(10);
         triggerHaptic('retroClick');
         playSound('close');
         setActiveApp(null);
@@ -102,11 +103,7 @@ export default function RetroPhone() {
                                     {activeApp === 'projects' && <MobileProjects />}
                                     {activeApp === 'skills' && <MobileSkills />}
                                     {activeApp === 'contact' && <MobileContact />}
-                                    {activeApp === 'timeline' && (
-                                        <div className="text-center p-4 text-xs font-mono text-[#636e72]">
-                                            Timeline view optimized for desktop. Please view on a larger screen for the full experience.
-                                        </div>
-                                    )}
+                                    {activeApp === 'blog' && <MobileBlog />}
                                 </div>
                             </div>
                         )}
