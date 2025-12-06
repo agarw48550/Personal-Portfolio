@@ -43,11 +43,7 @@ export default function AboutApp() {
           >
             <div className="absolute inset-0 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity duration-500" />
             <div className="relative w-48 h-48 rounded-2xl overflow-hidden border-2 border-white/10 bg-slate-800 shadow-2xl">
-              {/* Placeholder for actual image */}
-              <div className="w-full h-full flex items-center justify-center bg-slate-800 text-slate-600">
-                <span className="text-4xl">AA</span>
-              </div>
-              {/* <Image src="/images/profile.jpg" alt="Ayaan Agarwal" fill className="object-cover" /> */}
+              <Image src="/images/profile.jpg" alt="Ayaan Agarwal" fill className="object-cover" />
             </div>
           </motion.div>
 

@@ -5,6 +5,10 @@ import { motion } from 'framer-motion';
 import { useHaptics } from '@/hooks/useHaptics';
 import { useSounds } from '@/hooks/useSounds';
 import { Battery, Signal, Wifi, Menu, ChevronLeft, User, Briefcase, Code, Mail, BookOpen } from 'lucide-react';
+import MobileAbout from './apps/MobileAbout';
+import MobileProjects from './apps/MobileProjects';
+import MobileSkills from './apps/MobileSkills';
+import MobileContact from './apps/MobileContact';
 
 // Simple pixel-art style icons using Lucide for now, but styled to look retro
 const APPS = [
@@ -87,15 +91,22 @@ export default function RetroPhone() {
                         ) : (
                             // App View
                             <div className="h-full flex flex-col">
-                                <div className="flex items-center gap-2 mb-4 border-b-2 border-[#2d3436] pb-2">
-                                    <button onClick={handleBack} className="p-1 hover:bg-[#2d3436]/10 rounded">
+                                <div className="flex items-center gap-2 mb-4 border-b-2 border-[#2d3436] pb-2 sticky top-0 bg-[#9cb0a5] z-10 pt-2">
+                                    <button onClick={handleBack} className="p-1 hover:bg-[#2d3436]/10 rounded active:scale-90 transition-transform">
                                         <ChevronLeft size={20} />
                                     </button>
                                     <h2 className="text-lg font-bold uppercase">{APPS.find(a => a.id === activeApp)?.name}</h2>
                                 </div>
-                                <div className="flex-1 overflow-y-auto">
-                                    <p className="text-sm font-mono">App content for {activeApp} coming soon...</p>
-                                    {/* Placeholder for app content */}
+                                <div className="flex-1 overflow-y-auto custom-scrollbar">
+                                    {activeApp === 'about' && <MobileAbout />}
+                                    {activeApp === 'projects' && <MobileProjects />}
+                                    {activeApp === 'skills' && <MobileSkills />}
+                                    {activeApp === 'contact' && <MobileContact />}
+                                    {activeApp === 'timeline' && (
+                                        <div className="text-center p-4 text-xs font-mono text-[#636e72]">
+                                            Timeline view optimized for desktop. Please view on a larger screen for the full experience.
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         )}
