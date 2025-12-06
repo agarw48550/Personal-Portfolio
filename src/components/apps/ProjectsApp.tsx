@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ExternalLink, Github, Filter, X, Play } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface Project {
     id: string;
@@ -25,9 +26,24 @@ interface Project {
         demo?: string;
         repo?: string;
     };
+    internalRoute?: string; // Route to navigate to within the app
 }
 
 const projects: Project[] = [
+    {
+        id: 'stringsync',
+        name: 'StringSync',
+        type: 'Interactive',
+        category: 'AI',
+        description: 'Play air guitar with just your hands and a webcam. Powered by MediaPipe hand tracking and Web Audio API.',
+        stats: { hp: 85, attack: 95, defense: 60, speed: 100 },
+        tech: ['MediaPipe', 'TensorFlow.js', 'Web Audio API', 'React'],
+        image: '/projects/stringsync.png', // Placeholder, using solid color for now
+        color: 'from-pink-500 to-rose-600',
+        featured: true,
+        links: {},
+        internalRoute: '/stringsync'
+    },
     {
         id: '1',
         name: 'Portfolio OS',
@@ -88,6 +104,7 @@ const categories = ['All', ...new Set(projects.map(p => p.category))];
 const allTech = [...new Set(projects.flatMap(p => p.tech))].sort();
 
 export default function ProjectsApp() {
+    const router = useRouter();
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [activeCategory, setActiveCategory] = useState('All');
     const [selectedTech, setSelectedTech] = useState<string[]>([]);
@@ -113,6 +130,14 @@ export default function ProjectsApp() {
     const clearFilters = () => {
         setActiveCategory('All');
         setSelectedTech([]);
+    };
+
+    const handleProjectClick = (project: Project) => {
+        if (project.internalRoute) {
+            router.push(project.internalRoute);
+        } else {
+            setSelectedId(project.id);
+        }
     };
 
     const hasActiveFilters = activeCategory !== 'All' || selectedTech.length > 0;
@@ -215,7 +240,7 @@ export default function ProjectsApp() {
                                     exit={{ opacity: 0, scale: 0.9 }}
                                     transition={{ delay: index * 0.05 }}
                                     layoutId={project.id}
-                                    onClick={() => setSelectedId(project.id)}
+                                    onClick={() => handleProjectClick(project)}
                                     className={`relative rounded-2xl bg-gradient-to-br ${project.color} p-[2px] cursor-pointer group h-full`}
                                     whileHover={{ scale: 1.02 }}
                                 >
@@ -244,7 +269,7 @@ export default function ProjectsApp() {
                                                     <Play className="text-white/50 w-12 h-12" />
                                                 </div>
                                             ) : (
-                                                <span className="text-white/40 text-sm">Project Preview</span>
+                                                <span className="text-white/40 text-sm">{project.internalRoute ? 'Click to Play' : 'Project Preview'}</span>
                                             )}
                                         </div>
 
