@@ -4,7 +4,10 @@ import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ExternalLink, Github, Filter, X, Play } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useLanguage } from '@/lib/i18n';
+import { PROJECTS_DATA } from '@/lib/projectData';
 
+// Interface defined in projectData.ts effectively, but we can keep local interface if it matches
 interface Project {
     id: string;
     name: string;
@@ -26,89 +29,22 @@ interface Project {
         demo?: string;
         repo?: string;
     };
-    internalRoute?: string; // Route to navigate to within the app
+    internalRoute?: string;
 }
-
-const projects: Project[] = [
-    {
-        id: 'stringsync',
-        name: 'StringSync',
-        type: 'Interactive',
-        category: 'AI',
-        description: 'Play air guitar with just your hands and a webcam. Powered by MediaPipe hand tracking and Web Audio API.',
-        stats: { hp: 85, attack: 95, defense: 60, speed: 100 },
-        tech: ['MediaPipe', 'TensorFlow.js', 'Web Audio API', 'React'],
-        image: '/projects/stringsync.png', // Placeholder, using solid color for now
-        color: 'from-pink-500 to-rose-600',
-        featured: true,
-        links: {},
-        internalRoute: '/stringsync'
-    },
-    {
-        id: '1',
-        name: 'Portfolio OS',
-        type: 'Web App',
-        category: 'Web',
-        description: 'A fully functional operating system simulation in the browser using Next.js, React, and Framer Motion.',
-        stats: { hp: 90, attack: 85, defense: 80, speed: 95 },
-        tech: ['Next.js', 'React', 'TypeScript', 'Tailwind'],
-        image: '/projects/portfolio.png',
-        color: 'from-cyan-500 to-blue-600',
-        featured: true,
-        links: { repo: 'https://github.com/agarw48550/portfolio' }
-    },
-    {
-        id: '2',
-        name: 'Fridge Chef AI',
-        type: 'AI App',
-        category: 'AI',
-        description: 'AI-powered app that scans your fridge and suggests recipes based on available ingredients.',
-        stats: { hp: 85, attack: 95, defense: 70, speed: 80 },
-        tech: ['React Native', 'OpenAI', 'TensorFlow', 'Python'],
-        image: '/projects/fridgechef.png',
-        color: 'from-green-500 to-emerald-600',
-        featured: true,
-        links: { demo: 'https://fridgechef.app' }
-    },
-    {
-        id: '3',
-        name: 'Air Drums',
-        type: 'Computer Vision',
-        category: 'AI',
-        description: 'Virtual drumming experience using hand tracking technology. Play drums in the air!',
-        stats: { hp: 70, attack: 90, defense: 60, speed: 95 },
-        tech: ['Python', 'OpenCV', 'MediaPipe', 'PyAudio'],
-        image: '/projects/airdrums.png',
-        color: 'from-purple-500 to-pink-600',
-        featured: false,
-        links: { repo: 'https://github.com/agarw48550/air-drums' }
-    },
-    {
-        id: '4',
-        name: 'DragonsTV',
-        type: 'Media',
-        category: 'Other',
-        description: 'Video news platform for UWCSEA. Managed content strategy, filming, and editing.',
-        stats: { hp: 70, attack: 90, defense: 60, speed: 80 },
-        tech: ['Premiere Pro', 'After Effects', 'YouTube'],
-        image: '/projects/dragonstv.png',
-        video: 'dQw4w9WgXcQ', // Placeholder
-        color: 'from-orange-500 to-amber-600',
-        featured: false,
-        links: { demo: 'https://youtube.com' }
-    },
-];
-
-// Extract unique categories and tech for filters
-const categories = ['All', ...new Set(projects.map(p => p.category))];
-const allTech = [...new Set(projects.flatMap(p => p.tech))].sort();
 
 export default function ProjectsApp() {
     const router = useRouter();
+    const { t, language } = useLanguage();
+    const projects = PROJECTS_DATA[language];
+
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [activeCategory, setActiveCategory] = useState('All');
     const [selectedTech, setSelectedTech] = useState<string[]>([]);
     const [showFilters, setShowFilters] = useState(false);
+
+    // Extract unique categories and tech for filters from CURRENT language data
+    const categories = useMemo(() => ['All', ...new Set(projects.map(p => p.category))], [projects]);
+    const allTech = useMemo(() => [...new Set(projects.flatMap(p => p.tech))].sort(), [projects]);
 
     // Filter projects based on category and tech
     const filteredProjects = useMemo(() => {
@@ -117,7 +53,7 @@ export default function ProjectsApp() {
             const techMatch = selectedTech.length === 0 || selectedTech.some(t => project.tech.includes(t));
             return categoryMatch && techMatch;
         });
-    }, [activeCategory, selectedTech]);
+    }, [activeCategory, selectedTech, projects]);
 
     const toggleTech = (tech: string) => {
         setSelectedTech(prev =>
@@ -149,13 +85,13 @@ export default function ProjectsApp() {
                 <div className="flex items-center justify-between gap-4 mb-3">
                     <div className="flex items-center gap-2">
                         <Filter size={16} className="text-cyan-400" />
-                        <span className="text-sm font-medium text-gray-300">Filter Projects</span>
+                        <span className="text-sm font-medium text-gray-300">{t.appContent.projects.filter}</span>
                         {hasActiveFilters && (
                             <button
                                 onClick={clearFilters}
                                 className="text-xs text-cyan-400 hover:text-cyan-300 flex items-center gap-1"
                             >
-                                <X size={12} /> Clear
+                                <X size={12} /> {t.appContent.projects.clear}
                             </button>
                         )}
                     </div>
@@ -163,7 +99,7 @@ export default function ProjectsApp() {
                         onClick={() => setShowFilters(!showFilters)}
                         className="text-xs text-gray-400 hover:text-white transition-colors"
                     >
-                        {showFilters ? 'Hide' : 'Show'} Tech Filters
+                        {showFilters ? t.appContent.projects.hideFilters : t.appContent.projects.showFilters}
                     </button>
                 </div>
 
@@ -221,12 +157,12 @@ export default function ProjectsApp() {
                             exit={{ opacity: 0 }}
                             className="text-center py-12"
                         >
-                            <p className="text-gray-500">No projects match your filters</p>
+                            <p className="text-gray-500">{t.appContent.projects.noResults}</p>
                             <button
                                 onClick={clearFilters}
                                 className="mt-2 text-cyan-400 text-sm hover:underline"
                             >
-                                Clear filters
+                                {t.appContent.projects.clear}
                             </button>
                         </motion.div>
                     ) : (
@@ -248,7 +184,7 @@ export default function ProjectsApp() {
                                         {/* Featured Badge */}
                                         {project.featured && (
                                             <div className="absolute top-4 right-4 px-2 py-0.5 bg-cyan-500/20 border border-cyan-500/50 rounded-full z-10">
-                                                <span className="text-[10px] text-cyan-400 font-medium">Featured</span>
+                                                <span className="text-[10px] text-cyan-400 font-medium">{t.appContent.projects.featured}</span>
                                             </div>
                                         )}
 
@@ -269,7 +205,7 @@ export default function ProjectsApp() {
                                                     <Play className="text-white/50 w-12 h-12" />
                                                 </div>
                                             ) : (
-                                                <span className="text-white/40 text-sm">{project.internalRoute ? 'Click to Play' : 'Project Preview'}</span>
+                                                <span className="text-white/40 text-sm">{project.internalRoute ? t.appContent.projects.clickToPlay : t.appContent.projects.preview}</span>
                                             )}
                                         </div>
 
@@ -334,19 +270,19 @@ export default function ProjectsApp() {
                                                         className="absolute inset-0"
                                                     ></iframe>
                                                 ) : (
-                                                    <span className="text-white/60">Project Image</span>
+                                                    <span className="text-white/60">{t.appContent.projects.preview}</span>
                                                 )}
                                             </div>
 
                                             <div className="flex gap-4">
                                                 {project.links.demo && (
                                                     <a href={project.links.demo} target="_blank" rel="noopener noreferrer" className="flex-1 py-3 bg-white text-black rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-gray-200 transition-colors">
-                                                        <ExternalLink size={18} /> Demo
+                                                        <ExternalLink size={18} /> {t.appContent.projects.demo}
                                                     </a>
                                                 )}
                                                 {project.links.repo && (
                                                     <a href={project.links.repo} target="_blank" rel="noopener noreferrer" className="flex-1 py-3 bg-black/40 text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-black/60 transition-colors border border-white/20">
-                                                        <Github size={18} /> Code
+                                                        <Github size={18} /> {t.appContent.projects.code}
                                                     </a>
                                                 )}
                                             </div>
@@ -354,12 +290,12 @@ export default function ProjectsApp() {
 
                                         {/* Right Side - Stats & Info */}
                                         <div className="w-full md:w-1/2 p-8 bg-gray-900 text-white overflow-y-auto">
-                                            <h3 className="text-xl font-bold mb-4 text-gray-200">About</h3>
+                                            <h3 className="text-xl font-bold mb-4 text-gray-200">{t.appContent.projects.about}</h3>
                                             <p className="text-gray-400 mb-8 leading-relaxed">
                                                 {project.description}
                                             </p>
 
-                                            <h3 className="text-xl font-bold mb-4 text-gray-200">Base Stats</h3>
+                                            <h3 className="text-xl font-bold mb-4 text-gray-200">{t.appContent.projects.stats}</h3>
                                             <div className="space-y-4 mb-8">
                                                 {Object.entries(project.stats).map(([stat, value]) => (
                                                     <div key={stat} className="flex items-center gap-4">
@@ -377,7 +313,7 @@ export default function ProjectsApp() {
                                                 ))}
                                             </div>
 
-                                            <h3 className="text-xl font-bold mb-4 text-gray-200">Abilities (Tech Stack)</h3>
+                                            <h3 className="text-xl font-bold mb-4 text-gray-200">{t.appContent.projects.tech}</h3>
                                             <div className="flex flex-wrap gap-2">
                                                 {project.tech.map((t) => (
                                                     <span key={t} className="px-3 py-1.5 bg-gray-800 rounded-lg text-sm text-gray-300 border border-gray-700">

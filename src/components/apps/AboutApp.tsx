@@ -4,9 +4,11 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Mail, Phone, MapPin, Linkedin, Github, ExternalLink } from "lucide-react";
+import { useLanguage } from "@/lib/i18n";
 
 export default function AboutApp() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const { t } = useLanguage();
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -55,7 +57,7 @@ export default function AboutApp() {
               transition={{ delay: 0.1 }}
               className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight"
             >
-              Hi, I'm Ayaan <span className="inline-block animate-wave">👋</span>
+              {t.appContent.about.greeting} <span className="inline-block animate-wave">👋</span>
             </motion.h1>
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
@@ -63,7 +65,7 @@ export default function AboutApp() {
               transition={{ delay: 0.2 }}
               className="text-xl text-cyan-400 font-medium mb-6"
             >
-              Student • Leader • Developer
+              {t.appContent.about.role}
             </motion.h2>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -73,11 +75,11 @@ export default function AboutApp() {
             >
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-sm">
                 <MapPin size={14} className="text-cyan-400" />
-                <span>Singapore</span>
+                <span>{t.appContent.about.location}</span>
               </div>
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-sm">
                 <span className="text-cyan-400">🎓</span>
-                <span>Class of 2028</span>
+                <span>{t.appContent.about.classOf}</span>
               </div>
             </motion.div>
           </div>
@@ -93,46 +95,39 @@ export default function AboutApp() {
           <div className="md:col-span-2 space-y-6">
             <h3 className="text-2xl font-bold text-white flex items-center gap-2">
               <span className="w-8 h-1 bg-cyan-500 rounded-full" />
-              About Me
+              {t.appContent.about.aboutTitle}
             </h3>
             <div className="prose prose-invert max-w-none text-slate-300 leading-relaxed space-y-4">
-              <p>
-                I'm a 16-year-old student at UWC South East Asia in Singapore, passionate about leadership, service, and making an impact.
-                Whether I'm chairing MUN conferences, producing school news for DragonsTV, organizing community service initiatives,
-                or competing in squash, I bring energy and dedication to everything I do.
-              </p>
-              <p>
-                Currently learning to code through this portfolio project – proof that anyone can start somewhere!
-                I believe in the power of technology to solve real-world problems and bring communities together.
-              </p>
+              <p>{t.appContent.about.bio1}</p>
+              <p>{t.appContent.about.bio2}</p>
             </div>
           </div>
 
           {/* Quick Facts Card */}
           <div className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-sm h-fit">
             <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-              <span>⚡</span> Quick Facts
+              <span>⚡</span> {t.appContent.about.factsTitle}
             </h3>
             <ul className="space-y-3 text-sm">
               <li className="flex items-start gap-3">
                 <span className="text-cyan-400 mt-1">🎤</span>
-                <span>11+ MUN Conferences</span>
+                <span>{t.appContent.about.fact1}</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-cyan-400 mt-1">🏸</span>
-                <span>Top 20 Squash Player (Age Group, Singapore)</span>
+                <span>{t.appContent.about.fact2}</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-cyan-400 mt-1">🥁</span>
-                <span>Self-taught Drummer</span>
+                <span>{t.appContent.about.fact3}</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-cyan-400 mt-1">🎸</span>
-                <span>Learning Guitar</span>
+                <span>{t.appContent.about.fact4}</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-cyan-400 mt-1">🏫</span>
-                <span>UWCSEA East Campus</span>
+                <span>{t.appContent.about.fact5}</span>
               </li>
             </ul>
           </div>
@@ -145,7 +140,7 @@ export default function AboutApp() {
           transition={{ delay: 0.5 }}
           className="border-t border-white/10 pt-8"
         >
-          <h3 className="text-2xl font-bold text-white mb-6">Get In Touch</h3>
+          <h3 className="text-2xl font-bold text-white mb-6">{t.appContent.about.contactTitle}</h3>
           <div className="grid sm:grid-cols-2 gap-4">
             <a
               href="mailto:agarw48550@gapps.uwcsea.edu.sg"
@@ -155,7 +150,7 @@ export default function AboutApp() {
                 <Mail size={20} />
               </div>
               <div>
-                <div className="text-xs text-slate-400">Email</div>
+                <div className="text-xs text-slate-400">{t.appContent.about.email}</div>
                 <div className="text-white font-medium truncate">agarw48550@gapps.uwcsea.edu.sg</div>
               </div>
             </a>
@@ -168,7 +163,7 @@ export default function AboutApp() {
                 <Phone size={20} />
               </div>
               <div>
-                <div className="text-xs text-slate-400">Phone</div>
+                <div className="text-xs text-slate-400">{t.appContent.about.phone}</div>
                 <div className="text-white font-medium">+65 8283 7800</div>
               </div>
             </a>
