@@ -154,3 +154,10 @@ body {
   font-family: var(--font-retro);
   image-rendering: pixelated;
 }
+
+/* Hide default cursor on desktop to show custom cursor */
+@media (pointer: fine) {
+  body, a, button, input, textarea, select, [role="button"] {
+    cursor: none !important;
+  }
+}

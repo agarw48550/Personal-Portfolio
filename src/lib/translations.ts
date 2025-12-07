@@ -1,4 +1,4 @@
-export type Language = 'en' | 'zh';
+export type Language = 'en' | 'zh' | 'hi';
 
 export const translations = {
     en: {
@@ -70,6 +70,30 @@ export const translations = {
                 about: "About",
                 stats: "Base Stats",
                 tech: "Abilities (Tech Stack)",
+            },
+            stringsync: {
+                back: "Back to Portfolio",
+                desktopHeader: "Desktop Experience Only",
+                desktopBody: "StringSync requires a webcam and keyboard/mouse for the best experience. Please open this project on a desktop computer with Chrome.",
+                returnPortfolio: "Return to Portfolio",
+                initializing: "Initializing",
+                active: "Active",
+                startingCamera: "Starting Camera...",
+                cameraPermission: "Please allow camera access",
+                leftScreen: "Left Screen",
+                leftInstructions: "Hold up fingers to form chords.",
+                rightScreen: "Right Screen",
+                rightInstructions: "Strum downwards to play.",
+                currentChord: "Current Chord",
+                detection: "Detection",
+                chordLocked: "CHORD LOCKED",
+                noChord: "NO CHORD",
+                strumming: "STRUMMING",
+                idle: "IDLE",
+                audioEngine: "Audio Engine",
+                systemActive: "System Active",
+                clickEnable: "Click to Enable",
+                tip: "Tip: Ensure good lighting and keep your hands visible in the frame."
             }
         },
         common: {
@@ -157,6 +181,30 @@ export const translations = {
                 about: "关于",
                 stats: "基础属性",
                 tech: "技能 (技术栈)",
+            },
+            stringsync: {
+                back: "返回作品集",
+                desktopHeader: "仅限桌面体验",
+                desktopBody: "StringSync 需要网络摄像头和键盘/鼠标以获得最佳体验。请在带有 Chrome 的台式电脑上打开此项目。",
+                returnPortfolio: "返回作品集",
+                initializing: "正在初始化",
+                active: "系统正常",
+                startingCamera: "正在启动相机...",
+                cameraPermission: "请允许相机访问权限",
+                leftScreen: "左侧屏幕",
+                leftInstructions: "举起手指组成和弦。",
+                rightScreen: "右侧屏幕",
+                rightInstructions: "向下扫弦以演奏。",
+                currentChord: "当前和弦",
+                detection: "检测状态",
+                chordLocked: "和弦锁定",
+                noChord: "无和弦",
+                strumming: "正在扫弦",
+                idle: "空闲",
+                audioEngine: "音频引擎",
+                systemActive: "系统已激活",
+                clickEnable: "点击启用",
+                tip: "提示：确保光线充足，并保持双手在画面中可见。"
             }
         },
         common: {
@@ -175,6 +223,117 @@ export const translations = {
             carrier: 'Ayaan电信',
         }
     },
+    hi: {
+        desktop: {
+            appName: 'AyaanOS',
+            menu: {
+                file: 'फ़ाइल',
+                edit: 'संपादन',
+                view: 'दृश्य',
+                go: 'जाना',
+                window: 'खिड़की',
+                help: 'मदद',
+            },
+            weather: {
+                city: 'सिंगापुर',
+                temp: '28°C',
+            },
+            windowTitles: {
+                about: 'मेरे बारे में',
+                projects: 'मेरे प्रोजेक्ट्स',
+                skills: 'तकनीकी कौशल',
+                contact: 'संपर्क करें',
+                terminal: 'टर्मिनल',
+                timeline: 'मेरी यात्रा',
+                blogs: 'मेरे ब्लॉग',
+                stringsync: 'StringSync',
+            },
+        },
+        apps: {
+            about: 'मेरे बारे में',
+            projects: 'प्रोजेक्ट्स',
+            skills: 'कौशल',
+            timeline: 'समयरेखा',
+            terminal: 'टर्मिनल',
+            contact: 'संपर्क',
+            blogs: 'ब्लॉग',
+            stringsync: 'StringSync',
+        },
+        appContent: {
+            about: {
+                greeting: "नमस्ते, मैं अयान हूँ",
+                role: "छात्र • नेता • डेवलपर",
+                location: "सिंगापुर",
+                classOf: "कक्षा 2028",
+                aboutTitle: "मेरे बारे में",
+                bio1: "मैं सिंगापुर के UWC South East Asia में 16 वर्षीय छात्र हूँ, जो नेतृत्व, सेवा और प्रभाव डालने के बारे में भावुक हूँ। चाहे मैं MUN सम्मेलनों की अध्यक्षता कर रहा हूँ, DragonsTV के लिए स्कूल समाचार का निर्माण कर रहा हूँ, सामुदायिक सेवा पहल का आयोजन कर रहा हूँ, या स्क्वैश में प्रतिस्पर्धा कर रहा हूँ, मैं जो कुछ भी करता हूँ उसमें ऊर्जा और समर्पण लाता हूँ।",
+                bio2: "वर्तमान में इस पोर्टफोलियो प्रोजेक्ट के माध्यम से कोडिंग सीख रहा हूँ - इस बात का प्रमाण कि कोई भी कहीं से भी शुरू कर सकता है! मैं वास्तविक दुनिया की समस्याओं को हल करने और समुदायों को एक साथ लाने के लिए प्रौद्योगिकी की शक्ति में विश्वास करता हूँ।",
+                factsTitle: "त्वरित तथ्य",
+                fact1: "11+ MUN सम्मेलन",
+                fact2: "शीर्ष 20 स्क्वैश खिलाड़ी (आयु समूह, सिंगापुर)",
+                fact3: "स्वयं सिखाया ड्रमर",
+                fact4: "गिटार सीख रहा हूँ",
+                fact5: "UWCSEA East Campus",
+                contactTitle: "संपर्क में रहें",
+                email: "ईमेल",
+                phone: "फ़ोन",
+            },
+            projects: {
+                filter: "प्रोजेक्ट्स फ़िल्टर करें",
+                clear: "साफ़ करें",
+                showFilters: "तकनीकी फ़िल्टर दिखाएं",
+                hideFilters: "तकनीकी फ़िल्टर छिपाएं",
+                noResults: "कोई प्रोजेक्ट आपके फ़िल्टर से मेल नहीं खाता",
+                featured: "विशेष रुप से प्रदर्शित",
+                clickToPlay: "खेलने के लिए क्लिक करें",
+                preview: "प्रोजेक्ट पूर्वावलोकन",
+                demo: "डेमो",
+                code: "कोड",
+                about: "के बारे में",
+                stats: "बुनियादी आँकड़े",
+                tech: "क्षमताएं (तकनीकी स्टैक)",
+            },
+            stringsync: {
+                back: "पोर्टफोलियो पर वापस जाएं",
+                desktopHeader: "केवल डेस्कटॉप अनुभव",
+                desktopBody: "StringSync को सर्वोत्तम अनुभव के लिए वेबकैम और कीबोर्ड/माउस की आवश्यकता है। कृपया क्रोम के साथ डेस्कटॉप कंप्यूटर पर इस प्रोजेक्ट को खोलें।",
+                returnPortfolio: "पोर्टफोलियो पर वापस जाएं",
+                initializing: "शुरुआत हो रही है",
+                active: "सक्रिय",
+                startingCamera: "कैमरा शुरू हो रहा है...",
+                cameraPermission: "कृपया कैमरा एक्सेस की अनुमति दें",
+                leftScreen: "बाईं स्क्रीन",
+                leftInstructions: "कॉर्ड्स बनाने के लिए उंगलियां उठाएं।",
+                rightScreen: "दाहिनी स्क्रीन",
+                rightInstructions: "बजाने के लिए नीचे की ओर स्ट्रम करें।",
+                currentChord: "वर्तमान कॉर्ड",
+                detection: "खोज",
+                chordLocked: "कॉर्ड लॉक",
+                noChord: "कोई कॉर्ड नहीं",
+                strumming: "स्ट्रमिंग",
+                idle: "निष्क्रिय",
+                audioEngine: "ऑडियो इंजन",
+                systemActive: "सिस्टम सक्रिय",
+                clickEnable: "सक्षम करने के लिए क्लिक करें",
+                tip: "सुझाव: सुनिश्चित करें कि अच्छी रोशनी है और अपने हाथों को फ्रेम में दिखाई दें।"
+            }
+        },
+        common: {
+            loading: 'लोड हो रहा है...',
+            error: 'त्रुटि',
+            back: 'वापस',
+            close: 'बंद करें',
+            menu: 'मेन्यू',
+            select: 'चुनें',
+        },
+        mobile: {
+            unlock: 'अनलॉक करने के लिए स्लाइड करें',
+            camera: 'कैमरा',
+            photos: 'तस्वीरें',
+            settings: 'सेटिंग्स',
+            carrier: 'अयान-टेल',
+        }
+    }
 };
 
 export type TranslationKey = keyof typeof translations.en;

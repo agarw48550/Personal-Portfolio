@@ -2,23 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-
-interface Skill {
-    name: string;
-    rating: number; // 1-5
-    maxRating: number;
-}
-
-const skills: Skill[] = [
-    { name: 'Public Speaking & Communication', rating: 5, maxRating: 5 },
-    { name: 'Leadership & Team Coordination', rating: 5, maxRating: 5 },
-    { name: 'Event Planning & Organizing', rating: 4, maxRating: 5 },
-    { name: 'Research & Academic Writing', rating: 4, maxRating: 5 },
-    { name: 'Video Production & Interviewing', rating: 4, maxRating: 5 },
-    { name: 'Digital Literacy & Cyber Safety', rating: 4, maxRating: 5 },
-    { name: 'Innovation & Creative Problem-Solving', rating: 4, maxRating: 5 },
-    { name: 'Coding & Robotics (FLL Experience)', rating: 2, maxRating: 5 },
-];
+import { SKILLS_DATA } from '@/lib/skillsData';
 
 export default function SkillsApp() {
     return (
@@ -36,7 +20,7 @@ export default function SkillsApp() {
 
                 {/* Skills Grid */}
                 <div className="grid gap-6">
-                    {skills.map((skill, index) => (
+                    {SKILLS_DATA.map((skill, index) => (
                         <motion.div
                             key={skill.name}
                             initial={{ opacity: 0, x: -20 }}
@@ -64,8 +48,8 @@ export default function SkillsApp() {
                                             animate={{ opacity: i < skill.rating ? 1 : 0.1 }}
                                             transition={{ delay: index * 0.1 + i * 0.05 }}
                                             className={`flex-1 h-full ${i < skill.rating
-                                                    ? 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]'
-                                                    : 'bg-green-500/10'
+                                                ? 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]'
+                                                : 'bg-green-500/10'
                                                 }`}
                                         />
                                     ))}

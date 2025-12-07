@@ -136,5 +136,74 @@ export const PROJECTS_DATA = {
             featured: false,
             links: { demo: 'https://youtube.com' }
         },
+    ],
+    hi: [
+        {
+            id: 'stringsync',
+            name: 'StringSync',
+            type: 'इंटरैक्टिव',
+            category: 'AI',
+            description: 'बस अपने हाथों और एक वेबकैम से एयर गिटार बजाएं। मीडियापाइप हैंड ट्रैकिंग और वेब ऑडियो एपीआई द्वारा संचालित।',
+            stats: { hp: 85, attack: 95, defense: 60, speed: 100 },
+            tech: ['MediaPipe', 'TensorFlow.js', 'Web Audio API', 'React'],
+            image: '/projects/stringsync.png',
+            color: 'from-pink-500 to-rose-600',
+            featured: true,
+            links: {},
+            internalRoute: '/stringsync'
+        },
+        {
+            id: '1',
+            name: 'पोर्टफोलियो OS',
+            type: 'वेब ऐप',
+            category: 'वेब',
+            description: 'Next.js, React, और Framer Motion का उपयोग करके ब्राउज़र में पूरी तरह से कार्यात्मक ऑपरेटिंग सिस्टम सिमुलेशन।',
+            stats: { hp: 90, attack: 85, defense: 80, speed: 95 },
+            tech: ['Next.js', 'React', 'TypeScript', 'Tailwind'],
+            image: '/projects/portfolio.png',
+            color: 'from-cyan-500 to-blue-600',
+            featured: true,
+            links: { repo: 'https://github.com/agarw48550/portfolio' }
+        },
+        {
+            id: '2',
+            name: 'फ्रिज शेफ AI',
+            type: 'AI ऐप',
+            category: 'AI',
+            description: 'एआई-संचालित ऐप जो आपके फ्रिज को स्कैन करता है और उपलब्ध सामग्री के आधार पर व्यंजनों का सुझाव देता है।',
+            stats: { hp: 85, attack: 95, defense: 70, speed: 80 },
+            tech: ['React Native', 'OpenAI', 'TensorFlow', 'Python'],
+            image: '/projects/fridgechef.png',
+            color: 'from-green-500 to-emerald-600',
+            featured: true,
+            links: { demo: 'https://fridgechef.app' }
+        },
+        {
+            id: '3',
+            name: 'एयर ड्रम्स',
+            type: 'कंप्यूटर विजन',
+            category: 'AI',
+            description: 'हैंड ट्रैकिंग तकनीक का उपयोग करके वर्चुअल ड्रमिंग अनुभव। हवा में ड्रम बजाएं!',
+            stats: { hp: 70, attack: 90, defense: 60, speed: 95 },
+            tech: ['Python', 'OpenCV', 'MediaPipe', 'PyAudio'],
+            image: '/projects/airdrums.png',
+            color: 'from-purple-500 to-pink-600',
+            featured: false,
+            links: { repo: 'https://github.com/agarw48550/air-drums' }
+        },
+        {
+            id: '4',
+            name: 'DragonsTV',
+            type: 'मीडिया',
+            category: 'अन्य',
+            description: 'UWCSEA के लिए वीडियो समाचार मंच। सामग्री रणनीति, फिल्म निर्माण और संपादन का प्रबंधन किया।',
+            stats: { hp: 70, attack: 90, defense: 60, speed: 80 },
+            tech: ['Premiere Pro', 'After Effects', 'YouTube'],
+            image: '/projects/dragonstv.png',
+            video: 'dQw4w9WgXcQ', // Placeholder
+            color: 'from-orange-500 to-amber-600',
+            featured: false,
+            links: { demo: 'https://youtube.com' }
+        },
     ]
 };
