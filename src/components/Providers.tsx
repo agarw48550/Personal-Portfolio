@@ -2,6 +2,7 @@
 
 import { ThemeProvider } from "next-themes";
 import { useEffect, useState } from "react";
+import { LanguageProvider } from "@/lib/i18n";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
     const [mounted, setMounted] = useState(false);
@@ -16,7 +17,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
     return (
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-            {children}
+            <LanguageProvider>
+                {children}
+            </LanguageProvider>
         </ThemeProvider>
     );
 }

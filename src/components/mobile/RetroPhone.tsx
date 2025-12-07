@@ -9,18 +9,21 @@ import MobileSkills from './apps/MobileSkills';
 import MobileContact from './apps/MobileContact';
 import MobileBlog from './apps/MobileBlog';
 
+import { useLanguage } from '@/lib/i18n';
+
 // Simple pixel-art style icons using Lucide for now, but styled to look retro
-const APPS = [
-    { id: 'about', name: 'About', icon: User, color: '#ff7675' },
-    { id: 'projects', name: 'Projects', icon: Briefcase, color: '#74b9ff' },
-    { id: 'skills', name: 'Skills', icon: Code, color: '#55efc4' },
-    { id: 'blog', name: 'Blog', icon: Edit3, color: '#fab1a0' },
-    { id: 'contact', name: 'Contact', icon: Mail, color: '#fdcb6e' },
+const APP_CONFIG = [
+    { id: 'about', icon: User, color: '#ff7675' },
+    { id: 'projects', icon: Briefcase, color: '#74b9ff' },
+    { id: 'skills', icon: Code, color: '#55efc4' },
+    { id: 'blog', icon: Edit3, color: '#fab1a0' },
+    { id: 'contact', icon: Mail, color: '#fdcb6e' },
 ];
 
 export default function RetroPhone() {
     const { triggerHaptic } = useHaptics();
     const { playSound } = useSounds();
+    const { t } = useLanguage();
     const [activeApp, setActiveApp] = useState<string | null>(null);
     const [currentTime, setCurrentTime] = useState('');
 
@@ -60,7 +63,7 @@ export default function RetroPhone() {
                     <div className="h-8 bg-[#2d3436] text-[#9cb0a5] flex items-center justify-between px-2 text-xs font-mono">
                         <div className="flex gap-1">
                             <Signal size={14} />
-                            <span className="text-[10px]">AYAAN-TEL</span>
+                            <span className="text-[10px]">{t.mobile.carrier}</span>
                         </div>
                         <div className="flex gap-2 items-center">
                             <span>{currentTime}</span>
@@ -72,8 +75,9 @@ export default function RetroPhone() {
                     <div className="flex-1 p-4 overflow-y-auto relative">
                         {!activeApp ? (
                             // Home Screen
+                            // Home Screen
                             <div className="grid grid-cols-3 gap-4 mt-8">
-                                {APPS.map((app) => (
+                                {APP_CONFIG.map((app) => (
                                     <motion.button
                                         key={app.id}
                                         whileTap={{ scale: 0.9 }}
@@ -85,7 +89,9 @@ export default function RetroPhone() {
                                         >
                                             <app.icon size={24} />
                                         </div>
-                                        <span className="text-xs font-bold uppercase tracking-wider">{app.name}</span>
+                                        <span className="text-xs font-bold uppercase tracking-wider">
+                                            {t.apps[app.id === 'blog' ? 'blogs' : app.id as keyof typeof t.apps] || app.id}
+                                        </span>
                                     </motion.button>
                                 ))}
                             </div>
@@ -96,7 +102,9 @@ export default function RetroPhone() {
                                     <button onClick={handleBack} className="p-1 hover:bg-[#2d3436]/10 rounded active:scale-90 transition-transform">
                                         <ChevronLeft size={20} />
                                     </button>
-                                    <h2 className="text-lg font-bold uppercase">{APPS.find(a => a.id === activeApp)?.name}</h2>
+                                    <h2 className="text-lg font-bold uppercase">
+                                        {t.apps[activeApp === 'blog' ? 'blogs' : activeApp as keyof typeof t.apps] || activeApp}
+                                    </h2>
                                 </div>
                                 <div className="flex-1 overflow-y-auto custom-scrollbar">
                                     {activeApp === 'about' && <MobileAbout />}
@@ -112,9 +120,9 @@ export default function RetroPhone() {
                     {/* Bottom Nav (Soft Keys) */}
                     <div className="h-12 bg-[#2d3436] text-[#9cb0a5] flex items-center justify-between px-4 text-sm font-bold border-t-2 border-[#9cb0a5]/20">
                         <button onClick={activeApp ? handleBack : undefined} className="active:text-white">
-                            {activeApp ? 'BACK' : 'MENU'}
+                            {activeApp ? t.common.back.toUpperCase() : t.common.menu.toUpperCase()}
                         </button>
-                        <button className="active:text-white">SELECT</button>
+                        <button className="active:text-white">{t.common.select.toUpperCase()}</button>
                     </div>
                 </div>
 

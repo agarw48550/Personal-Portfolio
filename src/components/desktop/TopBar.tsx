@@ -2,26 +2,30 @@
 
 import React, { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
-import { Apple, Wifi, Battery, Search, Moon, Sun, Cloud } from 'lucide-react';
+import { Apple, Wifi, Battery, Search, Moon, Sun, Cloud, Globe } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useLanguage } from '@/lib/i18n';
 
 export default function TopBar() {
     const [time, setTime] = useState<string>('');
     const [date, setDate] = useState<string>('');
     const { theme, setTheme } = useTheme();
+    const { t, language, setLanguage } = useLanguage();
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
         setMounted(true);
         const updateTime = () => {
             const now = new Date();
-            setTime(now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
-            setDate(now.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' }));
+            // Use different locale based on selected language if desired, or keep default
+            const locale = language === 'zh' ? 'zh-CN' : 'en-US';
+            setTime(now.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' }));
+            setDate(now.toLocaleDateString(locale, { weekday: 'short', month: 'short', day: 'numeric' }));
         };
         updateTime();
         const interval = setInterval(updateTime, 1000);
         return () => clearInterval(interval);
-    }, []);
+    }, [language]);
 
     if (!mounted) return null;
 
@@ -32,14 +36,14 @@ export default function TopBar() {
                 <button className="hover:text-cyan-400 transition-colors">
                     <Apple size={14} fill="currentColor" />
                 </button>
-                <span className="font-bold hidden sm:inline">AyaanOS</span>
+                <span className="font-bold hidden sm:inline">{t.desktop.appName}</span>
                 <div className="hidden sm:flex gap-4 text-white/80">
-                    <button className="hover:text-white transition-colors">File</button>
-                    <button className="hover:text-white transition-colors">Edit</button>
-                    <button className="hover:text-white transition-colors">View</button>
-                    <button className="hover:text-white transition-colors">Go</button>
-                    <button className="hover:text-white transition-colors">Window</button>
-                    <button className="hover:text-white transition-colors">Help</button>
+                    <button className="hover:text-white transition-colors">{t.desktop.menu.file}</button>
+                    <button className="hover:text-white transition-colors">{t.desktop.menu.edit}</button>
+                    <button className="hover:text-white transition-colors">{t.desktop.menu.view}</button>
+                    <button className="hover:text-white transition-colors">{t.desktop.menu.go}</button>
+                    <button className="hover:text-white transition-colors">{t.desktop.menu.window}</button>
+                    <button className="hover:text-white transition-colors">{t.desktop.menu.help}</button>
                 </div>
             </div>
 
@@ -48,8 +52,8 @@ export default function TopBar() {
                 {/* Weather Widget (Mock) */}
                 <div className="hidden sm:flex items-center gap-2 text-white/90 hover:bg-white/10 px-2 py-0.5 rounded transition-colors cursor-default">
                     <Cloud size={14} className="text-cyan-400" />
-                    <span>28°C</span>
-                    <span className="text-white/60">Singapore</span>
+                    <span>{t.desktop.weather.temp}</span>
+                    <span className="text-white/60">{t.desktop.weather.city}</span>
                 </div>
 
                 {/* Status Icons */}
@@ -58,6 +62,15 @@ export default function TopBar() {
                     <Wifi size={14} />
                     <Search size={14} />
                 </div>
+
+                {/* Language Toggle */}
+                <button
+                    onClick={() => setLanguage(language === 'en' ? 'zh' : 'en')}
+                    className="p-1 hover:bg-white/10 rounded-full transition-colors flex items-center gap-1"
+                >
+                    <Globe size={14} />
+                    <span className="uppercase text-[10px]">{language}</span>
+                </button>
 
                 {/* Theme Toggle */}
                 <button

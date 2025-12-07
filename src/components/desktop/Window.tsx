@@ -7,6 +7,8 @@ import { useStore, AppId } from '@/lib/store';
 import { useSounds } from '@/hooks/useSounds';
 import { cn } from '@/lib/utils';
 
+import { useLanguage } from '@/lib/i18n';
+
 interface WindowProps {
     id: AppId;
     children: React.ReactNode;
@@ -16,24 +18,17 @@ interface WindowProps {
 export default function Window({ id, children, title }: WindowProps) {
     const { openApps, minimizedApps, activeApp, closeApp, minimizeApp, focusApp, zIndexes } = useStore();
     const { playSound } = useSounds();
+    const { t } = useLanguage();
     const [isMaximized, setIsMaximized] = useState(false);
 
     const isOpen = openApps.includes(id);
     const isMinimized = minimizedApps.includes(id);
     const zIndex = zIndexes[id] || 10;
 
-    // Default titles if not provided
-    const defaultTitles: Record<string, string> = {
-        about: 'About Me',
-        projects: 'My Projects',
-        skills: 'Technical Skills',
-        contact: 'Contact Me',
-        terminal: 'Terminal',
-        timeline: 'Journey Timeline',
-        blogs: 'My Blogs'
-    };
-
-    const windowTitle = title || defaultTitles[id] || id;
+    // Resolve title from translations or prop
+    // Use type assertion or check to ensure safe access to windowTitles
+    const translatedTitle = t.desktop.windowTitles[id as keyof typeof t.desktop.windowTitles];
+    const windowTitle = title || translatedTitle || id;
 
     if (!isOpen) return null;
 

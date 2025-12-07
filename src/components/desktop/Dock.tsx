@@ -8,20 +8,23 @@ import {
     User, Briefcase, Code, Mail, Terminal, Clock, BookOpen
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/lib/i18n';
 import { useTheme } from 'next-themes';
 
-const apps = [
-    { id: 'about', icon: User, label: 'About' },
-    { id: 'projects', icon: Briefcase, label: 'Projects' },
-    { id: 'skills', icon: Code, label: 'Skills' },
-    { id: 'timeline', icon: Clock, label: 'Timeline' },
-    { id: 'terminal', icon: Terminal, label: 'Terminal' },
-    { id: 'contact', icon: Mail, label: 'Contact' },
-    { id: 'blogs', label: 'Blogs', icon: BookOpen, color: 'bg-orange-500' }, // Add if implemented
+// Static config
+const appConfig = [
+    { id: 'about', icon: User },
+    { id: 'projects', icon: Briefcase },
+    { id: 'skills', icon: Code },
+    { id: 'timeline', icon: Clock },
+    { id: 'terminal', icon: Terminal },
+    { id: 'contact', icon: Mail },
+    { id: 'blogs', icon: BookOpen, color: 'bg-orange-500' },
 ] as const;
 
 interface DockIconProps {
-    app: typeof apps[number];
+    app: typeof appConfig[number];
+    label: string;
     mouseX: ReturnType<typeof useMotionValue<number>>;
     isOpen: boolean;
     isMinimized: boolean;
@@ -29,7 +32,7 @@ interface DockIconProps {
     onClick: () => void;
 }
 
-function DockIcon({ app, mouseX, isOpen, isMinimized, isActive, onClick }: DockIconProps) {
+function DockIcon({ app, label, mouseX, isOpen, isMinimized, isActive, onClick }: DockIconProps) {
     const ref = useRef<HTMLButtonElement>(null);
     const [isHovered, setIsHovered] = useState(false);
 
@@ -51,7 +54,7 @@ function DockIcon({ app, mouseX, isOpen, isMinimized, isActive, onClick }: DockI
             onMouseLeave={() => setIsHovered(false)}
             className="relative group flex flex-col items-center"
             style={{ width }}
-            aria-label={`Open ${app.label}`}
+            aria-label={`Open ${label}`}
         >
             {/* Tooltip */}
             <motion.div
@@ -63,7 +66,7 @@ function DockIcon({ app, mouseX, isOpen, isMinimized, isActive, onClick }: DockI
                     backdropFilter: 'blur(10px)',
                 }}
             >
-                <span className="text-xs font-medium text-cyan-300">{app.label}</span>
+                <span className="text-xs font-medium text-cyan-300">{label}</span>
             </motion.div>
 
             {/* Icon container - Liquid Glass */}
@@ -115,6 +118,7 @@ export default function Dock() {
     const { openApps, minimizedApps, activeApp, openApp, minimizeApp, focusApp } = useStore();
     const { playSound } = useSounds();
     const { resolvedTheme } = useTheme();
+    const { t } = useLanguage();
     const isDark = resolvedTheme === 'dark';
 
     const handleAppClick = (id: AppId) => {
@@ -159,10 +163,11 @@ export default function Dock() {
                         : '0 8px 32px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255,255,255,0.5)',
                 }}
             >
-                {apps.map((app) => (
+                {appConfig.map((app) => (
                     <DockIcon
                         key={app.id}
                         app={app}
+                        label={t.apps[app.id as keyof typeof t.apps] || app.id}
                         mouseX={mouseX}
                         isOpen={openApps.includes(app.id as AppId)}
                         isMinimized={minimizedApps.includes(app.id as AppId)}
