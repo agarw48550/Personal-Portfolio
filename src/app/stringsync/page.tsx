@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Loader2, Volume2, VolumeX, Moon, Sun } from 'lucide-react';
+import { ArrowLeft, Loader2, Volume2, VolumeX, Moon, Sun, Globe } from 'lucide-react';
 import WebcamFeed from '@/components/stringsync/WebcamFeed';
 import { HandTracker } from '@/components/stringsync/HandTracker';
 import { detectChord, ChordSmoother } from '@/components/stringsync/ChordDetector';
@@ -10,6 +10,57 @@ import { StrumDetector } from '@/components/stringsync/StrumDetector';
 import { AudioEngine } from '@/components/stringsync/AudioEngine';
 import { Results } from '@mediapipe/hands';
 import { useTheme } from 'next-themes';
+
+const TRANSLATIONS = {
+    en: {
+        back: "Back to Portfolio",
+        desktopHeader: "Desktop Experience Only",
+        desktopBody: "StringSync requires a webcam and keyboard/mouse for the best experience. Please open this project on a desktop computer with Chrome.",
+        returnPortfolio: "Return to Portfolio",
+        initializing: "Initializing",
+        active: "Active",
+        startingCamera: "Starting Camera...",
+        cameraPermission: "Please allow camera access",
+        leftScreen: "Left Screen",
+        leftInstructions: "Hold up fingers to form chords.",
+        rightScreen: "Right Screen",
+        rightInstructions: "Strum downwards to play.",
+        currentChord: "Current Chord",
+        detection: "Detection",
+        chordLocked: "CHORD LOCKED",
+        noChord: "NO CHORD",
+        strumming: "STRUMMING",
+        idle: "IDLE",
+        audioEngine: "Audio Engine",
+        systemActive: "System Active",
+        clickEnable: "Click to Enable",
+        tip: "Tip: Ensure good lighting and keep your hands visible in the frame."
+    },
+    zh: {
+        back: "返回作品集",
+        desktopHeader: "仅限桌面体验",
+        desktopBody: "StringSync 需要网络摄像头和键盘/鼠标以获得最佳体验。请在带有 Chrome 的台式电脑上打开此项目。",
+        returnPortfolio: "返回作品集",
+        initializing: "正在初始化",
+        active: "系统正常",
+        startingCamera: "正在启动相机...",
+        cameraPermission: "请允许相机访问权限",
+        leftScreen: "左侧屏幕",
+        leftInstructions: "举起手指组成和弦。",
+        rightScreen: "右侧屏幕",
+        rightInstructions: "向下扫弦以演奏。",
+        currentChord: "当前和弦",
+        detection: "检测状态",
+        chordLocked: "和弦锁定",
+        noChord: "无和弦",
+        strumming: "正在扫弦",
+        idle: "空闲",
+        audioEngine: "音频引擎",
+        systemActive: "系统已激活",
+        clickEnable: "点击启用",
+        tip: "提示：确保光线充足，并保持双手在画面中可见。"
+    }
+};
 
 export default function StringSyncPage() {
     // Refs for logic engines (persist across renders)
@@ -30,6 +81,9 @@ export default function StringSyncPage() {
     const [streamReady, setStreamReady] = useState(false);
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
+    const [lang, setLang] = useState<'en' | 'zh'>('en');
+
+    const t = TRANSLATIONS[lang];
 
     // Use a ref for currentChord to access it in the closure without re-binding
     const chordRef = useRef<string | null>(null);
@@ -151,18 +205,22 @@ export default function StringSyncPage() {
         setTheme(theme === 'dark' ? 'light' : 'dark');
     };
 
+    const toggleLang = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setLang(prev => prev === 'en' ? 'zh' : 'en');
+    };
+
     return (
         <div className="min-h-screen bg-white dark:bg-black text-slate-900 dark:text-white font-sans selection:bg-purple-500/30 transition-colors duration-300" onClick={startAudio}>
             {/* Mobile/Tablet Warning Banner */}
             <div className="lg:hidden fixed inset-0 z-50 bg-white dark:bg-black flex flex-col items-center justify-center p-8 text-center">
                 <div className="text-4xl mb-4">🎸</div>
-                <h2 className="text-2xl font-bold mb-2">Desktop Experience Only</h2>
+                <h2 className="text-2xl font-bold mb-2">{t.desktopHeader}</h2>
                 <p className="text-slate-500 dark:text-slate-400">
-                    StringSync requires a webcam and keyboard/mouse for the best experience.
-                    Please open this project on a desktop computer with Chrome.
+                    {t.desktopBody}
                 </p>
                 <Link href="/" className="mt-8 px-6 py-3 bg-slate-100 dark:bg-white/10 rounded-full text-slate-900 dark:text-white font-medium hover:bg-slate-200 dark:hover:bg-white/20 transition-colors">
-                    Return to Portfolio
+                    {t.returnPortfolio}
                 </Link>
             </div>
 
@@ -177,7 +235,7 @@ export default function StringSyncPage() {
                         <div className="p-2 rounded-full bg-slate-100 dark:bg-white/5 group-hover:bg-slate-200 dark:group-hover:bg-white/10 transition-colors">
                             <ArrowLeft size={20} />
                         </div>
-                        <span className="font-medium">Back to Portfolio</span>
+                        <span className="font-medium">{t.back}</span>
                     </Link>
 
                     <div className="flex items-center gap-3">
@@ -189,12 +247,22 @@ export default function StringSyncPage() {
 
                     <div className="flex items-center gap-4">
                         {mounted && (
-                            <button
-                                onClick={toggleTheme}
-                                className="p-2 rounded-full bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 transition-colors"
-                            >
-                                {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-                            </button>
+                            <>
+                                <button
+                                    onClick={toggleLang}
+                                    className="p-2 rounded-full bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 transition-colors flex items-center gap-1 px-3"
+                                >
+                                    <Globe size={18} />
+                                    <span className="text-xs font-medium uppercase">{lang}</span>
+                                </button>
+
+                                <button
+                                    onClick={toggleTheme}
+                                    className="p-2 rounded-full bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 transition-colors"
+                                >
+                                    {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+                                </button>
+                            </>
                         )}
 
                         <div className="w-[120px] text-right text-xs text-slate-500">
@@ -204,12 +272,12 @@ export default function StringSyncPage() {
                                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                                         <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                                     </span>
-                                    Active
+                                    {t.active}
                                 </span>
                             ) : (
                                 <span className="flex items-center justify-end gap-2 text-yellow-600 dark:text-yellow-400">
                                     <Loader2 className="animate-spin" size={12} />
-                                    Initializing
+                                    {t.initializing}
                                 </span>
                             )}
                         </div>
@@ -239,20 +307,20 @@ export default function StringSyncPage() {
                                 <div className="w-16 h-16 rounded-full border-2 border-slate-300 dark:border-gray-700 border-dashed flex items-center justify-center mb-4 animate-spin-slow">
                                     <div className="w-2 h-2 bg-slate-400 dark:bg-gray-700 rounded-full" />
                                 </div>
-                                <p className="font-medium">Starting Camera...</p>
-                                <p className="text-xs mt-2 opacity-60">Please allow camera access</p>
+                                <p className="font-medium">{t.startingCamera}</p>
+                                <p className="text-xs mt-2 opacity-60">{t.cameraPermission}</p>
                             </div>
                         )}
 
                         {/* Overlay UI (Instructions) */}
                         <div className="absolute top-6 left-6 right-6 flex justify-between items-start opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
                             <div className="bg-white/80 dark:bg-black/60 backdrop-blur-md rounded-xl p-4 text-xs text-slate-600 dark:text-gray-300 max-w-[200px] shadow-lg">
-                                <p className="font-bold text-slate-900 dark:text-white mb-1">Left Screen</p>
-                                <p>Hold up fingers to form chords.</p>
+                                <p className="font-bold text-slate-900 dark:text-white mb-1">{t.leftScreen}</p>
+                                <p>{t.leftInstructions}</p>
                             </div>
                             <div className="bg-white/80 dark:bg-black/60 backdrop-blur-md rounded-xl p-4 text-xs text-slate-600 dark:text-gray-300 max-w-[200px] text-right shadow-lg">
-                                <p className="font-bold text-slate-900 dark:text-white mb-1">Right Screen</p>
-                                <p>Strum downwards to play.</p>
+                                <p className="font-bold text-slate-900 dark:text-white mb-1">{t.rightScreen}</p>
+                                <p>{t.rightInstructions}</p>
                             </div>
                         </div>
 
@@ -265,7 +333,7 @@ export default function StringSyncPage() {
                     {/* Interactive Info */}
                     <div className="w-full max-w-4xl flex items-center justify-between px-8 bg-white dark:bg-white/5 rounded-2xl p-6 border border-slate-200 dark:border-white/5 backdrop-blur-sm shadow-xl dark:shadow-none transition-colors">
                         <div className="text-center w-1/3 border-r border-slate-200 dark:border-white/10">
-                            <p className="text-slate-500 text-xs tracking-widest uppercase mb-2">Current Chord</p>
+                            <p className="text-slate-500 text-xs tracking-widest uppercase mb-2">{t.currentChord}</p>
                             <div className="h-20 flex items-center justify-center">
                                 <span className={`text-6xl font-bold transition-all duration-200 ${currentChord ? 'text-purple-600 dark:text-white scale-110' : 'text-slate-300 dark:text-gray-700 scale-100'
                                     }`}>
@@ -275,25 +343,25 @@ export default function StringSyncPage() {
                         </div>
 
                         <div className="text-center w-1/3 border-r border-slate-200 dark:border-white/10">
-                            <p className="text-slate-500 text-xs tracking-widest uppercase mb-2">Detection</p>
+                            <p className="text-slate-500 text-xs tracking-widest uppercase mb-2">{t.detection}</p>
                             <div className="h-20 flex items-center justify-center flex-col gap-2">
                                 <div className={`px-3 py-1.5 rounded-full text-xs font-mono border transition-colors ${currentChord
-                                        ? 'bg-cyan-100 dark:bg-cyan-500/20 text-cyan-700 dark:text-cyan-400 border-cyan-200 dark:border-cyan-500/50'
-                                        : 'bg-slate-100 dark:bg-white/5 text-slate-400 dark:text-gray-500 border-slate-200 dark:border-white/5'
+                                    ? 'bg-cyan-100 dark:bg-cyan-500/20 text-cyan-700 dark:text-cyan-400 border-cyan-200 dark:border-cyan-500/50'
+                                    : 'bg-slate-100 dark:bg-white/5 text-slate-400 dark:text-gray-500 border-slate-200 dark:border-white/5'
                                     }`}>
-                                    {currentChord ? 'CHORD LOCKED' : 'NO CHORD'}
+                                    {currentChord ? t.chordLocked : t.noChord}
                                 </div>
                                 <div className={`px-3 py-1.5 rounded-full text-xs font-mono border transition-colors ${Date.now() - lastStrum < 300
-                                        ? 'bg-purple-100 dark:bg-purple-500/20 text-purple-700 dark:text-purple-400 border-purple-200 dark:border-purple-500/50'
-                                        : 'bg-slate-100 dark:bg-white/5 text-slate-400 dark:text-gray-500 border-slate-200 dark:border-white/5'
+                                    ? 'bg-purple-100 dark:bg-purple-500/20 text-purple-700 dark:text-purple-400 border-purple-200 dark:border-purple-500/50'
+                                    : 'bg-slate-100 dark:bg-white/5 text-slate-400 dark:text-gray-500 border-slate-200 dark:border-white/5'
                                     }`}>
-                                    {Date.now() - lastStrum < 300 ? 'STRUMMING' : 'IDLE'}
+                                    {Date.now() - lastStrum < 300 ? t.strumming : t.idle}
                                 </div>
                             </div>
                         </div>
 
                         <div className="text-center w-1/3">
-                            <p className="text-slate-500 text-xs tracking-widest uppercase mb-2">Audio Engine</p>
+                            <p className="text-slate-500 text-xs tracking-widest uppercase mb-2">{t.audioEngine}</p>
                             <div className="h-20 flex items-center justify-center">
                                 <button className="flex flex-col items-center gap-2 group" onClick={startAudio}>
                                     <div className={`p-3 rounded-full transition-colors ${status === 'ready'
@@ -303,7 +371,7 @@ export default function StringSyncPage() {
                                         {status === 'ready' ? <Volume2 size={24} /> : <VolumeX size={24} />}
                                     </div>
                                     <span className="text-[10px] text-slate-500 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
-                                        {status === 'ready' ? 'System Active' : 'Click to Enable'}
+                                        {status === 'ready' ? t.systemActive : t.clickEnable}
                                     </span>
                                 </button>
                             </div>
@@ -311,7 +379,7 @@ export default function StringSyncPage() {
                     </div>
 
                     <p className="mt-8 text-slate-600 dark:text-slate-500 text-sm">
-                        Tip: Ensure good lighting and keep your hands visible in the frame.
+                        {t.tip}
                     </p>
 
                 </main>
