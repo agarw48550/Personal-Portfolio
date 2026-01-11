@@ -19,7 +19,7 @@ type SoundType =
 // For now, we will implement the logic.
 
 export const useSounds = () => {
-    const { soundEnabled } = useStore();
+    const { soundEnabled, isMuted, viewMode } = useStore();
     const audioRefs = useRef<Record<string, HTMLAudioElement>>({});
 
     useEffect(() => {
@@ -38,13 +38,14 @@ export const useSounds = () => {
 
         Object.entries(sounds).forEach(([key, src]) => {
             const audio = new Audio(src);
-            audio.volume = 0.5;
+            audio.volume = 0.2; // Softer volume
             audioRefs.current[key] = audio;
         });
     }, []);
 
     const playSound = useCallback((type: SoundType) => {
-        if (!soundEnabled) return;
+        // Only play sounds if enabled, not muted, and in desktop mode
+        if (!soundEnabled || isMuted || viewMode !== 'desktop') return;
 
         const audio = audioRefs.current[type];
         if (audio) {
@@ -53,7 +54,7 @@ export const useSounds = () => {
                 // Ignore autoplay errors
             });
         }
-    }, [soundEnabled]);
+    }, [soundEnabled, isMuted, viewMode]);
 
     return { playSound };
 };

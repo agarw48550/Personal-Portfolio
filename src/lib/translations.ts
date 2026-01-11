@@ -56,6 +56,97 @@ export const translations = {
                 email: "Email",
                 phone: "Phone",
             },
+            resume: {
+                education: [
+                    {
+                        school: "United World College of South East Asia - East Campus",
+                        period: "2013 - Present",
+                        grade: "Grade 10 | Curriculum: IGCSE",
+                        subjects: "Economics, Design Technology: Systems and Control, Foreign Language: Chinese, English Language and Literature, Mathematics (Additional) and Co-ordinated Science."
+                    }
+                ],
+                internships: [
+                    {
+                        company: "Kaira Global",
+                        role: "Product Operations & Inventory Intern",
+                        year: "2025",
+                        points: [
+                            "Streamlined product inventory by reconciling 300+ items across physical stock, online listings, and internal databases.",
+                            "Improved customers' online marketing experience by updating Shopify listings and backend records to maintain accurate, customer-facing information.",
+                            "Performed hands-on warehouse operations, including scanning and organizing inventory and preparing orders for shipment."
+                        ]
+                    },
+                    {
+                        company: "Tinkeracademy",
+                        role: "Project Intern",
+                        year: "2025",
+                        points: [
+                            "Tested and improved 10+ hands-on engineering projects designed for Raffles Institution students, increasing clarity and classroom usability.",
+                            "Created and piloted 5 new project modules for a companion course, contributing original designs that were later adopted into the curriculum.",
+                            "Gained practical engineering experience by completing 20+ precision prototypes using the Cricut system and implementing Bluetooth UART communication in project builds."
+                        ]
+                    }
+                ],
+                leadership: [
+                    {
+                        role: "Chair",
+                        org: "Goonj – India Service Initiative",
+                        period: "Chair since Sept. 2025; Participated from 2024–Present",
+                        points: [
+                            "Leading a high-impact service group focused on equity, dignity, and humanitarian relief; oversee strategic planning, fundraising, and school-wide engagement.",
+                            "Organized and executed multiple school-wide events raising awareness and thousands of dollars for charity.",
+                            "Set to raise 20,000 SGD this year."
+                        ]
+                    },
+                    {
+                        role: "Activities Executive",
+                        org: "UWC East",
+                        period: "Aug 2024–Present",
+                        points: [
+                            "Led a team responsible for planning, organizing, and elevating major student-led events across the high school.",
+                            "Spearhead initiatives to increase the visibility, participation, and overall impact of the Activities Executive group.",
+                            "Introduce innovative, large-scale, and inclusive events aimed at strengthening school culture and student engagement."
+                        ]
+                    },
+                    {
+                        role: "DragonsTV Leadership Executive (Producer)",
+                        org: "UWC East",
+                        period: "2024–Present",
+                        points: [
+                            "Leading the school’s official video news platform, producing weekly coverage of school-wide, local, and global events.",
+                            "Plan and script news segments, conduct interviews, and collaborate with the editing team to finalize episodes."
+                        ]
+                    },
+                    {
+                        role: "Model United Nations",
+                        org: "",
+                        period: "2021–Present",
+                        points: [
+                            "Participated in 11+ conferences as both delegate and chair. Won awards for being the best delegate.",
+                            "Developed strong skills in public speaking, negotiation, resolution writing, and committee leadership."
+                        ]
+                    }
+                ],
+                community: [
+                    {
+                        role: "Migrant Worker Support Project",
+                        period: "Aug 2024",
+                        desc: "Independently organized a community donation drive for migrant workers. Collected and delivered 4 large suitcases of essential items and clothing to ItsRainingRaincoats."
+                    },
+                    {
+                        role: "Soup Kitchen Volunteer — Willing Hearts",
+                        period: "2023–Present",
+                        desc: "Volunteer regularly with Willing Hearts, preparing meal packages for elderly and low-income families."
+                    }
+                ],
+                sports: [
+                    {
+                        name: "Squash",
+                        period: "2018–Present",
+                        desc: "Competitor in national-level tournaments. Recently came 3rd place in a Squash Competition."
+                    }
+                ]
+            },
             projects: {
                 filter: "Filter Projects",
                 clear: "Clear",

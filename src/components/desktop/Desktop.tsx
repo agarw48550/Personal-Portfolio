@@ -21,6 +21,11 @@ export default function Desktop() {
     const { openApp, activeApp } = useStore();
     const { playSound } = useSounds();
 
+    // Open About app on initial load
+    useEffect(() => {
+        openApp('about');
+    }, []);
+
     // Cmd+K keyboard shortcut to open Terminal
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {

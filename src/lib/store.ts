@@ -8,6 +8,8 @@ interface AppState {
     theme: 'dark' | 'light';
     soundEnabled: boolean;
     hapticsEnabled: boolean;
+    viewMode: 'website' | 'desktop';
+    isMuted: boolean;
     isMobile: boolean;
 
     // Desktop State
@@ -19,8 +21,10 @@ interface AppState {
     // Actions
     setTheme: (theme: 'dark' | 'light') => void;
     toggleSound: () => void;
+    toggleMute: () => void;
     toggleHaptics: () => void;
     setIsMobile: (isMobile: boolean) => void;
+    setViewMode: (mode: 'website' | 'desktop') => void;
 
     openApp: (appId: AppId) => void;
     closeApp: (appId: AppId) => void;
@@ -41,10 +45,15 @@ export const useStore = create<AppState>()(
             minimizedApps: [],
             zIndexes: {},
 
+            viewMode: 'website',
+            isMuted: false,
+
             setTheme: (theme) => set({ theme }),
             toggleSound: () => set((state) => ({ soundEnabled: !state.soundEnabled })),
+            toggleMute: () => set((state) => ({ isMuted: !state.isMuted })),
             toggleHaptics: () => set((state) => ({ hapticsEnabled: !state.hapticsEnabled })),
             setIsMobile: (isMobile) => set({ isMobile }),
+            setViewMode: (mode) => set({ viewMode: mode }),
 
             openApp: (appId) => set((state) => {
                 if (state.openApps.includes(appId)) {
@@ -79,7 +88,9 @@ export const useStore = create<AppState>()(
             partialize: (state) => ({
                 theme: state.theme,
                 soundEnabled: state.soundEnabled,
-                hapticsEnabled: state.hapticsEnabled
+                hapticsEnabled: state.hapticsEnabled,
+                viewMode: state.viewMode,
+                isMuted: state.isMuted,
             }),
         }
     )

@@ -17,26 +17,45 @@ const RetroPhone = dynamic(() => import('@/components/mobile/RetroPhone'), {
   loading: () => <div className="h-screen w-screen bg-[#c7d5e0]" />,
 });
 
-export default function Home() {
-  const { setIsMobile, isMobile } = useStore();
-  const isSmallScreen = useMediaQuery('(max-width: 768px)');
-  const [showStartup, setShowStartup] = useState(true);
+const WebsiteView = dynamic(() => import('@/components/website/WebsiteView'), {
+  ssr: false,
+  loading: () => <div className="h-screen w-screen bg-[#0a192f]" />,
+});
 
+export default function Home() {
+  const { setIsMobile, isMobile, viewMode } = useStore();
+  const isSmallScreen = useMediaQuery('(max-width: 768px)');
+  const [showMatrix, setShowMatrix] = useState(true);
+
+  // Handle initial efficient check
   useEffect(() => {
     setIsMobile(isSmallScreen);
   }, [isSmallScreen, setIsMobile]);
 
+  // Trigger matrix rain when switching to desktop mode
+  useEffect(() => {
+    if (viewMode === 'desktop') {
+      setShowMatrix(true);
+    }
+  }, [viewMode]);
+
   const handleStartupComplete = () => {
-    setShowStartup(false);
+    setShowMatrix(false);
   };
 
   return (
     <main className="h-screen w-screen overflow-hidden relative bg-[#0a192f]">
-      {showStartup && (
+      {showMatrix && (
         <MatrixRain onComplete={handleStartupComplete} />
       )}
 
-      {!showStartup && (
+      {/* Website View */}
+      {!showMatrix && viewMode === 'website' && (
+        <WebsiteView />
+      )}
+
+      {/* Desktop/OS View */}
+      {!showMatrix && viewMode === 'desktop' && (
         <>
           {isMobile ? <RetroPhone /> : <Desktop />}
         </>

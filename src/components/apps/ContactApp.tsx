@@ -14,18 +14,20 @@ export default function ContactApp() {
     const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
     const [formData, setFormData] = useState({ name: '', email: '', message: '' });
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setStatus('sending');
-        
-        // Simulate sending - in production, connect to email service like EmailJS or Resend
-        await new Promise(resolve => setTimeout(resolve, 1500));
+
+        const subject = `Portfolio Contact from ${formData.name}`;
+        const body = `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`;
+
+        window.location.href = `mailto:agarw48550@gapps.uwcsea.edu.sg?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
         setStatus('success');
-        
-        // Reset after showing success
         setTimeout(() => {
             setFormData({ name: '', email: '', message: '' });
-        }, 2000);
+            setStatus('idle');
+        }, 1000);
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -35,7 +37,7 @@ export default function ContactApp() {
     return (
         <div className="h-full flex flex-col md:flex-row bg-gray-900 overflow-hidden">
             {/* Contact Info Sidebar */}
-            <motion.div 
+            <motion.div
                 initial={{ x: -50, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 className="w-full md:w-2/5 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6 md:p-8 flex flex-col border-r border-gray-800"
@@ -47,7 +49,7 @@ export default function ContactApp() {
                     </p>
 
                     <div className="space-y-5">
-                        <motion.a 
+                        <motion.a
                             href="mailto:agarw48550@gapps.uwcsea.edu.sg"
                             whileHover={{ x: 5 }}
                             className="flex items-start gap-4 group cursor-pointer"
@@ -63,7 +65,7 @@ export default function ContactApp() {
                             </div>
                         </motion.a>
 
-                        <motion.div 
+                        <motion.div
                             whileHover={{ x: 5 }}
                             className="flex items-start gap-4"
                         >

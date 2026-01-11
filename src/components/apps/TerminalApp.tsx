@@ -160,7 +160,8 @@ export default function TerminalApp() {
             case trimmedCmd === 'clear':
                 setHistory([]);
                 return;
-            case trimmedCmd.startsWith('sudo hire-ayaan'):
+            case trimmedCmd === 'hire-ayaan':
+            case trimmedCmd === 'sudo hire-ayaan':
                 output = (
                     <motion.div
                         initial={{ opacity: 0 }}
@@ -170,11 +171,14 @@ export default function TerminalApp() {
                         <p className="text-green-400 font-mono">🔓 ACCESS GRANTED</p>
                         <p className="text-white">Initiating hiring protocol...</p>
                         <div className="bg-green-500/20 border border-green-500/30 rounded-lg p-3 mt-2">
-                            <p className="text-green-400 font-semibold">✨ You've unlocked the secret!</p>
-                            <p className="text-gray-300 text-sm mt-1">Please contact via email to proceed with opportunities 🚀</p>
+                            <p className="text-green-400 font-semibold">✨ Excellent Choice!</p>
+                            <p className="text-gray-300 text-sm mt-1">Redirecting to contact channels... 🚀</p>
                         </div>
                     </motion.div>
                 );
+                setTimeout(() => {
+                    openApp('contact');
+                }, 1500);
                 break;
             case trimmedCmd === '':
                 output = '';
