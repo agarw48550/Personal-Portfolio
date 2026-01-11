@@ -53,26 +53,8 @@ export default function Desktop() {
                 <MatrixBackground />
             </div>
 
-            {/* Background Profile Image */}
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 0.15 }}
-                transition={{ duration: 1.5 }}
-                className="absolute right-0 bottom-0 h-[80vh] w-[40vw] z-0 pointer-events-none"
-            >
-                <div className="relative w-full h-full">
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0a192f] via-transparent to-transparent z-10" />
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#0a192f] via-transparent to-transparent z-10" />
-                    <img
-                        src="/images/profile.jpg"
-                        alt="Background"
-                        className="w-full h-full object-cover object-bottom opacity-60 grayscale mix-blend-luminosity"
-                    />
-                </div>
-            </motion.div>
-
             {/* Gradient Overlay for readability */}
-            <div className="absolute inset-0 z-0 bg-gradient-to-br from-[#0a192f]/80 via-[#112240]/50 to-[#0a192f]/80 pointer-events-none" />
+            <div className="absolute inset-0 z-0 bg-gradient-to-br from-[#0a192f]/80 via-[#112240]/80 to-[#0a192f]/80 pointer-events-none" />
 
             {/* Windows Layer */}
             <div className="absolute inset-0 z-10 pointer-events-none pt-8">

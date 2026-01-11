@@ -6,11 +6,14 @@ import { Apple, Wifi, Battery, Search, Moon, Sun, Cloud, Globe } from 'lucide-re
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/lib/i18n';
 
+import { useStore } from '@/lib/store';
+
 export default function TopBar() {
     const [time, setTime] = useState<string>('');
     const [date, setDate] = useState<string>('');
     const { theme, setTheme } = useTheme();
     const { t, language, setLanguage } = useLanguage();
+    const { setViewMode } = useStore();
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -33,17 +36,28 @@ export default function TopBar() {
         <div className="fixed top-0 left-0 right-0 h-8 bg-black/20 backdrop-blur-md z-50 flex items-center justify-between px-4 text-xs font-medium text-white select-none border-b border-white/5">
             {/* Left Side */}
             <div className="flex items-center gap-4">
-                <button className="hover:text-cyan-400 transition-colors">
+                <button
+                    onClick={() => setViewMode('website')}
+                    className="hover:text-cyan-400 transition-colors"
+                >
                     <Apple size={14} fill="currentColor" />
                 </button>
-                <span className="font-bold hidden sm:inline">{t.desktop.appName}</span>
-                <div className="hidden sm:flex gap-4 text-white/80">
-                    <button className="hover:text-white transition-colors">{t.desktop.menu.file}</button>
-                    <button className="hover:text-white transition-colors">{t.desktop.menu.edit}</button>
-                    <button className="hover:text-white transition-colors">{t.desktop.menu.view}</button>
-                    <button className="hover:text-white transition-colors">{t.desktop.menu.go}</button>
-                    <button className="hover:text-white transition-colors">{t.desktop.menu.window}</button>
-                    <button className="hover:text-white transition-colors">{t.desktop.menu.help}</button>
+                <div className="flex gap-4">
+                    <span className="font-bold hidden sm:inline">{t.desktop.appName}</span>
+                    <button
+                        onClick={() => setViewMode('website')}
+                        className="font-bold text-cyan-400 hover:text-cyan-300 transition-colors ml-2"
+                    >
+                        Switch to Website
+                    </button>
+                    <div className="hidden sm:flex gap-4 text-white/80 ml-2">
+                        <button className="hover:text-white transition-colors">{t.desktop.menu.file}</button>
+                        <button className="hover:text-white transition-colors">{t.desktop.menu.edit}</button>
+                        <button className="hover:text-white transition-colors">{t.desktop.menu.view}</button>
+                        <button className="hover:text-white transition-colors">{t.desktop.menu.go}</button>
+                        <button className="hover:text-white transition-colors">{t.desktop.menu.window}</button>
+                        <button className="hover:text-white transition-colors">{t.desktop.menu.help}</button>
+                    </div>
                 </div>
             </div>
 

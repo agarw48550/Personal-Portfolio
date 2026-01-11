@@ -89,7 +89,6 @@ export const useStore = create<AppState>()(
                 theme: state.theme,
                 soundEnabled: state.soundEnabled,
                 hapticsEnabled: state.hapticsEnabled,
-                viewMode: state.viewMode,
                 isMuted: state.isMuted,
             }),
         }
