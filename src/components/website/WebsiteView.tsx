@@ -73,8 +73,8 @@ export default function WebsiteView() {
                                 key={item.id}
                                 href={`#${item.id}`}
                                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${activeSection === item.id
-                                        ? (theme === 'dark' ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-900')
-                                        : (theme === 'dark' ? 'text-slate-400 hover:text-white' : 'text-slate-500 hover:text-slate-900')
+                                    ? (theme === 'dark' ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-900')
+                                    : (theme === 'dark' ? 'text-slate-400 hover:text-white' : 'text-slate-500 hover:text-slate-900')
                                     }`}
                             >
                                 {item.name}
@@ -122,16 +122,30 @@ export default function WebsiteView() {
                                 className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-500 text-xs font-bold uppercase tracking-widest mb-6"
                             >
                                 <Zap size={14} className="animate-pulse" />
-                                Available for opportunities
+                                Aspiring Developer & Student
                             </motion.div>
-                            <motion.h1
-                                initial={{ opacity: 0, y: 30 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.8, delay: 0.2 }}
-                                className="text-6xl md:text-8xl font-black tracking-tight mb-8 leading-[1.1]"
-                            >
-                                Building <span className="text-cyan-500">Digital</span> Experiences that <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent italic">Matter.</span>
-                            </motion.h1>
+
+                            <div className="flex flex-col md:flex-row gap-8 items-center mb-8">
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.8 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{ duration: 0.8, delay: 0.1 }}
+                                    className="relative w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-cyan-500/20 shadow-2xl shrink-0"
+                                >
+                                    <img src="/images/profile.jpg" alt="Ayaan Agarwal" className="object-cover w-full h-full" />
+                                </motion.div>
+
+                                <motion.h1
+                                    initial={{ opacity: 0, y: 30 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.8, delay: 0.2 }}
+                                    className="text-5xl md:text-7xl font-black tracking-tight leading-[1.1]"
+                                >
+                                    Building <span className="text-cyan-500">Cool Stuff</span> with &nbsp;
+                                    <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent italic">Code.</span>
+                                </motion.h1>
+                            </div>
+
                             <motion.p
                                 initial={{ opacity: 0, y: 30 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -147,10 +161,10 @@ export default function WebsiteView() {
                                 className="flex flex-wrap gap-5"
                             >
                                 <a href="#projects" className="px-8 py-4 bg-white text-black font-bold rounded-2xl hover:bg-slate-100 transition-all flex items-center gap-2 group">
-                                    Explore Projects <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                                    Check Out My Work <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                                 </a>
                                 <a href="#contact" className="px-8 py-4 bg-white/5 border border-white/10 font-bold rounded-2xl hover:bg-white/10 transition-all">
-                                    Get in Touch
+                                    Let's Chat!
                                 </a>
                             </motion.div>
                         </div>
