@@ -44,10 +44,8 @@ export default function Home() {
   };
 
   return (
-    <main className="h-screen w-screen overflow-hidden relative bg-[#0a192f]">
-      {showMatrix && (
-        <MatrixRain onComplete={handleStartupComplete} />
-      )}
+    <div className={`relative ${viewMode === 'desktop' ? 'h-screen w-screen overflow-hidden' : 'min-h-screen'}`}>
+      <MatrixRain onComplete={handleStartupComplete} />
 
       {/* Website View */}
       {!showMatrix && viewMode === 'website' && (
@@ -56,10 +54,10 @@ export default function Home() {
 
       {/* Desktop/OS View */}
       {!showMatrix && viewMode === 'desktop' && (
-        <>
+        <div className="h-full w-full relative">
           {isMobile ? <RetroPhone /> : <Desktop />}
-        </>
+        </div>
       )}
-    </main>
+    </div>
   );
 }

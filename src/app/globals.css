@@ -73,8 +73,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   transition: background-color 0.3s ease, color 0.3s ease;
-  overflow: hidden;
-  /* OS-like behavior */
+  /* OS-like behavior handled in page.tsx */
   font-family: var(--font-sans);
 }
 
@@ -157,7 +156,14 @@ body {
 
 /* Hide default cursor on desktop to show custom cursor */
 @media (pointer: fine) {
-  body, a, button, input, textarea, select, [role="button"] {
+
+  body,
+  a,
+  button,
+  input,
+  textarea,
+  select,
+  [role="button"] {
     cursor: none !important;
   }
 }

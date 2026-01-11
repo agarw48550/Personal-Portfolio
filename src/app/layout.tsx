@@ -32,12 +32,12 @@ export const metadata: Metadata = {
   },
   description: "Interactive OS-style portfolio of Ayaan Agarwal. A passionate full-stack developer specializing in React, Next.js, and modern web technologies. Explore my projects, skills, and journey.",
   keywords: [
-    "Ayaan Agarwal", 
-    "Portfolio", 
-    "Full-Stack Developer", 
-    "Web Developer", 
+    "Ayaan Agarwal",
+    "Portfolio",
+    "Full-Stack Developer",
+    "Web Developer",
     "React Developer",
-    "Next.js", 
+    "Next.js",
     "TypeScript",
     "Singapore Developer",
     "UWCSEA",
@@ -116,6 +116,8 @@ const jsonLd = {
   }
 };
 
+import CustomCursor from "@/components/CustomCursor";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -127,12 +129,12 @@ export default function RootLayout({
         {/* Preconnect to external resources */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        
+
         {/* Apple-specific meta tags for better PWA support */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="format-detection" content="telephone=no" />
-        
+
         {/* JSON-LD structured data */}
         <script
           type="application/ld+json"
@@ -143,6 +145,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-dark-bg text-foreground transition-colors duration-300`}
       >
         <Providers>
+          <CustomCursor />
           <main className="min-h-screen">{children}</main>
         </Providers>
       </body>
