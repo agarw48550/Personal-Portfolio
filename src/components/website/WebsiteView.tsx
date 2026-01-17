@@ -1,9 +1,13 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useStore } from '@/lib/store';
 import { useEffect, useState, useMemo } from 'react';
-import { Monitor, Moon, Sun, Globe, Volume2, VolumeX, Mail, Github, Linkedin, ExternalLink, Code2, Briefcase, GraduationCap, Trophy, Users, Zap, MapPin, Calendar, ArrowRight } from 'lucide-react';
+import { Monitor, Moon, Sun, Globe, Volume2, VolumeX, Mail, Github, Linkedin, ExternalLink, Code2, Briefcase, GraduationCap, Trophy, Users, Zap, MapPin, Calendar, ArrowRight, Cpu, Activity } from 'lucide-react';
 import { useLanguage } from '@/lib/i18n';
 import { PROJECTS_DATA } from '@/lib/projectData';
+
+import MobileBottomNav from './MobileBottomNav';
+import BlockToCode from './BlockToCode';
+import JarvisTerminal from './JarvisTerminal';
 
 export default function WebsiteView() {
     const { setTheme, theme, setViewMode, isMuted, toggleMute } = useStore();
@@ -16,12 +20,13 @@ export default function WebsiteView() {
     useEffect(() => {
         setMounted(true);
         const handleScroll = () => {
-            const sections = ['about', 'education', 'internships', 'leadership', 'projects', 'contact'];
+            const sections = ['hero', 'about', 'skills', 'education', 'internships', 'leadership', 'projects', 'jarvis', 'contact'];
             const current = sections.find(section => {
                 const element = document.getElementById(section);
                 if (element) {
                     const rect = element.getBoundingClientRect();
-                    return rect.top <= 100 && rect.bottom >= 100;
+                    // More precise detection for mobile
+                    return rect.top <= 300 && rect.bottom >= 300;
                 }
                 return false;
             });
@@ -43,7 +48,7 @@ export default function WebsiteView() {
     ];
 
     return (
-        <div className={`selection:bg-cyan-500/30 min-h-screen w-full transition-colors duration-500 ${theme === 'dark' ? 'bg-[#030712] text-slate-200' : 'bg-slate-50 text-slate-800'
+        <div className={`selection:bg-cyan-500/30 min-h-screen w-full transition-colors duration-500 pb-20 md:pb-0 ${theme === 'dark' ? 'bg-[#030712] text-slate-200' : 'bg-slate-50 text-slate-800'
             }`}>
             {/* Mesh Background */}
             <div className="fixed inset-0 overflow-hidden pointer-events-none">
@@ -55,8 +60,11 @@ export default function WebsiteView() {
                     }`} />
             </div>
 
-            {/* Navigation */}
-            <header className={`fixed top-0 w-full z-50 transition-all duration-300 border-b backdrop-blur-xl ${theme === 'dark' ? 'bg-[#030712]/80 border-white/5' : 'bg-white/80 border-slate-200'
+            {/* Mobile Bottom Navigation */}
+            <MobileBottomNav activeSection={activeSection} />
+
+            {/* Desktop Navigation */}
+            <header className={`hidden md:block fixed top-0 w-full z-50 transition-all duration-300 border-b backdrop-blur-xl ${theme === 'dark' ? 'bg-[#030712]/80 border-white/5' : 'bg-white/80 border-slate-200'
                 }`}>
                 <div className="container mx-auto px-6 h-20 flex items-center justify-between">
                     <motion.div
@@ -110,11 +118,32 @@ export default function WebsiteView() {
                 </div>
             </header>
 
+            {/* Mobile Header (Simplified) */}
+            <header className="md:hidden fixed top-0 w-full z-40 backdrop-blur-md bg-transparent px-6 h-16 flex items-center justify-between">
+                <div className="text-xl font-black tracking-tighter text-cyan-500">
+                    AYAAN<span className="text-slate-500 font-light">.DEV</span>
+                </div>
+                <div className="flex gap-2">
+                    <button
+                        onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                        className={`p-2 rounded-full ${theme === 'dark' ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-900'}`}
+                    >
+                        {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+                    </button>
+                    <button
+                        onClick={() => setViewMode('desktop')}
+                        className="p-2 rounded-full bg-cyan-500 text-white"
+                    >
+                        <Monitor size={16} />
+                    </button>
+                </div>
+            </header>
+
             <main className="relative z-10 pt-20">
                 {/* Hero */}
-                <section id="hero" className="min-h-[90vh] flex items-center px-6 relative overflow-hidden">
+                <section id="hero" className="min-h-[85vh] flex items-center px-6 relative overflow-hidden">
                     <div className="container mx-auto">
-                        <div className="max-w-4xl">
+                        <div className="max-w-4xl pt-10 md:pt-0">
                             <motion.div
                                 initial={{ opacity: 0, scale: 0.9 }}
                                 animate={{ opacity: 1, scale: 1 }}
@@ -130,7 +159,7 @@ export default function WebsiteView() {
                                     initial={{ opacity: 0, scale: 0.8 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     transition={{ duration: 0.8, delay: 0.1 }}
-                                    className="relative w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-cyan-500/20 shadow-2xl shrink-0"
+                                    className="relative w-28 h-28 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-cyan-500/20 shadow-2xl shrink-0"
                                 >
                                     <img src="/images/profile.jpg" alt="Ayaan Agarwal" className="object-cover w-full h-full" />
                                 </motion.div>
@@ -139,7 +168,7 @@ export default function WebsiteView() {
                                     initial={{ opacity: 0, y: 30 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.8, delay: 0.2 }}
-                                    className="text-5xl md:text-7xl font-black tracking-tight leading-[1.1]"
+                                    className="text-4xl md:text-7xl font-black tracking-tight leading-[1.1] text-center md:text-left"
                                 >
                                     Building <span className="text-cyan-500">Cool Stuff</span> with &nbsp;
                                     <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent italic">Code.</span>
@@ -150,7 +179,7 @@ export default function WebsiteView() {
                                 initial={{ opacity: 0, y: 30 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.8, delay: 0.4 }}
-                                className={`text-xl md:text-2xl mb-12 max-w-2xl leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}
+                                className={`text-lg md:text-2xl mb-12 max-w-2xl leading-relaxed text-center md:text-left ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}
                             >
                                 {t.appContent.about.bio1}
                             </motion.p>
@@ -158,7 +187,7 @@ export default function WebsiteView() {
                                 initial={{ opacity: 0, y: 30 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.8, delay: 0.6 }}
-                                className="flex flex-wrap gap-5"
+                                className="flex flex-wrap gap-5 justify-center md:justify-start"
                             >
                                 <a href="#projects" className="px-8 py-4 bg-white text-black font-bold rounded-2xl hover:bg-slate-100 transition-all flex items-center gap-2 group">
                                     Check Out My Work <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
@@ -172,7 +201,7 @@ export default function WebsiteView() {
                 </section>
 
                 {/* About & Quick Facts */}
-                <section id="about" className="py-32 px-6">
+                <section id="about" className="py-20 md:py-32 px-6">
                     <div className="container mx-auto">
                         <div className="grid lg:grid-cols-2 gap-20 items-center">
                             <div>
@@ -207,8 +236,8 @@ export default function WebsiteView() {
                                         className={`p-6 rounded-3xl border flex flex-col justify-center text-center ${theme === 'dark' ? 'bg-[#112240]/50 border-white/5' : 'bg-white border-slate-200 shadow-xl shadow-slate-200/50'
                                             }`}
                                     >
-                                        <p className="text-3xl font-black text-cyan-500 mb-2">{fact.title.split(' ')[0]}</p>
-                                        <p className="text-sm font-bold opacity-80 leading-tight">{fact.title.split(' ').slice(1).join(' ')}</p>
+                                        <p className="text-2xl md:text-3xl font-black text-cyan-500 mb-2">{fact.title.split(' ')[0]}</p>
+                                        <p className="text-xs md:text-sm font-bold opacity-80 leading-tight">{fact.title.split(' ').slice(1).join(' ')}</p>
                                         <p className="text-[10px] uppercase tracking-tighter opacity-50 mt-2 font-mono">{fact.desc}</p>
                                     </motion.div>
                                 ))}
@@ -217,8 +246,21 @@ export default function WebsiteView() {
                     </div>
                 </section>
 
+                {/* Skills / Block-To-Code Section */}
+                <section id="skills" className="py-20 md:py-32 px-6 bg-slate-50 dark:bg-white/5">
+                    <div className="container mx-auto">
+                        <div className="text-center mb-16 max-w-2xl mx-auto">
+                            <h2 className="text-4xl font-black tracking-tight italic uppercase mb-4">The <span className="text-cyan-500">Evolution.</span></h2>
+                            <p className={`text-lg italic ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
+                                My journey started with drag-and-drop logic. Now, I engineer systems with clean code. The logic remains the same; only the syntax changes.
+                            </p>
+                        </div>
+                        <BlockToCode />
+                    </div>
+                </section>
+
                 {/* Education Section */}
-                <section id="education" className="py-32 px-6 bg-cyan-500/5 relative overflow-hidden">
+                <section id="education" className="py-20 md:py-32 px-6 bg-cyan-500/5 relative overflow-hidden">
                     <div className="container mx-auto">
                         <div className="flex items-center gap-4 mb-16">
                             <div className="w-12 h-12 rounded-2xl bg-cyan-500 flex items-center justify-center text-white shadow-lg shadow-cyan-500/30">
@@ -227,7 +269,7 @@ export default function WebsiteView() {
                             <h2 className="text-4xl font-black tracking-tight italic uppercase">Education</h2>
                         </div>
                         {t.appContent.resume.education.map((edu, i) => (
-                            <div key={i} className={`group p-10 rounded-3xl border transition-all hover:border-cyan-500/50 ${theme === 'dark' ? 'bg-[#0a0a12] border-white/5' : 'bg-white border-slate-200 shadow-2xl shadow-slate-200/50'
+                            <div key={i} className={`group p-8 md:p-10 rounded-3xl border transition-all hover:border-cyan-500/50 ${theme === 'dark' ? 'bg-[#0a0a12] border-white/5' : 'bg-white border-slate-200 shadow-2xl shadow-slate-200/50'
                                 }`}>
                                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                                     <div>
@@ -247,7 +289,7 @@ export default function WebsiteView() {
                 </section>
 
                 {/* Internships Section */}
-                <section id="internships" className="py-32 px-6">
+                <section id="internships" className="py-20 md:py-32 px-6">
                     <div className="container mx-auto">
                         <div className="flex items-center gap-4 mb-16">
                             <div className="w-12 h-12 rounded-2xl bg-purple-500 flex items-center justify-center text-white shadow-lg shadow-purple-500/30">
@@ -257,11 +299,11 @@ export default function WebsiteView() {
                         </div>
                         <div className="space-y-12">
                             {t.appContent.resume.internships.map((intern, i) => (
-                                <div key={i} className="relative pl-12 before:absolute before:left-0 before:top-0 before:h-full before:w-[2px] before:bg-gradient-to-b before:from-purple-500 before:to-transparent">
+                                <div key={i} className="relative pl-8 md:pl-12 before:absolute before:left-0 before:top-0 before:h-full before:w-[2px] before:bg-gradient-to-b before:from-purple-500 before:to-transparent">
                                     <div className="absolute left-[-6px] top-2 w-3 h-3 rounded-full bg-purple-500 ring-4 ring-purple-500/20" />
                                     <div className="flex flex-col md:flex-row justify-between gap-4 mb-8">
                                         <div>
-                                            <h3 className="text-3xl font-black italic">{intern.role}</h3>
+                                            <h3 className="text-2xl md:text-3xl font-black italic">{intern.role}</h3>
                                             <p className="text-xl font-bold text-purple-500">{intern.company}</p>
                                         </div>
                                         <span className="font-mono text-slate-500 font-bold">{intern.year}</span>
@@ -282,7 +324,7 @@ export default function WebsiteView() {
                 </section>
 
                 {/* Leadership Section */}
-                <section id="leadership" className="py-32 px-6 bg-blue-500/5 relative">
+                <section id="leadership" className="py-20 md:py-32 px-6 bg-blue-500/5 relative">
                     <div className="container mx-auto">
                         <div className="flex items-center gap-4 mb-16">
                             <div className="w-12 h-12 rounded-2xl bg-blue-500 flex items-center justify-center text-white shadow-lg shadow-blue-500/30">
@@ -316,7 +358,7 @@ export default function WebsiteView() {
                 </section>
 
                 {/* Projects Section */}
-                <section id="projects" className="py-32 px-6">
+                <section id="projects" className="py-20 md:py-32 px-6">
                     <div className="container mx-auto">
                         <div className="flex flex-col md:flex-row md:items-end justify-between items-start gap-6 mb-16">
                             <div className="flex items-center gap-4">
@@ -332,7 +374,9 @@ export default function WebsiteView() {
                                 View full portfolio <ArrowRight size={20} />
                             </button>
                         </div>
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                        {/* Horizontal Scroll on Mobile, Grid on Desktop */}
+                        <div className="flex overflow-x-auto snap-x snap-mandatory md:grid md:grid-cols-2 lg:grid-cols-3 gap-8 pb-8 md:pb-0 hide-scrollbar -mx-6 px-6 md:mx-0 md:px-0">
                             {projects.map((project, i) => (
                                 <motion.div
                                     key={project.id}
@@ -340,7 +384,7 @@ export default function WebsiteView() {
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true }}
                                     transition={{ delay: i * 0.1 }}
-                                    className={`group relative rounded-[2.5rem] overflow-hidden border transition-all hover:scale-[1.02] active:scale-[0.98] ${theme === 'dark' ? 'bg-[#112240] border-white/5 shadow-2xl' : 'bg-white border-slate-100 shadow-xl'
+                                    className={`min-w-[85vw] md:min-w-0 snap-center group relative rounded-[2.5rem] overflow-hidden border transition-all hover:scale-[1.02] active:scale-[0.98] ${theme === 'dark' ? 'bg-[#112240] border-white/5 shadow-2xl' : 'bg-white border-slate-100 shadow-xl'
                                         }`}
                                 >
                                     <div className={`h-64 bg-gradient-to-br ${project.color} p-8 flex flex-col justify-end relative overflow-hidden`}>
@@ -379,14 +423,58 @@ export default function WebsiteView() {
                     </div>
                 </section>
 
+                {/* Jarvis Showcase Section */}
+                <section id="jarvis" className="py-20 md:py-32 px-6 bg-slate-900 border-y border-white/5 relative overflow-hidden">
+                    {/* Abstract background blobs for Jarvis section */}
+                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[120px] -mr-64 -mt-64" />
+                    <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[120px] -ml-64 -mb-64" />
+
+                    <div className="container mx-auto relative z-10">
+                        <div className="flex flex-col items-center text-center mb-16 max-w-3xl mx-auto">
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-[10px] font-black uppercase tracking-[0.3em] mb-6"
+                            >
+                                Featured Project Spotlight
+                            </motion.div>
+                            <h2 className="text-4xl md:text-6xl font-black tracking-tighter italic uppercase text-white mb-6">
+                                Project <span className="text-cyan-400">Jarvis</span>
+                            </h2>
+                            <p className="text-lg md:text-xl text-slate-400 italic">
+                                A high-performance personal AI companion built in Python. Features real-time voice interaction, screen analysis, and system automation.
+                                Designed to be the nervous system of my digital life.
+                            </p>
+                        </div>
+
+                        <div className="relative group">
+                            {/* Glass background for terminal */}
+                            <div className="absolute -inset-4 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-[2.5rem] blur-2xl opacity-50 group-hover:opacity-100 transition-opacity duration-1000" />
+                            <JarvisTerminal />
+                        </div>
+
+                        <div className="mt-16 flex flex-wrap justify-center gap-4">
+                            <div className="px-6 py-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md flex items-center gap-2 text-xs font-bold text-slate-300">
+                                <Cpu size={14} className="text-cyan-400" /> Faster-Whisper
+                            </div>
+                            <div className="px-6 py-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md flex items-center gap-2 text-xs font-bold text-slate-300">
+                                <Activity size={14} className="text-purple-400" /> Real-time STT/TTS
+                            </div>
+                            <div className="px-6 py-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md flex items-center gap-2 text-xs font-bold text-slate-300">
+                                <Zap size={14} className="text-yellow-400" /> Tool-Calling Engine
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 {/* Contact Section */}
-                <section id="contact" className="py-32 px-6 bg-gradient-to-t from-cyan-500/10 to-transparent">
+                <section id="contact" className="py-20 md:py-32 px-6 bg-gradient-to-t from-cyan-500/10 to-transparent">
                     <div className="container mx-auto">
-                        <div className="max-w-5xl mx-auto rounded-[3rem] p-12 md:p-20 relative overflow-hidden border border-white/10 shadow-3xl shadow-cyan-500/20">
+                        <div className="max-w-5xl mx-auto rounded-[3rem] p-8 md:p-20 relative overflow-hidden border border-white/10 shadow-3xl shadow-cyan-500/20">
                             <div className="absolute inset-0 bg-cyan-600 opacity-5" />
                             <div className="relative z-10 flex flex-col items-center text-center">
-                                <h2 className="text-5xl md:text-7xl font-black tracking-tighter italic uppercase mb-8">Let's <span className="text-cyan-500">Collaborate.</span></h2>
-                                <p className={`text-xl md:text-2xl mb-12 max-w-2xl italic leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
+                                <h2 className="text-4xl md:text-7xl font-black tracking-tighter italic uppercase mb-8">Let's <span className="text-cyan-500">Collaborate.</span></h2>
+                                <p className={`text-lg md:text-2xl mb-12 max-w-2xl italic leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
                                     Whether you have a question, a potential project, or just want to say hi, I'm always open to connecting!
                                 </p>
 
@@ -415,7 +503,7 @@ export default function WebsiteView() {
                 </section>
 
                 {/* Footer */}
-                <footer className="py-12 px-6 border-t border-white/5">
+                <footer className="py-12 px-6 border-t border-white/5 pb-24 md:pb-12">
                     <div className="container mx-auto flex flex-col md:flex-row justify-between items-center gap-6 opacity-50 text-xs font-black uppercase tracking-[0.2em] italic">
                         <p>© {new Date().getFullYear()} Ayaan Agarwal. Built with Passion & Code.</p>
                         <div className="flex gap-8">

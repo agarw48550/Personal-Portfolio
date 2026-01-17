@@ -1,55 +1,67 @@
 @import "tailwindcss";
 
 :root {
-  /* Deep Navy / Slate Blue / Gold / White Palette */
-  --background: #0a192f;
-  --foreground: #e6f1ff;
+  /* 🌙 Night Mode (Default) - Hacker/Builder Aesthetic */
+  --background: #0D1117;
+  /* GitHub Dark Dimmed / Deep Void */
+  --foreground: #E6EDF3;
+  /* Soft White */
 
-  --primary: #0a192f;
-  /* Deep Navy */
-  --secondary: #112240;
-  /* Slate Blue */
-  --tertiary: #233554;
-  /* Lighter Navy */
-  --accent: #ffc107;
-  /* Warm Amber/Gold */
-  --accent-glow: rgba(255, 193, 7, 0.5);
+  --primary: #0D1117;
+  --secondary: #161b22;
+  --tertiary: #21262d;
 
-  --text-primary: #e6f1ff;
-  --text-secondary: #8892b0;
-  --text-muted: #ccd6f6;
+  --accent: #39FF14;
+  /* Classic Hacker Neon Green */
+  --accent-glow: rgba(57, 255, 20, 0.4);
 
-  --card-bg: rgba(17, 34, 64, 0.7);
-  --card-border: rgba(255, 255, 255, 0.1);
+  --text-primary: #E6EDF3;
+  --text-secondary: #8b949e;
+  --text-muted: #6e7681;
 
-  --success: #64ffda;
-  --error: #ff6b6b;
+  --card-bg: rgba(13, 17, 23, 0.85);
+  /* Glassy Dark */
+  --card-border: rgba(48, 54, 61, 0.6);
 
-  /* Retro Mobile Palette */
-  --retro-bg: #c7d5e0;
-  --retro-screen: #9cb0a5;
-  /* Nokia screen green-ish */
-  --retro-dark: #2d3436;
-  --retro-accent: #ff7675;
+  --success: #39FF14;
+  --error: #FF0055;
+  /* Neon Red */
+
+  /* Cyberpunk specific extras */
+  --matrix-color: #0f0;
+  --cursor-color: #FF0055;
 }
 
 .light {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  /* ☀️ Day Mode - Productivity/Notion Aesthetic */
+  --background: #FFFFFF;
+  /* Pure White */
+  --foreground: #37352F;
+  /* Notion Soft Black */
 
-  --primary: #ffffff;
-  --secondary: #f1f5f9;
-  --tertiary: #e2e8f0;
-  --accent: #d97706;
-  /* Darker Amber for light mode contrast */
-  --accent-glow: rgba(217, 119, 6, 0.3);
+  --primary: #FFFFFF;
+  --secondary: #F7F7F5;
+  /* Notion Off-White */
+  --tertiary: #E6E6E6;
 
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #64748b;
+  --accent: #2E6F40;
+  /* Notion Green (Growth/Logic) */
+  --accent-glow: rgba(46, 111, 64, 0.2);
 
-  --card-bg: rgba(255, 255, 255, 0.8);
-  --card-border: rgba(0, 0, 0, 0.1);
+  --text-primary: #37352F;
+  --text-secondary: #787774;
+  /* Notion Muted Grey */
+  --text-muted: #9B9A97;
+
+  --card-bg: rgba(255, 255, 255, 0.9);
+  --card-border: #E6E6E6;
+
+  --success: #2E6F40;
+  --error: #D44C47;
+  /* Notion Red */
+
+  --matrix-color: #2E6F40;
+  --cursor-color: #2E6F40;
 }
 
 @theme {

@@ -4,7 +4,7 @@ import { useHaptics } from '@/hooks/useHaptics';
 import { useSounds } from '@/hooks/useSounds';
 import { Battery, Wifi, Signal, Globe, Moon, Sun, ChevronDown, User, Briefcase, Code, Mail, BookOpen, Edit3 } from 'lucide-react';
 import { useLanguage } from '@/lib/i18n';
-import { useTheme } from 'next-themes';
+import { useStore } from '@/lib/store';
 import Image from 'next/image';
 
 // App Components
@@ -18,7 +18,7 @@ export default function RetroPhone() {
     const { triggerHaptic } = useHaptics();
     const { playSound } = useSounds();
     const { t, language, setLanguage } = useLanguage();
-    const { theme, setTheme } = useTheme();
+    const { theme, setTheme } = useStore();
     const [activeApp, setActiveApp] = useState<string | null>(null);
     const [currentTime, setCurrentTime] = useState('');
     const [showControlCenter, setShowControlCenter] = useState(false);

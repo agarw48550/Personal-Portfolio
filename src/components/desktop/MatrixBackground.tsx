@@ -1,12 +1,10 @@
-"use client";
-
 import { useEffect, useRef } from 'react';
-import { useTheme } from 'next-themes';
+import { useStore } from '@/lib/store';
 
 export default function MatrixBackground() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const { resolvedTheme } = useTheme();
-    const isDark = resolvedTheme === 'dark';
+    const { theme } = useStore();
+    const isDark = theme === 'dark';
 
     useEffect(() => {
         const canvas = canvasRef.current;

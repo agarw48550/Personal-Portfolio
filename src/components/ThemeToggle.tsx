@@ -1,12 +1,12 @@
 "use client";
 
-import { useTheme } from "next-themes";
+import { useStore } from "@/lib/store";
 import { useEffect, useState } from "react";
 import { FiMoon, FiSun } from "react-icons/fi";
 import { motion } from "framer-motion";
 
 export default function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme } = useStore();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {

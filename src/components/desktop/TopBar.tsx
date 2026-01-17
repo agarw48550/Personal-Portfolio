@@ -1,19 +1,16 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { useTheme } from 'next-themes';
 import { Apple, Wifi, Battery, Search, Moon, Sun, Cloud, Globe } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/lib/i18n';
-
 import { useStore } from '@/lib/store';
 
 export default function TopBar() {
     const [time, setTime] = useState<string>('');
     const [date, setDate] = useState<string>('');
-    const { theme, setTheme } = useTheme();
+    const { theme, setTheme, setViewMode } = useStore();
     const { t, language, setLanguage } = useLanguage();
-    const { setViewMode } = useStore();
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {

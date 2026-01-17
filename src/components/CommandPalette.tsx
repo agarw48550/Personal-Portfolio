@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiSearch, FiCommand, FiHome, FiUser, FiCode, FiCpu, FiMail, FiMoon, FiSun } from "react-icons/fi";
 import { useRouter } from "next/navigation";
-import { useTheme } from "next-themes";
+import { useStore } from "@/lib/store";
 
 const actions = [
     { id: "home", label: "Home", icon: FiHome, href: "#" },
@@ -20,7 +20,7 @@ export default function CommandPalette() {
     const [query, setQuery] = useState("");
     const [selectedIndex, setSelectedIndex] = useState(0);
     const router = useRouter();
-    const { theme, setTheme } = useTheme();
+    const { theme, setTheme } = useStore();
 
     const filteredActions = actions.filter((action) =>
         action.label.toLowerCase().includes(query.toLowerCase())
@@ -138,15 +138,13 @@ export default function CommandPalette() {
                                 <button
                                     key={action.id}
                                     onClick={() => handleSelect(action.href)}
-                                    className={`w-full flex items-center px-3 py-2.5 sm:py-2 rounded-lg text-left text-foreground transition-colors group ${
-                                        selectedIndex === index
-                                            ? "bg-primary/10 text-primary"
-                                            : "hover:bg-gray-100 dark:hover:bg-gray-800"
-                                    }`}
+                                    className={`w-full flex items-center px-3 py-2.5 sm:py-2 rounded-lg text-left text-foreground transition-colors group ${selectedIndex === index
+                                        ? "bg-primary/10 text-primary"
+                                        : "hover:bg-gray-100 dark:hover:bg-gray-800"
+                                        }`}
                                 >
-                                    <action.icon className={`mr-3 flex-shrink-0 ${
-                                        selectedIndex === index ? "text-primary" : "text-gray-400 group-hover:text-primary"
-                                    }`} />
+                                    <action.icon className={`mr-3 flex-shrink-0 ${selectedIndex === index ? "text-primary" : "text-gray-400 group-hover:text-primary"
+                                        }`} />
                                     <span className="text-sm sm:text-base">{action.label}</span>
                                 </button>
                             ))}
@@ -164,20 +162,17 @@ export default function CommandPalette() {
                             </div>
                             <button
                                 onClick={toggleTheme}
-                                className={`w-full flex items-center px-3 py-2.5 sm:py-2 rounded-lg text-left text-foreground transition-colors group ${
-                                    selectedIndex === filteredActions.length
-                                        ? "bg-primary/10 text-primary"
-                                        : "hover:bg-gray-100 dark:hover:bg-gray-800"
-                                }`}
+                                className={`w-full flex items-center px-3 py-2.5 sm:py-2 rounded-lg text-left text-foreground transition-colors group ${selectedIndex === filteredActions.length
+                                    ? "bg-primary/10 text-primary"
+                                    : "hover:bg-gray-100 dark:hover:bg-gray-800"
+                                    }`}
                             >
                                 {theme === "dark" ? (
-                                    <FiSun className={`mr-3 flex-shrink-0 ${
-                                        selectedIndex === filteredActions.length ? "text-yellow-500" : "text-gray-400 group-hover:text-yellow-500"
-                                    }`} />
+                                    <FiSun className={`mr-3 flex-shrink-0 ${selectedIndex === filteredActions.length ? "text-yellow-500" : "text-gray-400 group-hover:text-yellow-500"
+                                        }`} />
                                 ) : (
-                                    <FiMoon className={`mr-3 flex-shrink-0 ${
-                                        selectedIndex === filteredActions.length ? "text-purple-500" : "text-gray-400 group-hover:text-purple-500"
-                                    }`} />
+                                    <FiMoon className={`mr-3 flex-shrink-0 ${selectedIndex === filteredActions.length ? "text-purple-500" : "text-gray-400 group-hover:text-purple-500"
+                                        }`} />
                                 )}
                                 <span className="text-sm sm:text-base">Toggle Theme</span>
                             </button>

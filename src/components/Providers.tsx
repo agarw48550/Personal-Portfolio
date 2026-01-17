@@ -1,8 +1,8 @@
 "use client";
 
-import { ThemeProvider } from "next-themes";
 import { useEffect, useState } from "react";
 import { LanguageProvider } from "@/lib/i18n";
+import ThemeController from "./ThemeController";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
     const [mounted, setMounted] = useState(false);
@@ -16,10 +16,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     }
 
     return (
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-            <LanguageProvider>
-                {children}
-            </LanguageProvider>
-        </ThemeProvider>
+        <LanguageProvider>
+            <ThemeController />
+            {children}
+        </LanguageProvider>
     );
 }

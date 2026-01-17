@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useCallback, useState } from 'react';
-import { useTheme } from 'next-themes';
+import { useStore } from '@/lib/store';
 
 interface MatrixParticle {
     x: number;
@@ -43,14 +43,14 @@ export default function MatrixBackground() {
     const particlesRef = useRef<MatrixParticle[]>([]);
     const dropsRef = useRef<{ y: number; speed: number; chars: string[] }[]>([]);
     const lastClickRef = useRef(0);
-    const { resolvedTheme } = useTheme();
+    const { theme } = useStore();
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
         setMounted(true);
     }, []);
 
-    const isDark = resolvedTheme === 'dark';
+    const isDark = theme === 'dark';
 
     const getRandomChar = useCallback(() => {
         return codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
@@ -60,7 +60,7 @@ export default function MatrixBackground() {
         const fontSize = 14;
         const columns = Math.floor(width / fontSize);
         const drops: { y: number; speed: number; chars: string[] }[] = [];
-        
+
         for (let i = 0; i < columns; i++) {
             const chars: string[] = [];
             const numChars = Math.floor(height / fontSize) + 10;
@@ -79,7 +79,7 @@ export default function MatrixBackground() {
     const initializeParticles = useCallback((width: number, height: number): MatrixParticle[] => {
         const particles: MatrixParticle[] = [];
         const count = 60; // Reduced from 120
-        
+
         for (let i = 0; i < count; i++) {
             particles.push({
                 x: Math.random() * width,
@@ -104,7 +104,7 @@ export default function MatrixBackground() {
             const dx = particle.x - mouse.x;
             const dy = particle.y - mouse.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
-            
+
             if (distance < 400) {
                 const angle = Math.atan2(dy, dx);
                 const force = (400 - distance) / 400 * 15;
@@ -135,7 +135,7 @@ export default function MatrixBackground() {
         if (!ctx) return;
 
         const dpr = window.devicePixelRatio || 1;
-        
+
         const updateSize = () => {
             const width = window.innerWidth;
             const height = window.innerHeight;
@@ -144,14 +144,14 @@ export default function MatrixBackground() {
             canvas.style.width = `${width}px`;
             canvas.style.height = `${height}px`;
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-            
+
             // Re-initialize on resize
             dropsRef.current = initializeDrops(width, height);
             if (particlesRef.current.length === 0) {
                 particlesRef.current = initializeParticles(width, height);
             }
         };
-        
+
         updateSize();
 
         const fontSize = 14;
@@ -169,7 +169,7 @@ export default function MatrixBackground() {
 
             // Draw falling matrix rain (more subtle)
             ctx.font = `${fontSize}px "Fira Code", "SF Mono", Monaco, monospace`;
-            
+
             dropsRef.current.forEach((drop, i) => {
                 // Only render every 3rd column for sparser rain
                 if (i % 3 !== 0) {
@@ -179,54 +179,54 @@ export default function MatrixBackground() {
                     }
                     return;
                 }
-                
+
                 const x = i * fontSize;
-                
+
                 // Draw the column of characters
                 for (let j = 0; j < 10; j++) { // Reduced trail length
                     const charIndex = Math.floor(drop.y) - j;
                     if (charIndex >= 0 && charIndex < drop.chars.length) {
                         const y = (drop.y - j) * fontSize;
-                        
+
                         if (y > 0 && y < height) {
                             // Calculate distance from mouse
                             const dx = x - mouse.x;
                             const dy = y - mouse.y;
                             const dist = Math.sqrt(dx * dx + dy * dy);
-                            
+
                             // Much lower base brightness
                             let alpha = 0.04 - j * 0.003;
                             if (j === 0) alpha = 0.4; // Head less bright
                             else if (j === 1) alpha = 0.2;
                             else if (j === 2) alpha = 0.12;
-                            
+
                             // Subtle brighten near mouse
                             if (dist < 150) {
                                 alpha = Math.min(0.6, alpha + (150 - dist) / 150 * 0.15);
                             }
-                            
+
                             if (alpha > 0) {
                                 // Head character is white/black, rest is cyan - adapt to theme
                                 if (j === 0) {
-                                    ctx.fillStyle = isDark 
+                                    ctx.fillStyle = isDark
                                         ? `rgba(255, 255, 255, ${alpha})`
                                         : `rgba(0, 0, 0, ${alpha * 0.7})`;
                                 } else {
-                                    ctx.fillStyle = isDark 
+                                    ctx.fillStyle = isDark
                                         ? `rgba(34, 211, 238, ${alpha})`
                                         : `rgba(6, 182, 212, ${alpha * 0.6})`;
                                 }
-                                
+
                                 const char = drop.chars[charIndex % drop.chars.length];
                                 ctx.fillText(char, x, y);
                             }
                         }
                     }
                 }
-                
+
                 // Update drop position
                 drop.y += drop.speed * 0.4; // Slower falling
-                
+
                 // Reset when off screen
                 if (drop.y * fontSize > height + 200) {
                     drop.y = Math.random() * -40; // More staggered starts
@@ -255,14 +255,14 @@ export default function MatrixBackground() {
                     // Attract towards mouse
                     particle.vx += normalizedDx * gravityForce;
                     particle.vy += normalizedDy * gravityForce;
-                    
+
                     // Add slight orbital velocity for swirling effect
                     particle.vx += normalizedDy * gravityForce * 0.5;
                     particle.vy -= normalizedDx * gravityForce * 0.5;
 
                     particle.opacity = Math.min(0.5, particle.baseOpacity + force * 0.3); // Lower max opacity
                     particle.isOrbiting = true;
-                    
+
                     // Glow spring effect (reduced)
                     const targetGlow = 1 + force * 1.2;
                     const springForce = (targetGlow - particle.glowMultiplier) * 0.12;
@@ -271,7 +271,7 @@ export default function MatrixBackground() {
                 } else {
                     particle.opacity = Math.max(particle.baseOpacity * 0.5, particle.opacity - 0.015);
                     particle.isOrbiting = false;
-                    
+
                     // Return glow to normal
                     const springForce = (1 - particle.glowMultiplier) * 0.1;
                     particle.glowVelocity = particle.glowVelocity * 0.9 + springForce;
@@ -303,19 +303,19 @@ export default function MatrixBackground() {
 
                 // Draw particle
                 ctx.save();
-                
+
                 const glowSize = particle.size * particle.glowMultiplier * 0.7;
-                
+
                 // Subtle glow effect - adapt to theme
                 ctx.shadowColor = isDark ? '#22d3ee' : '#0891b2';
                 ctx.shadowBlur = isDark ? 8 * particle.glowMultiplier : 4 * particle.glowMultiplier;
                 ctx.globalAlpha = isDark ? particle.opacity : particle.opacity * 0.5;
-                ctx.fillStyle = particle.isOrbiting 
+                ctx.fillStyle = particle.isOrbiting
                     ? (isDark ? 'rgba(255, 255, 255, 0.9)' : 'rgba(0, 0, 0, 0.7)')
                     : (isDark ? 'rgba(34, 211, 238, 0.7)' : 'rgba(6, 182, 212, 0.5)');
                 ctx.font = `${glowSize}px "Fira Code", "SF Mono", Monaco, monospace`;
                 ctx.fillText(particle.char, particle.x, particle.y);
-                
+
                 // Second pass for brighter core (more subtle)
                 if (particle.isOrbiting) {
                     ctx.shadowBlur = (isDark ? 12 : 6) * particle.glowMultiplier;
@@ -323,7 +323,7 @@ export default function MatrixBackground() {
                     ctx.globalAlpha = particle.opacity * (isDark ? 0.3 : 0.2);
                     ctx.fillText(particle.char, particle.x, particle.y);
                 }
-                
+
                 ctx.restore();
             });
 

@@ -9,7 +9,7 @@ import { detectChord, ChordSmoother } from '@/components/stringsync/ChordDetecto
 import { StrumDetector } from '@/components/stringsync/StrumDetector';
 import { AudioEngine } from '@/components/stringsync/AudioEngine';
 import { Results } from '@mediapipe/hands';
-import { useTheme } from 'next-themes';
+import { useStore } from '@/lib/store';
 
 const TRANSLATIONS = {
     en: {
@@ -79,7 +79,7 @@ export default function StringSyncPage() {
     const [currentChord, setCurrentChord] = useState<string | null>(null);
     const [lastStrum, setLastStrum] = useState<number>(0);
     const [streamReady, setStreamReady] = useState(false);
-    const { theme, setTheme } = useTheme();
+    const { theme, setTheme } = useStore();
     const [mounted, setMounted] = useState(false);
     const [lang, setLang] = useState<'en' | 'zh'>('en');
 
@@ -365,8 +365,8 @@ export default function StringSyncPage() {
                             <div className="h-20 flex items-center justify-center">
                                 <button className="flex flex-col items-center gap-2 group" onClick={startAudio}>
                                     <div className={`p-3 rounded-full transition-colors ${status === 'ready'
-                                            ? 'bg-green-100 dark:bg-green-500/20 text-green-600 dark:text-green-400'
-                                            : 'bg-slate-100 dark:bg-white/5 text-slate-400 dark:text-gray-500'
+                                        ? 'bg-green-100 dark:bg-green-500/20 text-green-600 dark:text-green-400'
+                                        : 'bg-slate-100 dark:bg-white/5 text-slate-400 dark:text-gray-500'
                                         }`}>
                                         {status === 'ready' ? <Volume2 size={24} /> : <VolumeX size={24} />}
                                     </div>

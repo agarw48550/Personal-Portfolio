@@ -9,7 +9,6 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/lib/i18n';
-import { useTheme } from 'next-themes';
 
 // Static config
 const appConfig = [
@@ -115,11 +114,10 @@ function DockIcon({ app, label, mouseX, isOpen, isMinimized, isActive, onClick }
 
 export default function Dock() {
     const mouseX = useMotionValue(Infinity);
-    const { openApps, minimizedApps, activeApp, openApp, minimizeApp, focusApp } = useStore();
+    const { openApps, minimizedApps, activeApp, openApp, minimizeApp, focusApp, theme } = useStore();
     const { playSound } = useSounds();
-    const { resolvedTheme } = useTheme();
     const { t } = useLanguage();
-    const isDark = resolvedTheme === 'dark';
+    const isDark = theme === 'dark';
 
     const handleAppClick = (id: AppId) => {
         playSound('click');
