@@ -30,22 +30,22 @@ export default function AboutApp() {
   ] as const;
 
   return (
-    <div className="h-full bg-[#0a192f] text-slate-300 overflow-hidden relative font-sans selection:bg-cyan-500/30 flex flex-col">
+    <div className="h-full overflow-hidden relative font-sans selection:bg-cyan-500/30 flex flex-col" style={{ background: 'var(--ds-bg)', color: 'var(--ds-text-secondary)' }}>
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-600/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" style={{ background: 'var(--ds-brand-surface)', opacity: 0.3 }} />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" style={{ background: 'var(--ds-blue-surface)', opacity: 0.3 }} />
       </div>
 
       {/* Header / Tabs */}
-      <div className="p-6 pb-2 border-b border-white/10 shrink-0 z-20 bg-[#0a192f]/80 backdrop-blur-md">
+      <div className="p-6 pb-2 shrink-0 z-20 backdrop-blur-md" style={{ borderBottom: '1px solid var(--ds-border)', background: 'var(--ds-glass)' }}>
         <div className="flex items-center gap-4 mb-6">
-          <div className="relative w-16 h-16 rounded-xl overflow-hidden border-2 border-white/10 shrink-0">
+          <div className="relative w-16 h-16 rounded-xl overflow-hidden shrink-0" style={{ border: '2px solid var(--ds-border)' }}>
             <Image src="/images/profile.jpg" alt="Profile" fill className="object-cover" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-white tracking-tight">Ayaan Agarwal</h1>
-            <p className="text-cyan-400 text-sm">{t.appContent.about.role}</p>
+            <h1 className="text-2xl font-bold tracking-tight" style={{ color: 'var(--ds-text)' }}>Ayaan Agarwal</h1>
+            <p className="text-sm" style={{ color: 'var(--ds-brand)' }}>{t.appContent.about.role}</p>
           </div>
         </div>
 
@@ -55,9 +55,13 @@ export default function AboutApp() {
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`px-4 py-2 rounded-lg transition-all flex items-center gap-2 whitespace-nowrap ${activeTab === tab.id
-                ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20'
-                : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 border border-transparent'
+                ? ''
+                : 'hover:bg-white/10'
                 }`}
+              style={activeTab === tab.id
+                ? { background: 'var(--ds-brand-surface)', color: 'var(--ds-brand)', border: '1px solid var(--ds-brand)' }
+                : { background: 'rgba(255,255,255,0.05)', color: 'var(--ds-text-muted)', border: '1px solid transparent' }
+              }
             >
               <span>{tab.icon}</span>
               <span>{tab.label}</span>
@@ -78,17 +82,17 @@ export default function AboutApp() {
           >
             {activeTab === 'bio' && (
               <div className="space-y-8 max-w-2xl mx-auto">
-                <div className="prose prose-invert max-w-none text-slate-300 leading-relaxed space-y-4">
+                <div className="prose prose-invert max-w-none leading-relaxed space-y-4" style={{ color: 'var(--ds-text-secondary)' }}>
                   <p>{t.appContent.about.bio1}</p>
                   <p>{t.appContent.about.bio2}</p>
                 </div>
 
-                <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-                  <h3 className="text-lg font-bold text-white mb-4">Quick Facts</h3>
+                <div className="rounded-2xl p-6" style={{ background: 'var(--ds-bg-elevated)', border: '1px solid var(--ds-border)' }}>
+                  <h3 className="text-lg font-bold mb-4" style={{ color: 'var(--ds-text)' }}>Quick Facts</h3>
                   <ul className="space-y-3 text-sm">
-                    <li className="flex items-center gap-3"><span className="text-cyan-400">📍</span> {t.appContent.about.fact5}</li>
-                    <li className="flex items-center gap-3"><span className="text-cyan-400">🗣️</span> {t.appContent.about.fact1}</li>
-                    <li className="flex items-center gap-3"><span className="text-cyan-400">🏸</span> {t.appContent.about.fact2}</li>
+                    <li className="flex items-center gap-3"><span style={{ color: 'var(--ds-brand)' }}>📍</span> {t.appContent.about.fact5}</li>
+                    <li className="flex items-center gap-3"><span style={{ color: 'var(--ds-brand)' }}>🗣️</span> {t.appContent.about.fact1}</li>
+                    <li className="flex items-center gap-3"><span style={{ color: 'var(--ds-brand)' }}>🏸</span> {t.appContent.about.fact2}</li>
                   </ul>
                 </div>
               </div>
@@ -97,15 +101,15 @@ export default function AboutApp() {
             {activeTab === 'experience' && (
               <div className="space-y-6">
                 {t.appContent.resume.internships.map((job: any, i: number) => (
-                  <div key={i} className="bg-white/5 rounded-xl p-5 border border-white/10">
+                  <div key={i} className="rounded-xl p-5" style={{ background: 'var(--ds-bg-elevated)', border: '1px solid var(--ds-border)' }}>
                     <div className="flex justify-between items-start mb-3">
                       <div>
-                        <h3 className="font-bold text-white text-lg">{job.role}</h3>
-                        <div className="text-cyan-400">{job.company}</div>
+                        <h3 className="font-bold text-lg" style={{ color: 'var(--ds-text)' }}>{job.role}</h3>
+                        <div style={{ color: 'var(--ds-brand)' }}>{job.company}</div>
                       </div>
-                      <span className="text-xs font-mono text-slate-500 bg-black/20 px-2 py-1 rounded">{job.year}</span>
+                      <span className="text-xs font-mono px-2 py-1 rounded" style={{ color: 'var(--ds-text-muted)', background: 'var(--ds-bg-inset)' }}>{job.year}</span>
                     </div>
-                    <ul className="space-y-2 text-sm text-slate-400 list-disc pl-4">
+                    <ul className="space-y-2 text-sm list-disc pl-4" style={{ color: 'var(--ds-text-secondary)' }}>
                       {job.points.map((pt: string, j: number) => (
                         <li key={j}>{pt}</li>
                       ))}
@@ -118,13 +122,13 @@ export default function AboutApp() {
             {activeTab === 'leadership' && (
               <div className="space-y-6">
                 {t.appContent.resume.leadership.map((role: any, i: number) => (
-                  <div key={i} className="bg-white/5 rounded-xl p-5 border border-white/10">
+                  <div key={i} className="rounded-xl p-5" style={{ background: 'var(--ds-bg-elevated)', border: '1px solid var(--ds-border)' }}>
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-bold text-white text-lg">{role.role}</h3>
-                      <span className="text-xs font-mono text-slate-500">{role.period}</span>
+                      <h3 className="font-bold text-lg" style={{ color: 'var(--ds-text)' }}>{role.role}</h3>
+                      <span className="text-xs font-mono" style={{ color: 'var(--ds-text-muted)' }}>{role.period}</span>
                     </div>
-                    {role.org && <div className="text-cyan-400 mb-3">{role.org}</div>}
-                    <ul className="space-y-2 text-sm text-slate-400 list-disc pl-4">
+                    {role.org && <div className="mb-3" style={{ color: 'var(--ds-brand)' }}>{role.org}</div>}
+                    <ul className="space-y-2 text-sm list-disc pl-4" style={{ color: 'var(--ds-text-secondary)' }}>
                       {role.points.map((pt: string, j: number) => (
                         <li key={j}>{pt}</li>
                       ))}
@@ -137,12 +141,12 @@ export default function AboutApp() {
             {activeTab === 'education' && (
               <div className="space-y-6">
                 {t.appContent.resume.education.map((edu: any, i: number) => (
-                  <div key={i} className="bg-white/5 rounded-xl p-5 border border-white/10">
-                    <h3 className="font-bold text-white text-lg mb-1">{edu.school}</h3>
-                    <div className="text-cyan-400 text-sm mb-3">{edu.period}</div>
-                    <div className="space-y-2 text-sm text-slate-300">
-                      <p className="font-medium text-white/80">{edu.grade}</p>
-                      <p className="italic text-slate-400">{edu.subjects}</p>
+                  <div key={i} className="rounded-xl p-5" style={{ background: 'var(--ds-bg-elevated)', border: '1px solid var(--ds-border)' }}>
+                    <h3 className="font-bold text-lg mb-1" style={{ color: 'var(--ds-text)' }}>{edu.school}</h3>
+                    <div className="text-sm mb-3" style={{ color: 'var(--ds-brand)' }}>{edu.period}</div>
+                    <div className="space-y-2 text-sm" style={{ color: 'var(--ds-text-secondary)' }}>
+                      <p className="font-medium" style={{ color: 'var(--ds-text)', opacity: 0.8 }}>{edu.grade}</p>
+                      <p className="italic" style={{ color: 'var(--ds-text-muted)' }}>{edu.subjects}</p>
                     </div>
                   </div>
                 ))}

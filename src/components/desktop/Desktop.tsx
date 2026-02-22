@@ -41,7 +41,7 @@ export default function Desktop() {
     }, [openApp, playSound]);
 
     return (
-        <div className="fixed inset-0 overflow-hidden select-none bg-[#0a192f] text-white" role="application" aria-label="AyaanOS Desktop Environment">
+        <div className="fixed inset-0 overflow-hidden select-none bg-[var(--ds-bg)] text-[var(--ds-text)]" role="application" aria-label="AyaanOS Desktop Environment">
             {/* Custom Cursor */}
             <CustomCursor />
 
@@ -54,7 +54,7 @@ export default function Desktop() {
             </div>
 
             {/* Gradient Overlay for readability */}
-            <div className="absolute inset-0 z-0 bg-gradient-to-br from-[#0a192f]/80 via-[#112240]/80 to-[#0a192f]/80 pointer-events-none" aria-hidden="true" />
+            <div className="absolute inset-0 z-0 pointer-events-none" style={{ background: 'linear-gradient(135deg, var(--ds-bg) 0%, rgba(15,23,42,0.8) 50%, var(--ds-bg) 100%)' }} aria-hidden="true" />
 
             {/* Windows Layer */}
             <div className="absolute inset-0 z-10 pointer-events-none pt-8" role="region" aria-label="Application windows">
@@ -73,7 +73,7 @@ export default function Desktop() {
             <Dock />
 
             {/* Keyboard shortcut hint */}
-            <div className="fixed bottom-24 right-4 z-0 text-slate-500 text-xs font-mono opacity-50 hover:opacity-100 transition-opacity" aria-hidden="true">
+            <div className="fixed bottom-24 right-4 z-0 text-xs font-mono opacity-50 hover:opacity-100 transition-opacity" style={{ color: 'var(--ds-text-muted)' }} aria-hidden="true">
                 ⌘K Terminal
             </div>
         </div>

@@ -84,14 +84,15 @@ export default function Window({ id, children, title }: WindowProps) {
                         exit={{ opacity: 0, scale: 0.95 }}
                         transition={{ duration: 0.15 }}
                         className={cn(
-                            "flex flex-col h-full w-full text-white",
+                            "flex flex-col h-full w-full",
                             "backdrop-blur-2xl backdrop-saturate-150",
-                            "border border-cyan-500/20",
                             isMaximized ? "rounded-none" : "rounded-xl"
                         )}
                         style={{
-                            background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.08) 0%, rgba(15, 15, 25, 0.95) 50%, rgba(10, 10, 15, 0.98) 100%)',
-                            boxShadow: '0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05), 0 0 0 1px rgba(34, 211, 238, 0.1)'
+                            background: 'var(--ds-glass)',
+                            border: '1px solid var(--ds-border)',
+                            color: 'var(--ds-text)',
+                            boxShadow: 'var(--ds-shadow-2xl)'
                         }}
                         role="dialog"
                         aria-label={`${windowTitle} window`}
@@ -100,9 +101,11 @@ export default function Window({ id, children, title }: WindowProps) {
                         <div
                             className={cn(
                                 "h-11 flex items-center px-4 select-none cursor-default flex-shrink-0",
-                                "bg-gradient-to-b from-cyan-500/5 to-transparent",
-                                "border-b border-cyan-500/10"
                             )}
+                            style={{
+                                background: 'linear-gradient(to bottom, rgba(255,255,255,0.03), transparent)',
+                                borderBottom: '1px solid var(--ds-border)',
+                            }}
                             onDoubleClick={handleMaximize}
                         >
                             {/* Traffic Light Buttons - enlarged touch/click area */}
@@ -145,14 +148,14 @@ export default function Window({ id, children, title }: WindowProps) {
 
                             {/* Window Title */}
                             <div className="flex-1 flex items-center justify-center">
-                                <span className="text-sm font-medium text-cyan-300/70">{windowTitle}</span>
+                                <span className="text-sm font-medium" style={{ color: 'var(--ds-text-muted)' }}>{windowTitle}</span>
                             </div>
 
                             <div className="w-[52px]" />
                         </div>
 
                         {/* Window Content */}
-                        <div className="flex-1 overflow-auto relative bg-[#0a0a0f]/90">
+                        <div className="flex-1 overflow-auto relative" style={{ background: 'var(--ds-bg-inset)' }}>
                             {children}
                         </div>
                     </motion.div>

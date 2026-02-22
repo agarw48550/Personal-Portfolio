@@ -30,12 +30,13 @@ export default function TopBar() {
     if (!mounted) return null;
 
     return (
-        <div className="fixed top-0 left-0 right-0 h-8 bg-black/20 backdrop-blur-md z-50 flex items-center justify-between px-4 text-xs font-medium text-white select-none border-b border-white/5" role="banner">
+        <div className="fixed top-0 left-0 right-0 h-8 backdrop-blur-md z-50 flex items-center justify-between px-4 text-xs font-medium select-none" style={{ background: 'var(--ds-glass)', borderBottom: '1px solid var(--ds-border)', color: 'var(--ds-text)' }} role="banner">
             {/* Left Side */}
             <div className="flex items-center gap-4">
                 <button
                     onClick={() => setViewMode('website')}
-                    className="hover:text-cyan-400 transition-colors"
+                    className="transition-colors"
+                    style={{ color: 'var(--ds-text-muted)' }}
                     aria-label="Switch to website view"
                 >
                     <Apple size={14} fill="currentColor" />
@@ -44,17 +45,18 @@ export default function TopBar() {
                     <span className="font-bold hidden sm:inline">{t.desktop.appName}</span>
                     <button
                         onClick={() => setViewMode('website')}
-                        className="font-bold text-cyan-400 hover:text-cyan-300 transition-colors ml-2"
+                        className="font-bold ml-2 transition-colors"
+                        style={{ color: 'var(--ds-brand)' }}
                     >
                         Switch to Website
                     </button>
-                    <nav className="hidden sm:flex gap-4 text-white/80 ml-2" aria-label="Desktop menu">
-                        <button className="hover:text-white transition-colors">{t.desktop.menu.file}</button>
-                        <button className="hover:text-white transition-colors">{t.desktop.menu.edit}</button>
-                        <button className="hover:text-white transition-colors">{t.desktop.menu.view}</button>
-                        <button className="hover:text-white transition-colors">{t.desktop.menu.go}</button>
-                        <button className="hover:text-white transition-colors">{t.desktop.menu.window}</button>
-                        <button className="hover:text-white transition-colors">{t.desktop.menu.help}</button>
+                    <nav className="hidden sm:flex gap-4 ml-2" style={{ color: 'var(--ds-text-secondary)' }} aria-label="Desktop menu">
+                        <button className="hover:text-[var(--ds-text)] transition-colors">{t.desktop.menu.file}</button>
+                        <button className="hover:text-[var(--ds-text)] transition-colors">{t.desktop.menu.edit}</button>
+                        <button className="hover:text-[var(--ds-text)] transition-colors">{t.desktop.menu.view}</button>
+                        <button className="hover:text-[var(--ds-text)] transition-colors">{t.desktop.menu.go}</button>
+                        <button className="hover:text-[var(--ds-text)] transition-colors">{t.desktop.menu.window}</button>
+                        <button className="hover:text-[var(--ds-text)] transition-colors">{t.desktop.menu.help}</button>
                     </nav>
                 </div>
             </div>
@@ -62,10 +64,10 @@ export default function TopBar() {
             {/* Right Side */}
             <div className="flex items-center gap-4">
                 {/* Weather Widget (Mock) */}
-                <div className="hidden sm:flex items-center gap-2 text-white/90 hover:bg-white/10 px-2 py-0.5 rounded transition-colors cursor-default" aria-label={`Weather: ${t.desktop.weather.temp} in ${t.desktop.weather.city}`}>
-                    <Cloud size={14} className="text-cyan-400" aria-hidden="true" />
+                <div className="hidden sm:flex items-center gap-2 hover:bg-white/10 px-2 py-0.5 rounded transition-colors cursor-default" style={{ color: 'var(--ds-text-secondary)' }} aria-label={`Weather: ${t.desktop.weather.temp} in ${t.desktop.weather.city}`}>
+                    <Cloud size={14} style={{ color: 'var(--ds-brand)' }} aria-hidden="true" />
                     <span>{t.desktop.weather.temp}</span>
-                    <span className="text-white/60">{t.desktop.weather.city}</span>
+                    <span style={{ color: 'var(--ds-text-muted)' }}>{t.desktop.weather.city}</span>
                 </div>
 
                 {/* Status Icons */}

@@ -6,7 +6,7 @@ import { SKILLS_DATA } from '@/lib/skillsData';
 
 export default function SkillsApp() {
     return (
-        <div className="h-full bg-black text-green-500 p-8 font-mono overflow-y-auto selection:bg-green-500/30 selection:text-black">
+        <div className="h-full bg-black text-green-500 p-8 font-mono overflow-y-auto selection:bg-green-500/30 selection:text-black" style={{ fontFamily: 'var(--font-mono)' }}>
             <div className="max-w-3xl mx-auto">
                 {/* Header */}
                 <div className="mb-8 border-b border-green-500/30 pb-4">

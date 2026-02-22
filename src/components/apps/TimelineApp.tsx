@@ -104,13 +104,13 @@ function TimelineItem({ event, index }: { event: TimelineEvent; index: number })
                 whileHover={{ scale: 1.02 }}
                 transition={{ type: 'spring', stiffness: 300 }}
             >
-                <div className={`bg-gray-800/50 backdrop-blur-sm p-5 rounded-xl border border-gray-700/50 hover:border-cyan-500/30 transition-all group ${isLeft ? 'mr-4' : 'ml-4'}`}>
+                <div className={`bg-gray-800/50 backdrop-blur-sm p-5 rounded-xl hover:border-[var(--ds-brand)] transition-all group ${isLeft ? 'mr-4' : 'ml-4'}`} style={{ border: '1px solid var(--ds-border)' }}>
                     {/* Year Badge */}
                     <span className={`inline-block px-3 py-1 bg-gradient-to-r ${event.color} rounded-full text-xs font-bold text-white mb-3`}>
                         {event.year}
                     </span>
 
-                    <h3 className={`text-lg font-bold text-white mb-2 flex items-center gap-2 ${isLeft ? 'justify-end' : 'justify-start'}`}>
+                    <h3 className={`text-lg font-bold mb-2 flex items-center gap-2 ${isLeft ? 'justify-end' : 'justify-start'}`} style={{ color: 'var(--ds-text)' }}>
                         {!isLeft && <Icon size={18} className="text-cyan-400" />}
                         {event.title}
                         {isLeft && <Icon size={18} className="text-cyan-400" />}
@@ -158,21 +158,22 @@ export default function TimelineApp() {
     }, [activeCategory]);
 
     return (
-        <div className="h-full bg-gradient-to-b from-gray-900 via-gray-900 to-black overflow-y-auto">
+        <div className="h-full overflow-y-auto" style={{ background: 'linear-gradient(to bottom, var(--ds-bg), var(--ds-bg-inset))' }}>
             {/* Header */}
             <motion.div
                 ref={headerRef}
                 initial={{ opacity: 0, y: -20 }}
                 animate={headerInView ? { opacity: 1, y: 0 } : {}}
-                className="sticky top-0 z-20 bg-gray-900/80 backdrop-blur-lg border-b border-gray-800 p-6"
+                className="sticky top-0 z-20 backdrop-blur-lg p-6"
+                style={{ background: 'var(--ds-glass)', borderBottom: '1px solid var(--ds-border)' }}
             >
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+                        <h2 className="text-2xl font-bold flex items-center gap-3" style={{ color: 'var(--ds-text)' }}>
                             <Calendar className="text-cyan-400" />
                             My Journey
                         </h2>
-                        <p className="text-gray-500 text-sm mt-1">A timeline of milestones and achievements</p>
+                        <p className="text-sm mt-1" style={{ color: 'var(--ds-text-muted)' }}>A timeline of milestones and achievements</p>
                     </div>
 
                     {/* Filter Pills */}
@@ -181,10 +182,11 @@ export default function TimelineApp() {
                             <button
                                 key={cat}
                                 onClick={() => setActiveCategory(cat)}
-                                className={`px-3 py-1.5 rounded-full text-xs font-medium capitalize transition-all ${activeCategory === cat
-                                        ? 'bg-cyan-500 text-black'
-                                        : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
-                                    }`}
+                                className="px-3 py-1.5 rounded-full text-xs font-medium capitalize transition-all"
+                                style={activeCategory === cat
+                                    ? { background: 'var(--ds-brand)', color: '#000' }
+                                    : { background: 'rgba(255,255,255,0.05)', color: 'var(--ds-text-muted)' }
+                                }
                             >
                                 {cat}
                             </button>

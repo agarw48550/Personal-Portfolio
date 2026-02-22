@@ -1,173 +1,219 @@
 @import "tailwindcss";
 
 :root {
-  /* 🌙 Night Mode (Default) - Hacker/Builder Aesthetic */
-  --background: #0D1117;
-  /* GitHub Dark Dimmed / Deep Void */
-  --foreground: #E6EDF3;
-  /* Soft White */
-
-  --primary: #0D1117;
-  --secondary: #161b22;
-  --tertiary: #21262d;
-
-  --accent: #39FF14;
-  /* Classic Hacker Neon Green */
-  --accent-glow: rgba(57, 255, 20, 0.4);
-
-  --text-primary: #E6EDF3;
-  --text-secondary: #8b949e;
-  --text-muted: #6e7681;
-
-  --card-bg: rgba(13, 17, 23, 0.85);
-  /* Glassy Dark */
-  --card-border: rgba(48, 54, 61, 0.6);
-
-  --success: #39FF14;
-  --error: #FF0055;
-  /* Neon Red */
-
-  /* Cyberpunk specific extras */
+  --ds-bg: #030712;
+  --ds-bg-elevated: #0b1120;
+  --ds-bg-surface: #111827;
+  --ds-bg-card: #1e293b;
+  --ds-bg-inset: #0f172a;
+  --ds-border: rgba(255,255,255,0.06);
+  --ds-border-hover: rgba(255,255,255,0.12);
+  --ds-border-focus: #22d3ee;
+  --ds-text: #f1f5f9;
+  --ds-text-secondary: #94a3b8;
+  --ds-text-muted: #64748b;
+  --ds-text-inverse: #030712;
+  --ds-brand: #22d3ee;
+  --ds-brand-hover: #06b6d4;
+  --ds-brand-active: #0891b2;
+  --ds-brand-surface: rgba(34,211,238,0.08);
+  --ds-brand-glow: rgba(6,182,212,0.25);
+  --ds-emerald: #10b981;
+  --ds-emerald-surface: rgba(16,185,129,0.08);
+  --ds-blue: #3b82f6;
+  --ds-blue-surface: rgba(59,130,246,0.08);
+  --ds-purple: #8b5cf6;
+  --ds-purple-surface: rgba(139,92,246,0.08);
+  --ds-amber: #f59e0b;
+  --ds-amber-surface: rgba(245,158,11,0.08);
+  --ds-pink: #ec4899;
+  --ds-pink-surface: rgba(236,72,153,0.08);
+  --ds-rose: #f43f5e;
+  --ds-rose-surface: rgba(244,63,94,0.08);
+  --ds-success: #22c55e;
+  --ds-warning: #f59e0b;
+  --ds-error: #ef4444;
+  --ds-info: #3b82f6;
+  --ds-glass-bg: rgba(3,7,18,0.80);
+  --ds-glass-border: rgba(255,255,255,0.08);
+  --ds-glass-shine: rgba(255,255,255,0.04);
+  --ds-shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+  --ds-shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+  --ds-shadow-lg: 0 12px 24px rgba(0,0,0,0.5);
+  --ds-shadow-xl: 0 20px 40px rgba(0,0,0,0.6);
+  --ds-shadow-glow: 0 0 20px var(--ds-brand-glow);
+  --ds-shadow-card: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04);
+  --background: var(--ds-bg);
+  --foreground: var(--ds-text);
+  --accent: var(--ds-brand);
+  --accent-glow: var(--ds-brand-glow);
+  --text-primary: var(--ds-text);
+  --text-secondary: var(--ds-text-secondary);
+  --text-muted: var(--ds-text-muted);
+  --card-bg: var(--ds-glass-bg);
+  --card-border: var(--ds-glass-border);
   --matrix-color: #0f0;
   --cursor-color: #FF0055;
+  --primary: var(--ds-bg);
+  --secondary: var(--ds-bg-elevated);
+  --tertiary: var(--ds-bg-surface);
+  --success: var(--ds-success);
+  --error: var(--ds-error);
 }
 
 .light {
-  /* ☀️ Day Mode - Productivity/Notion Aesthetic */
-  --background: #FFFFFF;
-  /* Pure White */
-  --foreground: #37352F;
-  /* Notion Soft Black */
-
-  --primary: #FFFFFF;
-  --secondary: #F7F7F5;
-  /* Notion Off-White */
-  --tertiary: #E6E6E6;
-
-  --accent: #2E6F40;
-  /* Notion Green (Growth/Logic) */
-  --accent-glow: rgba(46, 111, 64, 0.2);
-
-  --text-primary: #37352F;
-  --text-secondary: #787774;
-  /* Notion Muted Grey */
-  --text-muted: #9B9A97;
-
-  --card-bg: rgba(255, 255, 255, 0.9);
-  --card-border: #E6E6E6;
-
-  --success: #2E6F40;
-  --error: #D44C47;
-  /* Notion Red */
-
+  --ds-bg: #ffffff;
+  --ds-bg-elevated: #f8fafc;
+  --ds-bg-surface: #f1f5f9;
+  --ds-bg-card: #ffffff;
+  --ds-bg-inset: #f1f5f9;
+  --ds-border: #e2e8f0;
+  --ds-border-hover: #cbd5e1;
+  --ds-border-focus: #06b6d4;
+  --ds-text: #0f172a;
+  --ds-text-secondary: #475569;
+  --ds-text-muted: #94a3b8;
+  --ds-text-inverse: #f8fafc;
+  --ds-brand: #0891b2;
+  --ds-brand-hover: #0e7490;
+  --ds-brand-active: #155e75;
+  --ds-brand-surface: rgba(8,145,178,0.06);
+  --ds-brand-glow: rgba(6,182,212,0.15);
+  --ds-glass-bg: rgba(255,255,255,0.80);
+  --ds-glass-border: rgba(0,0,0,0.06);
+  --ds-glass-shine: rgba(255,255,255,0.6);
+  --ds-shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+  --ds-shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+  --ds-shadow-lg: 0 12px 24px rgba(0,0,0,0.08);
+  --ds-shadow-xl: 0 20px 40px rgba(0,0,0,0.10);
+  --ds-shadow-glow: 0 0 20px var(--ds-brand-glow);
+  --ds-shadow-card: 0 8px 32px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.5);
+  --background: var(--ds-bg);
+  --foreground: var(--ds-text);
+  --accent: var(--ds-brand);
+  --accent-glow: var(--ds-brand-glow);
+  --text-primary: var(--ds-text);
+  --text-secondary: var(--ds-text-secondary);
+  --text-muted: var(--ds-text-muted);
+  --card-bg: var(--ds-glass-bg);
+  --card-border: var(--ds-glass-border);
   --matrix-color: #2E6F40;
   --cursor-color: #2E6F40;
+  --primary: var(--ds-bg);
+  --secondary: var(--ds-bg-elevated);
+  --tertiary: var(--ds-bg-surface);
+  --success: var(--ds-success);
+  --error: #d44c47;
 }
 
 @theme {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-primary: var(--primary);
-  --color-secondary: var(--secondary);
-  --color-tertiary: var(--tertiary);
-  --color-accent: var(--accent);
-  --color-accent-glow: var(--accent-glow);
-  --color-card-bg: var(--card-bg);
-  --color-card-border: var(--card-border);
-
-  --font-sans: 'Inter', system-ui, sans-serif;
-  --font-mono: 'Fira Code', monospace;
+  --color-background: var(--ds-bg);
+  --color-foreground: var(--ds-text);
+  --color-primary: var(--ds-bg);
+  --color-secondary: var(--ds-bg-elevated);
+  --color-tertiary: var(--ds-bg-surface);
+  --color-accent: var(--ds-brand);
+  --color-accent-glow: var(--ds-brand-glow);
+  --color-card-bg: var(--ds-glass-bg);
+  --color-card-border: var(--ds-glass-border);
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Fira Code', 'Cascadia Code', monospace;
   --font-retro: 'VT323', monospace;
-  /* We'll need to load this */
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  transition: background-color 0.3s ease, color 0.3s ease;
-  /* OS-like behavior handled in page.tsx */
+  background: var(--ds-bg);
+  color: var(--ds-text);
   font-family: var(--font-sans);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
+/* Typography Scale */
+.ds-display-xl { font-size: clamp(3rem, 5vw + 1rem, 4.5rem); line-height: 1.05; letter-spacing: -0.03em; font-weight: 900; }
+.ds-display { font-size: clamp(2.25rem, 4vw + 0.5rem, 3.75rem); line-height: 1.1; letter-spacing: -0.025em; font-weight: 900; }
+.ds-heading-1 { font-size: clamp(1.875rem, 3vw, 2.25rem); line-height: 1.15; letter-spacing: -0.02em; font-weight: 800; }
+.ds-heading-2 { font-size: clamp(1.5rem, 2.5vw, 1.875rem); line-height: 1.2; letter-spacing: -0.015em; font-weight: 700; }
+.ds-heading-3 { font-size: clamp(1.25rem, 2vw, 1.5rem); line-height: 1.3; letter-spacing: -0.01em; font-weight: 700; }
+.ds-body-lg { font-size: 1.125rem; line-height: 1.75; letter-spacing: -0.01em; }
+.ds-body { font-size: 1rem; line-height: 1.75; letter-spacing: -0.005em; }
+.ds-body-sm { font-size: 0.875rem; line-height: 1.65; }
+.ds-caption { font-size: 0.75rem; line-height: 1.5; letter-spacing: 0.02em; font-weight: 500; }
+.ds-overline { font-size: 0.6875rem; line-height: 1.3; letter-spacing: 0.08em; font-weight: 700; text-transform: uppercase; }
 
-::-webkit-scrollbar-track {
-  background: transparent;
-}
+/* Surfaces */
+.ds-surface { background: var(--ds-bg-surface); border: 1px solid var(--ds-border); border-radius: 24px; }
+.ds-card { background: var(--ds-bg-card); border: 1px solid var(--ds-border); border-radius: 24px; box-shadow: var(--ds-shadow-card); transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease; }
+.ds-card:hover { border-color: var(--ds-border-hover); }
+.ds-card-interactive:hover { border-color: var(--ds-brand); box-shadow: var(--ds-shadow-glow); transform: translateY(-4px); }
+.glass { background: var(--ds-glass-bg); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); border: 1px solid var(--ds-glass-border); box-shadow: var(--ds-shadow-card); }
+.glass-panel { background: var(--ds-glass-bg); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); border: 1px solid var(--ds-glass-border); box-shadow: var(--ds-shadow-lg), inset 0 1px 0 var(--ds-glass-shine); }
+.glass-subtle { background: var(--ds-brand-surface); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--ds-glass-border); }
 
-::-webkit-scrollbar-thumb {
-  background: var(--text-secondary);
-  border-radius: 3px;
-  opacity: 0.5;
-}
+/* Buttons */
+.ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700; border-radius: 16px; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; white-space: nowrap; user-select: none; }
+.ds-btn:active { transform: scale(0.97); }
+.ds-btn-primary { background: var(--ds-brand); color: var(--ds-text-inverse); padding: 14px 32px; font-size: 0.9375rem; box-shadow: 0 4px 14px var(--ds-brand-glow); }
+.ds-btn-primary:hover { background: var(--ds-brand-hover); box-shadow: 0 6px 20px var(--ds-brand-glow); transform: translateY(-1px); }
+.ds-btn-secondary { background: var(--ds-brand-surface); color: var(--ds-text); border: 1px solid var(--ds-border); padding: 14px 32px; font-size: 0.9375rem; }
+.ds-btn-secondary:hover { background: var(--ds-border); border-color: var(--ds-border-hover); }
+.ds-btn-ghost { background: transparent; color: var(--ds-brand); padding: 14px 32px; font-size: 0.9375rem; }
+.ds-btn-ghost:hover { background: var(--ds-brand-surface); }
+.ds-btn-sm { padding: 8px 16px; font-size: 0.8125rem; border-radius: 12px; }
+.ds-btn-lg { padding: 18px 40px; font-size: 1rem; border-radius: 20px; }
+.ds-btn-icon { padding: 10px; border-radius: 12px; }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--accent);
-}
+/* Chips */
+.ds-chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; border: 1px solid; transition: all 0.2s ease; }
+
+/* Section Icon */
+.ds-section-icon { width: 48px; height: 48px; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; }
+
+/* Inputs */
+.ds-input { width: 100%; padding: 12px 16px; border-radius: 12px; font-size: 1rem; line-height: 1.5; background: var(--ds-bg-surface); border: 1px solid var(--ds-border); color: var(--ds-text); transition: all 0.2s ease; outline: none; }
+.ds-input:focus { border-color: var(--ds-brand); box-shadow: 0 0 0 3px var(--ds-brand-surface); }
+.ds-input::placeholder { color: var(--ds-text-muted); }
+.ds-label { display: block; font-size: 0.875rem; font-weight: 600; color: var(--ds-text-secondary); margin-bottom: 8px; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--ds-text-muted); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--ds-brand); }
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
 /* Utilities */
-.glass {
-  background: var(--card-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--card-border);
-}
+.text-glow { text-shadow: 0 0 10px var(--ds-brand-glow); }
+.box-glow { box-shadow: 0 0 20px var(--ds-brand-glow); }
+.matrix-text { font-family: var(--font-mono); color: var(--accent); text-shadow: 0 0 5px var(--accent); }
 
-.glass-panel {
-  background: rgba(17, 34, 64, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-}
+/* Animations */
+@keyframes ds-fade-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes ds-slide-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes ds-scale-in { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+@keyframes ds-pulse-glow { 0%, 100% { box-shadow: 0 0 8px var(--ds-brand-glow); } 50% { box-shadow: 0 0 20px var(--ds-brand-glow); } }
+.animate-fade-in { animation: ds-fade-in 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+.animate-slide-up { animation: ds-slide-up 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+.animate-scale-in { animation: ds-scale-in 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+.animate-glow { animation: ds-pulse-glow 3s ease-in-out infinite; }
 
-.text-glow {
-  text-shadow: 0 0 10px var(--accent-glow);
-}
-
-.box-glow {
-  box-shadow: 0 0 20px var(--accent-glow);
-}
-
-/* Matrix Effect Utilities */
-.matrix-text {
-  font-family: var(--font-mono);
-  color: var(--accent);
-  text-shadow: 0 0 5px var(--accent);
-}
-
-/* Retro Phone Utilities */
-.retro-screen-effect {
-  background: var(--retro-screen);
-  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
-  position: relative;
-}
-
+/* Retro Effects */
+.retro-screen-effect { position: relative; }
 .retro-screen-effect::after {
-  content: " ";
+  content: "";
   display: block;
   position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.1) 50%), linear-gradient(90deg, rgba(255,0,0,0.06), rgba(0,255,0,0.02), rgba(0,0,255,0.06));
   z-index: 2;
   background-size: 100% 2px, 3px 100%;
   pointer-events: none;
 }
+.pixel-text { font-family: var(--font-retro); image-rendering: pixelated; }
 
-.pixel-text {
-  font-family: var(--font-retro);
-  image-rendering: pixelated;
-}
-
-/* Hide default cursor on desktop to show custom cursor */
-/* Only hide cursor for mouse users, not keyboard navigators */
+/* Cursor Hiding */
 @media (pointer: fine) {
   body:not(.keyboard-user),
   body:not(.keyboard-user) a,
@@ -180,7 +226,7 @@ body {
   }
 }
 
-/* === ACCESSIBILITY: Skip to Content Link === */
+/* Accessibility */
 .skip-to-content {
   position: absolute;
   top: -100%;
@@ -188,59 +234,30 @@ body {
   transform: translateX(-50%);
   z-index: 10000;
   padding: 1rem 2rem;
-  background: var(--accent);
-  color: #000;
+  background: var(--ds-brand);
+  color: var(--ds-text-inverse);
   font-weight: 700;
   font-size: 1rem;
-  border-radius: 0 0 0.75rem 0.75rem;
+  border-radius: 0 0 12px 12px;
   text-decoration: none;
   transition: top 0.2s ease;
 }
-
-.skip-to-content:focus {
-  top: 0;
-  outline: 3px solid var(--accent);
-  outline-offset: 2px;
-}
-
-/* === ACCESSIBILITY: Focus Visible Styles === */
-*:focus-visible {
-  outline: 2px solid var(--accent, #39FF14);
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
-/* Keyboard user detection - restore outline only for keyboard */
-.keyboard-user *:focus-visible {
-  outline: 3px solid var(--accent, #39FF14);
-  outline-offset: 3px;
-}
-
-/* === ACCESSIBILITY: Reduced Motion === */
+.skip-to-content:focus { top: 0; outline: 3px solid var(--ds-brand); outline-offset: 2px; }
+*:focus-visible { outline: 2px solid var(--ds-brand); outline-offset: 2px; border-radius: 4px; }
+.keyboard-user *:focus-visible { outline: 3px solid var(--ds-brand); outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-
-  .matrix-text,
-  .animate-pulse,
-  .animate-spin {
-    animation: none !important;
-  }
+  .matrix-text, .animate-pulse, .animate-spin { animation: none !important; }
 }
-
-/* === ACCESSIBILITY: Screen Reader Only Utility === */
 .sr-only {
   position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;

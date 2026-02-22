@@ -59,28 +59,29 @@ function DockIcon({ app, label, mouseX, isOpen, isMinimized, isActive, onClick }
             <motion.div
                 initial={{ opacity: 0, y: 10, scale: 0.8 }}
                 animate={isHovered ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 10, scale: 0.8 }}
-                className="absolute -top-10 px-3 py-1 rounded-lg whitespace-nowrap pointer-events-none z-50 border border-cyan-500/20"
+                className="absolute -top-10 px-3 py-1 rounded-lg whitespace-nowrap pointer-events-none z-50"
                 style={{
-                    background: 'rgba(10, 10, 15, 0.9)',
+                    background: 'var(--ds-glass)',
                     backdropFilter: 'blur(10px)',
+                    border: '1px solid var(--ds-border)',
                 }}
             >
-                <span className="text-xs font-medium text-cyan-300">{label}</span>
+                <span className="text-xs font-medium" style={{ color: 'var(--ds-brand)' }}>{label}</span>
             </motion.div>
 
             {/* Icon container - Liquid Glass */}
             <motion.div
                 className={cn(
                     "aspect-square rounded-xl flex items-center justify-center relative overflow-hidden",
-                    "border border-cyan-500/20"
                 )}
                 style={{
                     width,
                     background: isHovered || isOpen
-                        ? 'linear-gradient(135deg, rgba(34, 211, 238, 0.2) 0%, rgba(34, 211, 238, 0.1) 100%)'
-                        : 'linear-gradient(135deg, rgba(34, 211, 238, 0.1) 0%, rgba(34, 211, 238, 0.05) 100%)',
+                        ? 'linear-gradient(135deg, rgba(var(--ds-brand-rgb, 34, 211, 238), 0.2) 0%, rgba(var(--ds-brand-rgb, 34, 211, 238), 0.1) 100%)'
+                        : 'linear-gradient(135deg, rgba(var(--ds-brand-rgb, 34, 211, 238), 0.1) 0%, rgba(var(--ds-brand-rgb, 34, 211, 238), 0.05) 100%)',
+                    border: '1px solid var(--ds-border)',
                     boxShadow: isHovered || isOpen
-                        ? '0 0 20px rgba(34, 211, 238, 0.2), inset 0 1px 0 rgba(255,255,255,0.1)'
+                        ? 'var(--ds-shadow-glow)'
                         : 'inset 0 1px 0 rgba(255,255,255,0.05)',
                 }}
                 whileTap={{ scale: 0.9 }}
@@ -89,7 +90,7 @@ function DockIcon({ app, label, mouseX, isOpen, isMinimized, isActive, onClick }
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent" />
 
                 <motion.div style={{ scale: useTransform(width, [48, 70], [1, 1.15]) }}>
-                    <Icon className="text-cyan-400" size={22} />
+                    <Icon style={{ color: 'var(--ds-brand)' }} size={22} />
                 </motion.div>
             </motion.div>
 
@@ -99,10 +100,10 @@ function DockIcon({ app, label, mouseX, isOpen, isMinimized, isActive, onClick }
                     layoutId={`dock-indicator-${app.id}`}
                     className={cn(
                         "absolute -bottom-1.5 w-1 h-1 rounded-full",
-                        isMinimized ? "bg-cyan-500/40" : "bg-cyan-400"
                     )}
                     style={{
-                        boxShadow: isMinimized ? 'none' : '0 0 6px rgba(34, 211, 238, 0.8)',
+                        background: isMinimized ? 'var(--ds-text-muted)' : 'var(--ds-brand)',
+                        boxShadow: isMinimized ? 'none' : 'var(--ds-shadow-glow)',
                     }}
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
@@ -147,17 +148,17 @@ export default function Dock() {
             className="fixed bottom-3 left-1/2 -translate-x-1/2 z-[100]"
         >
             <div
-                className="flex items-end gap-1.5 px-2.5 py-2 border border-cyan-500/20"
+                className="flex items-end gap-1.5 px-2.5 py-2"
                 style={{
                     background: isDark
-                        ? 'linear-gradient(135deg, rgba(34, 211, 238, 0.08) 0%, rgba(10, 10, 15, 0.9) 100%)'
+                        ? 'var(--ds-glass)'
                         : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%)',
                     backdropFilter: 'blur(30px) saturate(180%)',
                     WebkitBackdropFilter: 'blur(30px) saturate(180%)',
                     borderRadius: '18px',
-                    borderColor: isDark ? 'rgba(34, 211, 238, 0.2)' : 'rgba(0, 0, 0, 0.1)',
+                    border: `1px solid var(--ds-border)`,
                     boxShadow: isDark
-                        ? '0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.05)'
+                        ? 'var(--ds-shadow-2xl)'
                         : '0 8px 32px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255,255,255,0.5)',
                 }}
             >
