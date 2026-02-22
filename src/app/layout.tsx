@@ -27,21 +27,22 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Ayaan Agarwal | Full-Stack Developer",
+    default: "Ayaan Agarwal | Student Leader & Developer",
     template: "%s | Ayaan Agarwal"
   },
-  description: "Interactive OS-style portfolio of Ayaan Agarwal. A passionate full-stack developer specializing in React, Next.js, and modern web technologies. Explore my projects, skills, and journey.",
+  description: "Portfolio of Ayaan Agarwal — student leader, service advocate, and aspiring developer at UWCSEA in Singapore. Explore my leadership, projects, and journey.",
   keywords: [
     "Ayaan Agarwal",
     "Portfolio",
-    "Full-Stack Developer",
+    "Student Leader",
+    "UWCSEA",
+    "Singapore",
     "Web Developer",
-    "React Developer",
+    "Service",
+    "MUN",
+    "React",
     "Next.js",
     "TypeScript",
-    "Singapore Developer",
-    "UWCSEA",
-    "Student Developer",
     "Creative Portfolio",
     "Interactive Portfolio"
   ],
@@ -53,8 +54,8 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "Ayaan Agarwal | Full-Stack Developer",
-    description: "Interactive OS-style portfolio showcasing projects in React, Next.js, and AI. Explore the matrix!",
+    title: "Ayaan Agarwal | Student Leader & Developer",
+    description: "Portfolio of Ayaan Agarwal — student leader, service advocate, and aspiring developer at UWCSEA in Singapore.",
     url: "https://ayaanagarwal.dev",
     siteName: "Ayaan Agarwal Portfolio",
     images: [
@@ -62,7 +63,7 @@ export const metadata: Metadata = {
         url: "/images/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Ayaan Agarwal - Full-Stack Developer Portfolio",
+        alt: "Ayaan Agarwal - Student Leader & Developer Portfolio",
       },
     ],
     locale: "en_US",
@@ -70,8 +71,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ayaan Agarwal | Full-Stack Developer",
-    description: "Interactive OS-style portfolio showcasing projects in React, Next.js, and AI.",
+    title: "Ayaan Agarwal | Student Leader & Developer",
+    description: "Portfolio of Ayaan Agarwal — student leader, service advocate, and aspiring developer at UWCSEA in Singapore.",
     images: ["/images/og-image.png"],
     creator: "@ayaanagarwal",
   },
@@ -104,12 +105,12 @@ const jsonLd = {
     "https://github.com/agarw48550",
     "https://linkedin.com/in/ayaanagarwal",
   ],
-  jobTitle: "Student Developer",
+  jobTitle: "Student Leader & Aspiring Developer",
   worksFor: {
     "@type": "EducationalOrganization",
     name: "UWCSEA"
   },
-  knowsAbout: ["React", "Next.js", "TypeScript", "Python", "Web Development", "AI"],
+  knowsAbout: ["Leadership", "Service", "MUN", "React", "Next.js", "TypeScript", "Python", "Web Development", "AI", "Public Speaking"],
   alumniOf: {
     "@type": "EducationalOrganization",
     name: "UWC South East Asia"

@@ -147,57 +147,78 @@ export default function WebsiteView() {
                 {/* Hero */}
                 <section id="hero" className="min-h-[85vh] flex items-center px-6 relative overflow-hidden" aria-label="Introduction">
                     <div className="container mx-auto">
-                        <div className="max-w-4xl pt-10 md:pt-0">
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.8, ease: "easeOut" }}
-                                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-500 text-xs font-bold uppercase tracking-widest mb-6"
-                            >
-                                <Zap size={14} className="animate-pulse" />
-                                Aspiring Developer & Student
-                            </motion.div>
-
-                            <div className="flex flex-col md:flex-row gap-8 items-center mb-8">
+                        <div className="max-w-5xl pt-10 md:pt-0">
+                            <div className="flex flex-col md:flex-row gap-10 md:gap-16 items-center mb-10">
                                 <motion.div
                                     initial={{ opacity: 0, scale: 0.8 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     transition={{ duration: 0.8, delay: 0.1 }}
-                                    className="relative w-28 h-28 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-cyan-500/20 shadow-2xl shrink-0"
+                                    className="relative w-32 h-32 md:w-44 md:h-44 rounded-3xl overflow-hidden border-2 border-cyan-500/20 shadow-2xl shrink-0"
                                 >
                                     <img src="/images/profile.jpg" alt="Ayaan Agarwal" className="object-cover w-full h-full" />
                                 </motion.div>
 
-                                <motion.h1
-                                    initial={{ opacity: 0, y: 30 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.8, delay: 0.2 }}
-                                    className="text-4xl md:text-7xl font-black tracking-tight leading-[1.1] text-center md:text-left"
-                                >
-                                    Building <span className="text-cyan-500">Cool Stuff</span> with &nbsp;
-                                    <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent italic">Code.</span>
-                                </motion.h1>
+                                <div className="text-center md:text-left">
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.6 }}
+                                        className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-500 text-xs font-bold uppercase tracking-widest mb-4"
+                                    >
+                                        <MapPin size={12} /> Singapore • UWCSEA East
+                                    </motion.div>
+
+                                    <motion.h1
+                                        initial={{ opacity: 0, y: 30 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.8, delay: 0.15 }}
+                                        className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.1] mb-4"
+                                    >
+                                        Hi, I'm <span className="text-cyan-500">Ayaan</span>
+                                    </motion.h1>
+
+                                    <motion.p
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.8, delay: 0.3 }}
+                                        className={`text-lg md:text-xl max-w-xl leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}
+                                    >
+                                        Student leader, service advocate, and aspiring developer. I chair humanitarian initiatives, produce school media, compete in squash nationally, and build things with code.
+                                    </motion.p>
+                                </div>
                             </div>
 
-                            <motion.p
-                                initial={{ opacity: 0, y: 30 }}
+                            {/* Identity Chips */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.8, delay: 0.4 }}
-                                className={`text-lg md:text-2xl mb-12 max-w-2xl leading-relaxed text-center md:text-left ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}
+                                transition={{ duration: 0.8, delay: 0.45 }}
+                                className="flex flex-wrap gap-3 justify-center md:justify-start mb-10"
                             >
-                                {t.appContent.about.bio1}
-                            </motion.p>
+                                {[
+                                    { label: 'Service Chair', color: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' },
+                                    { label: 'MUN Delegate & Chair', color: 'bg-blue-500/10 text-blue-400 border-blue-500/20' },
+                                    { label: 'News Producer', color: 'bg-amber-500/10 text-amber-500 border-amber-500/20' },
+                                    { label: 'Squash Athlete', color: 'bg-purple-500/10 text-purple-400 border-purple-500/20' },
+                                    { label: 'Developer', color: 'bg-cyan-500/10 text-cyan-500 border-cyan-500/20' },
+                                ].map((chip) => (
+                                    <span key={chip.label} className={`px-3 py-1.5 rounded-full text-xs font-bold border ${chip.color}`}>
+                                        {chip.label}
+                                    </span>
+                                ))}
+                            </motion.div>
+
                             <motion.div
                                 initial={{ opacity: 0, y: 30 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.8, delay: 0.6 }}
-                                className="flex flex-wrap gap-5 justify-center md:justify-start"
+                                className="flex flex-wrap gap-4 justify-center md:justify-start"
                             >
-                                <a href="#projects" className="px-8 py-4 bg-white text-black font-bold rounded-2xl hover:bg-slate-100 transition-all flex items-center gap-2 group">
-                                    Check Out My Work <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                                <a href="#about" className="px-8 py-4 bg-cyan-500 text-white font-bold rounded-2xl hover:bg-cyan-600 transition-all flex items-center gap-2 group shadow-lg shadow-cyan-500/25">
+                                    Learn More About Me <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                                 </a>
-                                <a href="#contact" className="px-8 py-4 bg-white/5 border border-white/10 font-bold rounded-2xl hover:bg-white/10 transition-all">
-                                    Let's Chat!
+                                <a href="#contact" className={`px-8 py-4 border font-bold rounded-2xl transition-all ${theme === 'dark' ? 'bg-white/5 border-white/10 hover:bg-white/10' : 'bg-black/5 border-slate-200 hover:bg-black/10'}`}>
+                                    Get In Touch
                                 </a>
                             </motion.div>
                         </div>
@@ -209,7 +230,15 @@ export default function WebsiteView() {
                     <div className="container mx-auto">
                         <div className="grid lg:grid-cols-2 gap-20 items-center">
                             <div>
-                                <h2 className="text-4xl font-black mb-8">Passionate about <span className="text-cyan-500">Impact.</span></h2>
+                                <div className="flex items-center gap-4 mb-8">
+                                    <div className="w-12 h-12 rounded-2xl bg-cyan-500 flex items-center justify-center text-white shadow-lg shadow-cyan-500/30">
+                                        <Users size={24} />
+                                    </div>
+                                    <h2 className="text-4xl font-black tracking-tight">About Me</h2>
+                                </div>
+                                <p className={`text-lg leading-relaxed mb-6 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
+                                    {t.appContent.about.bio1}
+                                </p>
                                 <p className={`text-lg leading-relaxed mb-8 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
                                     {t.appContent.about.bio2}
                                 </p>
@@ -229,10 +258,10 @@ export default function WebsiteView() {
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 {[
-                                    { title: t.appContent.about.fact1, desc: 'Public Speaking' },
-                                    { title: t.appContent.about.fact2, desc: 'Ranking (SG)' },
-                                    { title: t.appContent.about.fact3, desc: 'Musical Skill' },
-                                    { title: t.appContent.about.fact5, desc: 'Institution' },
+                                    { value: '11+', label: 'MUN Conferences', desc: 'Public Speaking' },
+                                    { value: 'Top 20', label: 'Squash (SG Age Group)', desc: 'Athletics' },
+                                    { value: '🥁', label: 'Self-taught Drummer', desc: 'Musical Skill' },
+                                    { value: 'UWC', label: 'East Campus', desc: 'Institution' },
                                 ].map((fact, i) => (
                                     <motion.div
                                         whileHover={{ y: -5 }}
@@ -240,9 +269,9 @@ export default function WebsiteView() {
                                         className={`p-6 rounded-3xl border flex flex-col justify-center text-center ${theme === 'dark' ? 'bg-[#112240]/50 border-white/5' : 'bg-white border-slate-200 shadow-xl shadow-slate-200/50'
                                             }`}
                                     >
-                                        <p className="text-2xl md:text-3xl font-black text-cyan-500 mb-2">{fact.title.split(' ')[0]}</p>
-                                        <p className="text-xs md:text-sm font-bold opacity-80 leading-tight">{fact.title.split(' ').slice(1).join(' ')}</p>
-                                        <p className="text-[10px] uppercase tracking-tighter opacity-50 mt-2 font-mono">{fact.desc}</p>
+                                        <p className="text-2xl md:text-3xl font-black text-cyan-500 mb-2">{fact.value}</p>
+                                        <p className="text-xs md:text-sm font-bold opacity-80 leading-tight">{fact.label}</p>
+                                        <p className="text-[10px] uppercase tracking-wider opacity-50 mt-2 font-mono">{fact.desc}</p>
                                     </motion.div>
                                 ))}
                             </div>
@@ -254,9 +283,9 @@ export default function WebsiteView() {
                 <section id="skills" className="py-20 md:py-32 px-6 bg-slate-50 dark:bg-white/5">
                     <div className="container mx-auto">
                         <div className="text-center mb-16 max-w-2xl mx-auto">
-                            <h2 className="text-4xl font-black tracking-tight italic uppercase mb-4">The <span className="text-cyan-500">Evolution.</span></h2>
-                            <p className={`text-lg italic ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
-                                My journey started with drag-and-drop logic. Now, I engineer systems with clean code. The logic remains the same; only the syntax changes.
+                            <h2 className="text-4xl font-black tracking-tight mb-4">The <span className="text-cyan-500">Evolution</span></h2>
+                            <p className={`text-lg ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
+                                My journey started with drag-and-drop logic. Now, I engineer systems with clean code. The logic remains the same — only the syntax changes.
                             </p>
                         </div>
                         <BlockToCode />
@@ -270,7 +299,7 @@ export default function WebsiteView() {
                             <div className="w-12 h-12 rounded-2xl bg-cyan-500 flex items-center justify-center text-white shadow-lg shadow-cyan-500/30">
                                 <GraduationCap size={24} />
                             </div>
-                            <h2 className="text-4xl font-black tracking-tight italic uppercase">Education</h2>
+                            <h2 className="text-4xl font-black tracking-tight">Education</h2>
                         </div>
                         {t.appContent.resume.education.map((edu, i) => (
                             <div key={i} className={`group p-8 md:p-10 rounded-3xl border transition-all hover:border-cyan-500/50 ${theme === 'dark' ? 'bg-[#0a0a12] border-white/5' : 'bg-white border-slate-200 shadow-2xl shadow-slate-200/50'
@@ -279,7 +308,7 @@ export default function WebsiteView() {
                                     <div>
                                         <h3 className="text-2xl md:text-3xl font-black text-cyan-500 group-hover:scale-[1.01] transition-transform origin-left">{edu.school}</h3>
                                         <p className="text-xl font-bold mt-2 opacity-80">{edu.grade}</p>
-                                        <p className={`mt-6 text-lg max-w-3xl italic ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
+                                        <p className={`mt-6 text-lg max-w-3xl ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
                                             {edu.subjects}
                                         </p>
                                     </div>
@@ -299,7 +328,7 @@ export default function WebsiteView() {
                             <div className="w-12 h-12 rounded-2xl bg-purple-500 flex items-center justify-center text-white shadow-lg shadow-purple-500/30">
                                 <Briefcase size={24} />
                             </div>
-                            <h2 className="text-4xl font-black tracking-tight italic uppercase">Internships</h2>
+                            <h2 className="text-4xl font-black tracking-tight">Internships</h2>
                         </div>
                         <div className="space-y-12">
                             {t.appContent.resume.internships.map((intern, i) => (
@@ -307,7 +336,7 @@ export default function WebsiteView() {
                                     <div className="absolute left-[-6px] top-2 w-3 h-3 rounded-full bg-purple-500 ring-4 ring-purple-500/20" />
                                     <div className="flex flex-col md:flex-row justify-between gap-4 mb-8">
                                         <div>
-                                            <h3 className="text-2xl md:text-3xl font-black italic">{intern.role}</h3>
+                                            <h3 className="text-2xl md:text-3xl font-black">{intern.role}</h3>
                                             <p className="text-xl font-bold text-purple-500">{intern.company}</p>
                                         </div>
                                         <span className="font-mono text-slate-500 font-bold">{intern.year}</span>
@@ -334,7 +363,7 @@ export default function WebsiteView() {
                             <div className="w-12 h-12 rounded-2xl bg-blue-500 flex items-center justify-center text-white shadow-lg shadow-blue-500/30">
                                 <Trophy size={24} />
                             </div>
-                            <h2 className="text-4xl font-black tracking-tight italic uppercase">Leadership</h2>
+                            <h2 className="text-4xl font-black tracking-tight">Leadership</h2>
                         </div>
                         <div className="grid md:grid-cols-2 gap-8">
                             {t.appContent.resume.leadership.map((lead, i) => (
@@ -344,12 +373,12 @@ export default function WebsiteView() {
                                     className={`p-10 rounded-3xl border group transition-all ${theme === 'dark' ? 'bg-[#0a0a12] border-white/10 hover:border-blue-500/50' : 'bg-white border-slate-200 shadow-xl'
                                         }`}
                                 >
-                                    <h3 className="text-2xl font-black mb-1 group-hover:text-blue-500 transition-colors uppercase italic leading-tight">{lead.role}</h3>
+                                    <h3 className="text-2xl font-black mb-1 group-hover:text-blue-500 transition-colors leading-tight">{lead.role}</h3>
                                     <p className="font-bold text-lg opacity-80 mb-4">{lead.org}</p>
-                                    <span className="inline-block px-3 py-1 bg-blue-500/10 text-blue-500 text-xs font-black rounded-lg mb-8 uppercase tracking-tighter">{lead.period}</span>
+                                    <span className="inline-block px-3 py-1 bg-blue-500/10 text-blue-500 text-xs font-black rounded-lg mb-8 tracking-tight">{lead.period}</span>
                                     <ul className="space-y-4">
                                         {lead.points.map((point, pi) => (
-                                            <li key={pi} className="flex gap-3 text-sm italic opacity-70 leading-relaxed">
+                                            <li key={pi} className="flex gap-3 text-sm opacity-70 leading-relaxed">
                                                 <Zap size={16} className="text-blue-500 shrink-0" />
                                                 {point}
                                             </li>
@@ -369,13 +398,13 @@ export default function WebsiteView() {
                                 <div className="w-12 h-12 rounded-2xl bg-pink-500 flex items-center justify-center text-white shadow-lg shadow-pink-500/30">
                                     <Code2 size={24} />
                                 </div>
-                                <h2 className="text-4xl font-black tracking-tight italic uppercase">Projects</h2>
+                                <h2 className="text-4xl font-black tracking-tight">Projects</h2>
                             </div>
                             <button
                                 onClick={() => setViewMode('desktop')}
-                                className="group flex items-center gap-2 text-pink-500 font-black italic uppercase tracking-tighter hover:gap-4 transition-all"
+                                className="group flex items-center gap-2 text-cyan-500 font-bold hover:gap-4 transition-all"
                             >
-                                View full portfolio <ArrowRight size={20} />
+                                View all projects <ArrowRight size={20} />
                             </button>
                         </div>
 
@@ -405,19 +434,19 @@ export default function WebsiteView() {
                                             )}
                                         </div>
                                         <div className="relative z-10">
-                                            <p className="text-xs font-black uppercase tracking-[0.2em] text-white/70 mb-2">{project.type}</p>
-                                            <h3 className="text-3xl font-black text-white italic group-hover:tracking-wider transition-all duration-500 leading-tight">{project.name}</h3>
+                                            <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/70 mb-2">{project.type}</p>
+                                            <h3 className="text-3xl font-black text-white group-hover:tracking-wider transition-all duration-500 leading-tight">{project.name}</h3>
                                         </div>
                                         {/* Abstract Shape */}
                                         <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:w-60 group-hover:h-60 transition-all duration-700" />
                                     </div>
                                     <div className="p-8">
-                                        <p className={`text-sm leading-relaxed mb-6 line-clamp-3 italic ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
+                                        <p className={`text-sm leading-relaxed mb-6 line-clamp-3 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
                                             {project.description}
                                         </p>
                                         <div className="flex flex-wrap gap-2">
                                             {project.tech.slice(0, 4).map(tech => (
-                                                <span key={tech} className={`px-3 py-1 bg-white/5 border border-white/5 rounded-lg text-[10px] uppercase font-black italic tracking-tighter opacity-70`}>{tech}</span>
+                                                <span key={tech} className={`px-3 py-1 bg-white/5 border border-white/5 rounded-lg text-[10px] uppercase font-bold tracking-wider opacity-70`}>{tech}</span>
                                             ))}
                                         </div>
                                     </div>
@@ -442,10 +471,10 @@ export default function WebsiteView() {
                             >
                                 Featured Project Spotlight
                             </motion.div>
-                            <h2 className="text-4xl md:text-6xl font-black tracking-tighter italic uppercase text-white mb-6">
+                            <h2 className="text-4xl md:text-6xl font-black tracking-tight text-white mb-6">
                                 Project <span className="text-cyan-400">Jarvis</span>
                             </h2>
-                            <p className="text-lg md:text-xl text-slate-400 italic">
+                            <p className="text-lg md:text-xl text-slate-400">
                                 A high-performance personal AI companion built in Python. Features real-time voice interaction, screen analysis, and system automation.
                                 Designed to be the nervous system of my digital life.
                             </p>
@@ -477,13 +506,13 @@ export default function WebsiteView() {
                         <div className="max-w-5xl mx-auto rounded-[3rem] p-8 md:p-20 relative overflow-hidden border border-white/10 shadow-3xl shadow-cyan-500/20">
                             <div className="absolute inset-0 bg-cyan-600 opacity-5" />
                             <div className="relative z-10 flex flex-col items-center text-center">
-                                <h2 className="text-4xl md:text-7xl font-black tracking-tighter italic uppercase mb-8">Let's <span className="text-cyan-500">Collaborate.</span></h2>
-                                <p className={`text-lg md:text-2xl mb-12 max-w-2xl italic leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
-                                    Whether you have a question, a potential project, or just want to say hi, I'm always open to connecting!
+                                <h2 className="text-4xl md:text-6xl font-black tracking-tight mb-8">Let's <span className="text-cyan-500">Connect</span></h2>
+                                <p className={`text-lg md:text-xl mb-12 max-w-2xl leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
+                                    Whether you have a question, a potential project, or just want to say hi — I'm always open to connecting.
                                 </p>
 
                                 <div className="flex flex-wrap justify-center gap-6 mb-16">
-                                    <a href="mailto:agarw48550@gapps.uwcsea.edu.sg" className="px-10 py-5 bg-cyan-500 text-white font-black italic uppercase rounded-3xl hover:bg-cyan-600 hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-cyan-500/40 flex items-center gap-3">
+                                    <a href="mailto:agarw48550@gapps.uwcsea.edu.sg" className="px-10 py-5 bg-cyan-500 text-white font-bold rounded-2xl hover:bg-cyan-600 hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-cyan-500/40 flex items-center gap-3">
                                         <Mail size={24} /> Send Email
                                     </a>
                                 </div>
@@ -493,11 +522,11 @@ export default function WebsiteView() {
                                         { icon: Github, href: "https://github.com/agarw48550", label: "GitHub" },
                                         { icon: Linkedin, href: "https://linkedin.com/in/ayaanagarwal", label: "LinkedIn" },
                                     ].map((social, i) => (
-                                        <a key={i} href={social.href} target="_blank" rel="noopener noreferrer" className={`flex items-center gap-2 font-black transition-all hover:text-cyan-500 group`} aria-label={`Visit my ${social.label} profile`}>
+                                        <a key={i} href={social.href} target="_blank" rel="noopener noreferrer" className={`flex items-center gap-2 font-bold transition-all hover:text-cyan-500 group`} aria-label={`Visit my ${social.label} profile`}>
                                             <div className="p-3 rounded-2xl bg-white/5 border border-white/10 group-hover:border-cyan-500 transition-all">
                                                 <social.icon size={24} aria-hidden="true" />
                                             </div>
-                                            <span className="hidden sm:inline italic text-sm">{social.label}</span>
+                                            <span className="hidden sm:inline text-sm">{social.label}</span>
                                         </a>
                                     ))}
                                 </div>
@@ -508,7 +537,7 @@ export default function WebsiteView() {
 
                 {/* Footer */}
                 <footer className="py-12 px-6 border-t border-white/5 pb-24 md:pb-12">
-                    <div className="container mx-auto flex flex-col md:flex-row justify-between items-center gap-6 opacity-50 text-xs font-black uppercase tracking-[0.2em] italic">
+                    <div className="container mx-auto flex flex-col md:flex-row justify-between items-center gap-6 opacity-50 text-xs font-medium tracking-wide">
                         <p>© {new Date().getFullYear()} Ayaan Agarwal. Built with Passion & Code.</p>
                         <div className="flex gap-8">
                             <a href="#hero" className="hover:text-cyan-500 transition-colors">Back to top</a>
