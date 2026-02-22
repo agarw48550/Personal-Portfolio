@@ -41,7 +41,7 @@ export default function Desktop() {
     }, [openApp, playSound]);
 
     return (
-        <div className="fixed inset-0 overflow-hidden select-none bg-[#0a192f] text-white">
+        <div className="fixed inset-0 overflow-hidden select-none bg-[#0a192f] text-white" role="application" aria-label="AyaanOS Desktop Environment">
             {/* Custom Cursor */}
             <CustomCursor />
 
@@ -49,15 +49,15 @@ export default function Desktop() {
             <TopBar />
 
             {/* Matrix Background */}
-            <div className="absolute inset-0 z-0 opacity-30">
+            <div className="absolute inset-0 z-0 opacity-30" aria-hidden="true">
                 <MatrixBackground />
             </div>
 
             {/* Gradient Overlay for readability */}
-            <div className="absolute inset-0 z-0 bg-gradient-to-br from-[#0a192f]/80 via-[#112240]/80 to-[#0a192f]/80 pointer-events-none" />
+            <div className="absolute inset-0 z-0 bg-gradient-to-br from-[#0a192f]/80 via-[#112240]/80 to-[#0a192f]/80 pointer-events-none" aria-hidden="true" />
 
             {/* Windows Layer */}
-            <div className="absolute inset-0 z-10 pointer-events-none pt-8">
+            <div className="absolute inset-0 z-10 pointer-events-none pt-8" role="region" aria-label="Application windows">
                 <div className="relative w-full h-full pointer-events-auto">
                     <Window id="about"><AboutApp /></Window>
                     <Window id="projects"><ProjectsApp /></Window>
@@ -73,7 +73,7 @@ export default function Desktop() {
             <Dock />
 
             {/* Keyboard shortcut hint */}
-            <div className="fixed bottom-24 right-4 z-0 text-slate-500 text-xs font-mono opacity-50 hover:opacity-100 transition-opacity">
+            <div className="fixed bottom-24 right-4 z-0 text-slate-500 text-xs font-mono opacity-50 hover:opacity-100 transition-opacity" aria-hidden="true">
                 ⌘K Terminal
             </div>
         </div>

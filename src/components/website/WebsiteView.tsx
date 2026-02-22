@@ -75,7 +75,7 @@ export default function WebsiteView() {
                         AYAAN<span className="text-slate-500 font-light">.DEV</span>
                     </motion.div>
 
-                    <nav className="hidden lg:flex items-center gap-1">
+                    <nav className="hidden lg:flex items-center gap-1" aria-label="Main navigation">
                         {navItems.map((item) => (
                             <a
                                 key={item.id}
@@ -95,16 +95,18 @@ export default function WebsiteView() {
                             onClick={toggleMute}
                             className={`p-2.5 rounded-xl border transition-all ${theme === 'dark' ? 'bg-white/5 border-white/10 text-slate-400 hover:text-white' : 'bg-black/5 border-slate-200 text-slate-600 hover:text-slate-900'
                                 }`}
+                            aria-label={isMuted ? 'Unmute sound effects' : 'Mute sound effects'}
                         >
-                            {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+                            {isMuted ? <VolumeX size={18} aria-hidden="true" /> : <Volume2 size={18} aria-hidden="true" />}
                         </button>
 
                         <button
                             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                             className={`p-2.5 rounded-xl border transition-all ${theme === 'dark' ? 'bg-white/5 border-white/10 text-slate-400 hover:text-white' : 'bg-black/5 border-slate-200 text-slate-600 hover:text-slate-900'
                                 }`}
+                            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
                         >
-                            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+                            {theme === 'dark' ? <Sun size={18} aria-hidden="true" /> : <Moon size={18} aria-hidden="true" />}
                         </button>
 
                         <button
@@ -119,7 +121,7 @@ export default function WebsiteView() {
             </header>
 
             {/* Mobile Header (Simplified) */}
-            <header className="md:hidden fixed top-0 w-full z-40 backdrop-blur-md bg-transparent px-6 h-16 flex items-center justify-between">
+            <header className="md:hidden fixed top-0 w-full z-40 backdrop-blur-md bg-transparent px-6 h-16 flex items-center justify-between" role="banner">
                 <div className="text-xl font-black tracking-tighter text-cyan-500">
                     AYAAN<span className="text-slate-500 font-light">.DEV</span>
                 </div>
@@ -127,21 +129,23 @@ export default function WebsiteView() {
                     <button
                         onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                         className={`p-2 rounded-full ${theme === 'dark' ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-900'}`}
+                        aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
                     >
-                        {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+                        {theme === 'dark' ? <Sun size={16} aria-hidden="true" /> : <Moon size={16} aria-hidden="true" />}
                     </button>
                     <button
                         onClick={() => setViewMode('desktop')}
                         className="p-2 rounded-full bg-cyan-500 text-white"
+                        aria-label="Switch to OS desktop mode"
                     >
-                        <Monitor size={16} />
+                        <Monitor size={16} aria-hidden="true" />
                     </button>
                 </div>
             </header>
 
             <main className="relative z-10 pt-20">
                 {/* Hero */}
-                <section id="hero" className="min-h-[85vh] flex items-center px-6 relative overflow-hidden">
+                <section id="hero" className="min-h-[85vh] flex items-center px-6 relative overflow-hidden" aria-label="Introduction">
                     <div className="container mx-auto">
                         <div className="max-w-4xl pt-10 md:pt-0">
                             <motion.div
@@ -201,7 +205,7 @@ export default function WebsiteView() {
                 </section>
 
                 {/* About & Quick Facts */}
-                <section id="about" className="py-20 md:py-32 px-6">
+                <section id="about" className="py-20 md:py-32 px-6" aria-label="About me">
                     <div className="container mx-auto">
                         <div className="grid lg:grid-cols-2 gap-20 items-center">
                             <div>
@@ -390,13 +394,13 @@ export default function WebsiteView() {
                                     <div className={`h-64 bg-gradient-to-br ${project.color} p-8 flex flex-col justify-end relative overflow-hidden`}>
                                         <div className="absolute top-6 right-6 flex gap-2">
                                             {project.links.demo && (
-                                                <a href={project.links.demo} target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-2xl bg-black/20 backdrop-blur-xl border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all">
-                                                    <ExternalLink size={20} />
+                                                <a href={project.links.demo} target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-2xl bg-black/20 backdrop-blur-xl border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all" aria-label={`View ${project.name} demo`}>
+                                                    <ExternalLink size={20} aria-hidden="true" />
                                                 </a>
                                             )}
                                             {project.links.repo && (
-                                                <a href={project.links.repo} target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-2xl bg-black/20 backdrop-blur-xl border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all">
-                                                    <Github size={20} />
+                                                <a href={project.links.repo} target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-2xl bg-black/20 backdrop-blur-xl border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all" aria-label={`View ${project.name} source code`}>
+                                                    <Github size={20} aria-hidden="true" />
                                                 </a>
                                             )}
                                         </div>
@@ -468,7 +472,7 @@ export default function WebsiteView() {
                 </section>
 
                 {/* Contact Section */}
-                <section id="contact" className="py-20 md:py-32 px-6 bg-gradient-to-t from-cyan-500/10 to-transparent">
+                <section id="contact" className="py-20 md:py-32 px-6 bg-gradient-to-t from-cyan-500/10 to-transparent" aria-label="Contact">
                     <div className="container mx-auto">
                         <div className="max-w-5xl mx-auto rounded-[3rem] p-8 md:p-20 relative overflow-hidden border border-white/10 shadow-3xl shadow-cyan-500/20">
                             <div className="absolute inset-0 bg-cyan-600 opacity-5" />
@@ -489,9 +493,9 @@ export default function WebsiteView() {
                                         { icon: Github, href: "https://github.com/agarw48550", label: "GitHub" },
                                         { icon: Linkedin, href: "https://linkedin.com/in/ayaanagarwal", label: "LinkedIn" },
                                     ].map((social, i) => (
-                                        <a key={i} href={social.href} target="_blank" rel="noopener noreferrer" className={`flex items-center gap-2 font-black transition-all hover:text-cyan-500 group`}>
+                                        <a key={i} href={social.href} target="_blank" rel="noopener noreferrer" className={`flex items-center gap-2 font-black transition-all hover:text-cyan-500 group`} aria-label={`Visit my ${social.label} profile`}>
                                             <div className="p-3 rounded-2xl bg-white/5 border border-white/10 group-hover:border-cyan-500 transition-all">
-                                                <social.icon size={24} />
+                                                <social.icon size={24} aria-hidden="true" />
                                             </div>
                                             <span className="hidden sm:inline italic text-sm">{social.label}</span>
                                         </a>
@@ -507,7 +511,7 @@ export default function WebsiteView() {
                     <div className="container mx-auto flex flex-col md:flex-row justify-between items-center gap-6 opacity-50 text-xs font-black uppercase tracking-[0.2em] italic">
                         <p>© {new Date().getFullYear()} Ayaan Agarwal. Built with Passion & Code.</p>
                         <div className="flex gap-8">
-                            <a href="#" className="hover:text-cyan-500 transition-colors">Back to top</a>
+                            <a href="#hero" className="hover:text-cyan-500 transition-colors">Back to top</a>
                             <button onClick={() => setViewMode('desktop')} className="hover:text-cyan-500 transition-colors">View as OS</button>
                         </div>
                     </div>

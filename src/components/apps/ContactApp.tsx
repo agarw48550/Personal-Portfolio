@@ -112,8 +112,9 @@ export default function ContactApp() {
                                 whileTap={{ scale: 0.95 }}
                                 className={`p-2.5 bg-gray-800 rounded-lg text-gray-400 ${social.color} transition-colors border border-gray-700 hover:border-gray-600`}
                                 title={social.name}
+                                aria-label={`Visit ${social.name} profile`}
                             >
-                                <social.icon size={18} />
+                                <social.icon size={18} aria-hidden="true" />
                             </motion.a>
                         ))}
                     </div>
@@ -130,6 +131,8 @@ export default function ContactApp() {
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.9 }}
                             className="h-full flex flex-col items-center justify-center text-center"
+                            role="status"
+                            aria-live="polite"
                         >
                             <motion.div
                                 initial={{ scale: 0 }}
@@ -158,38 +161,43 @@ export default function ContactApp() {
                             className="max-w-md mx-auto space-y-5"
                         >
                             <div>
-                                <label className="block text-sm font-medium text-gray-300 mb-2">Name</label>
+                                <label htmlFor="contact-name" className="block text-sm font-medium text-gray-300 mb-2">Name</label>
                                 <input
+                                    id="contact-name"
                                     required
                                     type="text"
                                     name="name"
+                                    autoComplete="name"
                                     value={formData.name}
                                     onChange={handleChange}
-                                    className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-all"
+                                    className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-600 text-white placeholder-gray-400 focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-all"
                                     placeholder="Your name"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                                <label htmlFor="contact-email" className="block text-sm font-medium text-gray-300 mb-2">Email</label>
                                 <input
+                                    id="contact-email"
                                     required
                                     type="email"
                                     name="email"
+                                    autoComplete="email"
                                     value={formData.email}
                                     onChange={handleChange}
-                                    className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-all"
+                                    className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-600 text-white placeholder-gray-400 focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-all"
                                     placeholder="your@email.com"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-300 mb-2">Message</label>
+                                <label htmlFor="contact-message" className="block text-sm font-medium text-gray-300 mb-2">Message</label>
                                 <textarea
+                                    id="contact-message"
                                     required
                                     name="message"
                                     value={formData.message}
                                     onChange={handleChange}
                                     rows={5}
-                                    className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-all resize-none"
+                                    className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-600 text-white placeholder-gray-400 focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-all resize-none"
                                     placeholder="Tell me about your project or just say hi..."
                                 />
                             </div>

@@ -11,6 +11,13 @@ export default function StartupAnimation({ onComplete }: StartupAnimationProps) 
     const [phase, setPhase] = useState<'welcome' | 'matrix' | 'complete'>('welcome');
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const animationIdRef = useRef<number | null>(null);
+    const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+    // Check for reduced motion preference
+    useEffect(() => {
+        const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+        setPrefersReducedMotion(mq.matches);
+    }, []);
 
     const runMatrix = useCallback(() => {
         const canvas = canvasRef.current;
@@ -96,7 +103,13 @@ export default function StartupAnimation({ onComplete }: StartupAnimationProps) 
     }, [phase, onComplete, runMatrix]);
 
     const handleBeginClick = () => {
-        setPhase('matrix');
+        if (prefersReducedMotion) {
+            // Skip matrix animation entirely
+            setPhase('complete');
+            onComplete();
+        } else {
+            setPhase('matrix');
+        }
     };
 
     return (

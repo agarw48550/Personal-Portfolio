@@ -32,14 +32,21 @@ export default function SkillsApp() {
                                 <span className="font-bold text-lg group-hover:text-green-400 transition-colors">
                                     &gt; {skill.name}
                                 </span>
-                                <span className="text-xs text-green-500/50 font-mono hidden md:block">
+                                <span className="text-xs text-green-500/70 font-mono hidden md:block" aria-hidden="true">
                                     [ID: 0x{index.toString(16).padStart(2, '0')}]
                                 </span>
                             </div>
 
-                            {/* Retro Progress Bar */}
-                            <div className="flex items-center gap-1">
-                                <span className="text-green-500/50 text-xs w-8">[{skill.rating}/{skill.maxRating}]</span>
+                            {/* Accessible Progress Bar */}
+                            <div
+                                className="flex items-center gap-1"
+                                role="progressbar"
+                                aria-label={`${skill.name} proficiency`}
+                                aria-valuenow={skill.rating}
+                                aria-valuemin={0}
+                                aria-valuemax={skill.maxRating}
+                            >
+                                <span className="text-green-500/70 text-xs w-12 shrink-0" aria-hidden="true">[{skill.rating}/{skill.maxRating}]</span>
                                 <div className="flex-1 h-6 bg-green-900/20 border border-green-500/30 p-1 flex gap-1">
                                     {Array.from({ length: skill.maxRating }).map((_, i) => (
                                         <motion.div
@@ -51,6 +58,7 @@ export default function SkillsApp() {
                                                 ? 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]'
                                                 : 'bg-green-500/10'
                                                 }`}
+                                            aria-hidden="true"
                                         />
                                     ))}
                                 </div>

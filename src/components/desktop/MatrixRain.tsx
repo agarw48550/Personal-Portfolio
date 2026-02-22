@@ -7,6 +7,13 @@ export default function MatrixRain({ onComplete }: { onComplete: () => void }) {
     const [opacity, setOpacity] = useState(1);
 
     useEffect(() => {
+        // Skip animation entirely if user prefers reduced motion
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReducedMotion) {
+            onComplete();
+            return;
+        }
+
         const canvas = canvasRef.current;
         if (!canvas) return;
 

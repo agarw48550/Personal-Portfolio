@@ -20,6 +20,7 @@ export default function MobileBottomNav({ activeSection }: { activeSection: stri
     return (
         <div className="fixed bottom-6 left-4 right-4 z-50 md:hidden">
             <nav
+                aria-label="Mobile navigation"
                 className={`
                     backdrop-blur-xl rounded-2xl border shadow-2xl flex justify-around items-center px-2 py-3
                     transition-all duration-300
@@ -38,6 +39,8 @@ export default function MobileBottomNav({ activeSection }: { activeSection: stri
                         <a
                             key={item.id}
                             href={`#${item.id}`}
+                            aria-label={item.label}
+                            aria-current={isActive ? 'true' : undefined}
                             className="relative flex flex-col items-center gap-1 min-w-[60px]"
                         >
                             <div

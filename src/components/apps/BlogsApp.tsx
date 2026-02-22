@@ -21,6 +21,7 @@ export default function BlogsApp() {
                     rel="noopener noreferrer"
                     className="p-1.5 hover:bg-gray-200 rounded text-gray-600 transition-colors"
                     title="Open in new tab"
+                    aria-label="Open blog in new tab"
                 >
                     <ExternalLink size={16} />
                 </a>

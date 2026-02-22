@@ -226,7 +226,10 @@ export default function TerminalApp() {
                 background: 'linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(10,10,20,0.98) 100%)',
             }}
             onClick={() => inputRef.current?.focus()}
+            role="log"
+            aria-label="Terminal output"
         >
+            <div aria-live="polite" aria-relevant="additions">
             {history.map((entry, i) => (
                 <motion.div
                     key={i}
@@ -244,11 +247,14 @@ export default function TerminalApp() {
                     <div className="ml-6 mt-1 text-gray-300">{entry.output}</div>
                 </motion.div>
             ))}
+            </div>
 
             <div className="flex gap-2 items-center">
                 <span className="text-green-400">➜</span>
                 <span className="text-cyan-400">~</span>
+                <label htmlFor="terminal-input" className="sr-only">Terminal command input</label>
                 <input
+                    id="terminal-input"
                     ref={inputRef}
                     type="text"
                     value={input}
@@ -257,6 +263,7 @@ export default function TerminalApp() {
                     className="flex-1 bg-transparent border-none outline-none text-white caret-green-400"
                     autoFocus
                     spellCheck={false}
+                    aria-label="Enter command"
                 />
             </div>
             <div ref={bottomRef} />

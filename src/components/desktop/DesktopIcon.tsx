@@ -41,6 +41,7 @@ export default function DesktopIcon({ id, label, icon: Icon }: DesktopIconProps)
             whileTap={{ scale: 0.95 }}
             onClick={handleClick}
             onDoubleClick={handleClick}
+            aria-label={`Open ${label}`}
             className={cn(
                 "flex flex-col items-center gap-2 p-3 rounded-xl transition-all group w-20",
                 isOpen ? "bg-white/10" : "hover:bg-white/5"

@@ -92,6 +92,7 @@ export default function KonamiCode() {
     const [showSuccess, setShowSuccess] = useState(false);
     const [effectType, setEffectType] = useState<"confetti" | "matrix">("confetti");
     const [windowDimensions, setWindowDimensions] = useState({ width: 1920, height: 1080 });
+    const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
     // Set mounted state and get window dimensions
     useEffect(() => {
@@ -100,6 +101,7 @@ export default function KonamiCode() {
             width: window.innerWidth,
             height: window.innerHeight,
         });
+        setPrefersReducedMotion(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
     }, []);
 
     const triggerEasterEgg = useCallback(() => {
@@ -144,8 +146,8 @@ export default function KonamiCode() {
         <AnimatePresence>
             {showSuccess && (
                 <>
-                    {/* Confetti Effect */}
-                    {effectType === "confetti" && (
+                    {/* Confetti Effect - skip if reduced motion */}
+                    {effectType === "confetti" && !prefersReducedMotion && (
                         <div className="fixed inset-0 z-[200] pointer-events-none overflow-hidden">
                             {Array.from({ length: 100 }).map((_, i) => (
                                 <ConfettiParticle key={i} index={i} windowHeight={windowDimensions.height} />
@@ -153,8 +155,8 @@ export default function KonamiCode() {
                         </div>
                     )}
 
-                    {/* Matrix Rain Effect */}
-                    {effectType === "matrix" && (
+                    {/* Matrix Rain Effect - skip if reduced motion */}
+                    {effectType === "matrix" && !prefersReducedMotion && (
                         <div className="matrix-rain">
                             {Array.from({ length: columnCount }).map((_, i) => (
                                 <MatrixColumn key={i} index={i} totalColumns={columnCount} />

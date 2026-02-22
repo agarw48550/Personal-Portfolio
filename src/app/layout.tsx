@@ -145,8 +145,25 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-dark-bg text-foreground transition-colors duration-300`}
       >
         <Providers>
+          {/* Skip to content link for keyboard users */}
+          <a href="#main-content" className="skip-to-content">
+            Skip to main content
+          </a>
+          {/* Keyboard user detection script */}
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                document.addEventListener('keydown', function(e) {
+                  if (e.key === 'Tab') document.body.classList.add('keyboard-user');
+                });
+                document.addEventListener('mousedown', function() {
+                  document.body.classList.remove('keyboard-user');
+                });
+              `,
+            }}
+          />
           <CustomCursor />
-          <main className="min-h-screen">{children}</main>
+          <main id="main-content" className="min-h-screen">{children}</main>
         </Providers>
       </body>
     </html>

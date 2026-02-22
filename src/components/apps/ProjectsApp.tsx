@@ -81,6 +81,8 @@ export default function ProjectsApp() {
                     <div className="flex items-center gap-2">
                         <button
                             onClick={() => setShowFilters(!showFilters)}
+                            aria-expanded={showFilters}
+                            aria-label={showFilters ? 'Hide tech filters' : 'Show tech filters'}
                             className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-colors border ${showFilters ? 'bg-cyan-500/20 border-cyan-500/50 text-cyan-400' : 'bg-white/5 border-white/10 text-slate-400 hover:text-white'
                                 }`}
                         >
@@ -90,6 +92,7 @@ export default function ProjectsApp() {
                         {hasActiveFilters && (
                             <button
                                 onClick={clearFilters}
+                                aria-label="Clear all filters"
                                 className="px-3 py-1.5 rounded-lg text-sm text-red-400 hover:bg-red-400/10 transition-colors flex items-center gap-1"
                             >
                                 <X size={16} />
@@ -105,6 +108,7 @@ export default function ProjectsApp() {
                         <button
                             key={category}
                             onClick={() => setActiveCategory(category)}
+                            aria-pressed={activeCategory === category}
                             className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${activeCategory === category
                                 ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/20'
                                 : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white border border-white/5'
@@ -129,6 +133,7 @@ export default function ProjectsApp() {
                                     <button
                                         key={tech}
                                         onClick={() => toggleTech(tech)}
+                                        aria-pressed={selectedTech.includes(tech)}
                                         className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${selectedTech.includes(tech)
                                             ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/50'
                                             : 'bg-white/5 text-slate-500 hover:text-slate-300 border border-white/5'
@@ -205,7 +210,7 @@ export default function ProjectsApp() {
             {/* Modal */}
             <AnimatePresence>
                 {selectedId && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={() => setSelectedId(null)}>
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={() => setSelectedId(null)} role="dialog" aria-label="Project details" aria-modal="true">
                         <motion.div
                             layoutId={`project-${selectedId}`}
                             className="bg-[#112240] w-full max-w-4xl max-h-[90vh] rounded-2xl overflow-hidden shadow-2xl border border-white/10 flex flex-col md:flex-row"
@@ -228,12 +233,12 @@ export default function ProjectsApp() {
 
                                             <div className="space-y-4">
                                                 {project.links.demo && (
-                                                    <a href={project.links.demo} target="_blank" rel="noopener noreferrer" className="block w-full py-3 bg-white text-black font-bold text-center rounded-xl hover:bg-slate-100 transition-colors flex items-center justify-center gap-2">
+                                                    <a href={project.links.demo} target="_blank" rel="noopener noreferrer" aria-label={`View ${project.name} live demo`} className="block w-full py-3 bg-white text-black font-bold text-center rounded-xl hover:bg-slate-100 transition-colors flex items-center justify-center gap-2">
                                                         <ExternalLink size={18} /> Live Demo
                                                     </a>
                                                 )}
                                                 {project.links.repo && (
-                                                    <a href={project.links.repo} target="_blank" rel="noopener noreferrer" className="block w-full py-3 bg-black/30 text-white font-bold text-center rounded-xl hover:bg-black/40 transition-colors border border-white/10 flex items-center justify-center gap-2">
+                                                    <a href={project.links.repo} target="_blank" rel="noopener noreferrer" aria-label={`View ${project.name} source code`} className="block w-full py-3 bg-black/30 text-white font-bold text-center rounded-xl hover:bg-black/40 transition-colors border border-white/10 flex items-center justify-center gap-2">
                                                         <Github size={18} /> View Code
                                                     </a>
                                                 )}
@@ -267,7 +272,7 @@ export default function ProjectsApp() {
                                                                     {getStatIcon(key)} {key}
                                                                 </div>
                                                                 <div className="flex items-center gap-3">
-                                                                    <div className="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                                                                    <div className="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden" role="progressbar" aria-valuenow={value as number} aria-valuemin={0} aria-valuemax={100} aria-label={`${key}: ${value}%`}>
                                                                         <motion.div
                                                                             initial={{ width: 0 }}
                                                                             animate={{ width: `${value}%` }}

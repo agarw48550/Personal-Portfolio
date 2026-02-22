@@ -93,6 +93,8 @@ export default function Window({ id, children, title }: WindowProps) {
                             background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.08) 0%, rgba(15, 15, 25, 0.95) 50%, rgba(10, 10, 15, 0.98) 100%)',
                             boxShadow: '0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05), 0 0 0 1px rgba(34, 211, 238, 0.1)'
                         }}
+                        role="dialog"
+                        aria-label={`${windowTitle} window`}
                     >
                         {/* Window Header - Liquid Glass */}
                         <div
@@ -103,35 +105,35 @@ export default function Window({ id, children, title }: WindowProps) {
                             )}
                             onDoubleClick={handleMaximize}
                         >
-                            {/* Traffic Light Buttons */}
+                            {/* Traffic Light Buttons - enlarged touch/click area */}
                             <div className="flex items-center gap-2 group">
                                 <button
                                     onClick={handleClose}
-                                    className="w-3 h-3 rounded-full bg-[#ff5f57] hover:brightness-110 transition-all flex items-center justify-center"
+                                    className="w-6 h-6 rounded-full bg-[#ff5f57] hover:brightness-110 transition-all flex items-center justify-center"
                                     title="Close"
-                                    aria-label="Close Window"
+                                    aria-label={`Close ${windowTitle} window`}
                                 >
-                                    <svg className="w-2 h-2 opacity-0 group-hover:opacity-100 transition-opacity" viewBox="0 0 12 12" fill="none" stroke="rgba(0,0,0,0.5)" strokeWidth="2">
+                                    <svg className="w-2.5 h-2.5 opacity-0 group-hover:opacity-100 transition-opacity" viewBox="0 0 12 12" fill="none" stroke="rgba(0,0,0,0.5)" strokeWidth="2" aria-hidden="true">
                                         <path d="M3 3l6 6M9 3l-6 6" />
                                     </svg>
                                 </button>
                                 <button
                                     onClick={handleMinimize}
-                                    className="w-3 h-3 rounded-full bg-[#febc2e] hover:brightness-110 transition-all flex items-center justify-center"
+                                    className="w-6 h-6 rounded-full bg-[#febc2e] hover:brightness-110 transition-all flex items-center justify-center"
                                     title="Minimize"
-                                    aria-label="Minimize Window"
+                                    aria-label={`Minimize ${windowTitle} window`}
                                 >
-                                    <svg className="w-2 h-2 opacity-0 group-hover:opacity-100 transition-opacity" viewBox="0 0 12 12" fill="none" stroke="rgba(0,0,0,0.5)" strokeWidth="2">
+                                    <svg className="w-2.5 h-2.5 opacity-0 group-hover:opacity-100 transition-opacity" viewBox="0 0 12 12" fill="none" stroke="rgba(0,0,0,0.5)" strokeWidth="2" aria-hidden="true">
                                         <path d="M2 6h8" />
                                     </svg>
                                 </button>
                                 <button
                                     onClick={handleMaximize}
-                                    className="w-3 h-3 rounded-full bg-[#28c840] hover:brightness-110 transition-all flex items-center justify-center"
+                                    className="w-6 h-6 rounded-full bg-[#28c840] hover:brightness-110 transition-all flex items-center justify-center"
                                     title={isMaximized ? "Restore" : "Maximize"}
-                                    aria-label={isMaximized ? "Restore Window" : "Maximize Window"}
+                                    aria-label={isMaximized ? `Restore ${windowTitle} window` : `Maximize ${windowTitle} window`}
                                 >
-                                    <svg className="w-2 h-2 opacity-0 group-hover:opacity-100 transition-opacity" viewBox="0 0 12 12" fill="none" stroke="rgba(0,0,0,0.5)" strokeWidth="1.5">
+                                    <svg className="w-2.5 h-2.5 opacity-0 group-hover:opacity-100 transition-opacity" viewBox="0 0 12 12" fill="none" stroke="rgba(0,0,0,0.5)" strokeWidth="1.5" aria-hidden="true">
                                         {isMaximized ? (
                                             <path d="M4 8l4-4M4 4v4h4" />
                                         ) : (

@@ -30,12 +30,13 @@ export default function TopBar() {
     if (!mounted) return null;
 
     return (
-        <div className="fixed top-0 left-0 right-0 h-8 bg-black/20 backdrop-blur-md z-50 flex items-center justify-between px-4 text-xs font-medium text-white select-none border-b border-white/5">
+        <div className="fixed top-0 left-0 right-0 h-8 bg-black/20 backdrop-blur-md z-50 flex items-center justify-between px-4 text-xs font-medium text-white select-none border-b border-white/5" role="banner">
             {/* Left Side */}
             <div className="flex items-center gap-4">
                 <button
                     onClick={() => setViewMode('website')}
                     className="hover:text-cyan-400 transition-colors"
+                    aria-label="Switch to website view"
                 >
                     <Apple size={14} fill="currentColor" />
                 </button>
@@ -47,37 +48,41 @@ export default function TopBar() {
                     >
                         Switch to Website
                     </button>
-                    <div className="hidden sm:flex gap-4 text-white/80 ml-2">
+                    <nav className="hidden sm:flex gap-4 text-white/80 ml-2" aria-label="Desktop menu">
                         <button className="hover:text-white transition-colors">{t.desktop.menu.file}</button>
                         <button className="hover:text-white transition-colors">{t.desktop.menu.edit}</button>
                         <button className="hover:text-white transition-colors">{t.desktop.menu.view}</button>
                         <button className="hover:text-white transition-colors">{t.desktop.menu.go}</button>
                         <button className="hover:text-white transition-colors">{t.desktop.menu.window}</button>
                         <button className="hover:text-white transition-colors">{t.desktop.menu.help}</button>
-                    </div>
+                    </nav>
                 </div>
             </div>
 
             {/* Right Side */}
             <div className="flex items-center gap-4">
                 {/* Weather Widget (Mock) */}
-                <div className="hidden sm:flex items-center gap-2 text-white/90 hover:bg-white/10 px-2 py-0.5 rounded transition-colors cursor-default">
-                    <Cloud size={14} className="text-cyan-400" />
+                <div className="hidden sm:flex items-center gap-2 text-white/90 hover:bg-white/10 px-2 py-0.5 rounded transition-colors cursor-default" aria-label={`Weather: ${t.desktop.weather.temp} in ${t.desktop.weather.city}`}>
+                    <Cloud size={14} className="text-cyan-400" aria-hidden="true" />
                     <span>{t.desktop.weather.temp}</span>
                     <span className="text-white/60">{t.desktop.weather.city}</span>
                 </div>
 
                 {/* Status Icons */}
-                <div className="flex items-center gap-3 text-white/90">
-                    <Battery size={16} className="text-green-400" />
-                    <Wifi size={14} />
-                    <Search size={14} />
+                <div className="flex items-center gap-3 text-white/90" aria-label="System status">
+                    <Battery size={16} className="text-green-400" aria-hidden="true" />
+                    <span className="sr-only">Battery full</span>
+                    <Wifi size={14} aria-hidden="true" />
+                    <span className="sr-only">Wi-Fi connected</span>
+                    <Search size={14} aria-hidden="true" />
+                    <span className="sr-only">Search</span>
                 </div>
 
                 {/* Language Toggle */}
                 <button
                     onClick={() => setLanguage(language === 'en' ? 'zh' : 'en')}
                     className="p-1 hover:bg-white/10 rounded-full transition-colors flex items-center gap-1"
+                    aria-label={`Switch language to ${language === 'en' ? 'Chinese' : 'English'}`}
                 >
                     <Globe size={14} />
                     <span className="uppercase text-[10px]">{language}</span>
@@ -87,8 +92,9 @@ export default function TopBar() {
                 <button
                     onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                     className="p-1 hover:bg-white/10 rounded-full transition-colors"
+                    aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
                 >
-                    {theme === 'dark' ? <Moon size={14} /> : <Sun size={14} />}
+                    {theme === 'dark' ? <Moon size={14} aria-hidden="true" /> : <Sun size={14} aria-hidden="true" />}
                 </button>
 
                 {/* Date & Time */}
